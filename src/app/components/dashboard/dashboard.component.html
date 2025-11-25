@@ -1,0 +1,114 @@
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <h2>工作概览</h2>
+    <p class="subtitle">实时掌握你的工作进度</p>
+  </div>
+
+  <div class="stats-grid">
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-content">
+          <mat-icon class="stat-icon" color="primary">forest</mat-icon>
+          <div>
+            <h3>{{ stats.totalForests }}</h3>
+            <p>竹林总数</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-content">
+          <mat-icon class="stat-icon" color="accent">agriculture</mat-icon>
+          <div>
+            <h3>{{ stats.totalFields }}</h3>
+            <p>竹田总数</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-content">
+          <mat-icon class="stat-icon" color="warn">eco</mat-icon>
+          <div>
+            <h3>{{ stats.totalBamboos }}</h3>
+            <p>竹子总数</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-content">
+          <mat-icon class="stat-icon" color="primary">assignment</mat-icon>
+          <div>
+            <h3>{{ stats.totalTasks }}</h3>
+            <p>任务总数</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div class="progress-section">
+    <mat-card class="progress-card">
+      <mat-card-header>
+        <mat-card-title>任务完成率</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="progress-circle">
+          <div class="progress-value">{{ stats.completionRate }}%</div>
+          <svg class="progress-ring" width="120" height="120">
+            <circle class="progress-ring-circle-bg" cx="60" cy="60" r="54"></circle>
+            <circle class="progress-ring-circle" 
+                    cx="60" cy="60" r="54"
+                    [style.stroke-dasharray]="getProgressDashArray()"
+                    [style.stroke-dashoffset]="getProgressDashOffset()"></circle>
+          </svg>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="task-status-card">
+      <mat-card-header>
+        <mat-card-title>任务状态分布</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="status-list">
+          <div class="status-item completed">
+            <mat-progress-bar mode="determinate" 
+                             [value]="stats.totalTasks > 0 ? (stats.completedTasks / stats.totalTasks * 100) : 0"
+                             color="primary"></mat-progress-bar>
+            <div class="status-info">
+              <span class="status-label">已完成</span>
+              <span class="status-count">{{ stats.completedTasks }}</span>
+            </div>
+          </div>
+          <div class="status-item in-progress">
+            <mat-progress-bar mode="determinate" 
+                             [value]="stats.totalTasks > 0 ? (stats.inProgressTasks / stats.totalTasks * 100) : 0"
+                             color="accent"></mat-progress-bar>
+            <div class="status-info">
+              <span class="status-label">进行中</span>
+              <span class="status-count">{{ stats.inProgressTasks }}</span>
+            </div>
+          </div>
+          <div class="status-item pending">
+            <mat-progress-bar mode="determinate" 
+                             [value]="stats.totalTasks > 0 ? (stats.pendingTasks / stats.totalTasks * 100) : 0"
+                             color="warn"></mat-progress-bar>
+            <div class="status-info">
+              <span class="status-label">待办</span>
+              <span class="status-count">{{ stats.pendingTasks }}</span>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+

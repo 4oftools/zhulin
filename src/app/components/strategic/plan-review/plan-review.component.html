@@ -1,0 +1,60 @@
+<div class="container">
+  <div class="header">
+    <h2>计划与回顾</h2>
+  </div>
+
+  <div class="review-selector">
+    <div class="form-group">
+      <label>回顾类型：</label>
+      <select [(ngModel)]="reviewType">
+        <option value="bamboo">竹子回顾</option>
+        <option value="field">竹田回顾</option>
+        <option value="forest">竹林回顾</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="selection-section">
+    <div class="card" *ngIf="reviewType === 'forest' || reviewType === 'field' || reviewType === 'bamboo'">
+      <h3>选择竹林</h3>
+      <div class="forests-list">
+        <button class="btn" [class.btn-primary]="selectedForest?.id === forest.id" 
+                *ngFor="let forest of forests" (click)="selectForest(forest)">
+          {{ forest.name }}
+        </button>
+      </div>
+    </div>
+
+    <div class="card" *ngIf="selectedForest && (reviewType === 'field' || reviewType === 'bamboo')">
+      <h3>选择竹田</h3>
+      <div class="fields-list">
+        <button class="btn" [class.btn-primary]="selectedField?.id === field.id" 
+                *ngFor="let field of selectedForest.bambooFields" (click)="selectField(field)">
+          {{ field.name }}
+        </button>
+      </div>
+    </div>
+
+    <div class="card" *ngIf="selectedField && reviewType === 'bamboo'">
+      <h3>选择竹子</h3>
+      <div class="bamboos-list">
+        <button class="btn" [class.btn-primary]="selectedBamboo?.id === bamboo.id" 
+                *ngFor="let bamboo of selectedField.bamboos" (click)="selectBamboo(bamboo)">
+          {{ bamboo.name }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" *ngIf="(reviewType === 'forest' && selectedForest) || 
+                           (reviewType === 'field' && selectedField) || 
+                           (reviewType === 'bamboo' && selectedBamboo)">
+    <h3>撰写回顾</h3>
+    <div class="form-group">
+      <label>回顾内容：</label>
+      <textarea [(ngModel)]="reviewContent" rows="10" placeholder="记录你的回顾和总结..."></textarea>
+    </div>
+    <button class="btn btn-primary" (click)="saveReview()">保存回顾</button>
+  </div>
+</div>
+

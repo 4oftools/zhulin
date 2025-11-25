@@ -1,0 +1,12 @@
+<div class="container">
+  <div class="card">
+    <h2>今日回顾</h2>
+    <p class="duration">时长：10分钟</p>
+    <div class="form-group">
+      <label>回顾内容：</label>
+      <textarea [(ngModel)]="reviewContent" rows="10" placeholder="记录今天的收获、问题和改进..."></textarea>
+    </div>
+    <button class="btn btn-primary" (click)="saveReview()">保存回顾</button>
+  </div>
+</div>
+

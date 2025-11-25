@@ -1,0 +1,88 @@
+<div class="container">
+  <div class="header">
+    <button class="btn btn-secondary" (click)="router.navigate(['/strategic/bamboos', field?.id])">← 返回竹子</button>
+    <h2>竹节管理 - {{ bamboo?.name }}</h2>
+  </div>
+
+  <div class="current-section" *ngIf="currentSection">
+    <div class="card current-section-card">
+      <h3>当前竹节：{{ getSectionTypeName(currentSection.type) }}</h3>
+      <p>开始时间：{{ currentSection.startTime | date:'HH:mm:ss' }}</p>
+      <p>持续时间：{{ currentSection.duration }} 分钟</p>
+      <button class="btn btn-primary" (click)="completeSection(currentSection.id)">完成</button>
+      <button class="btn btn-secondary" (click)="skipSection(currentSection.id)">跳过</button>
+    </div>
+  </div>
+
+  <div class="section-controls">
+    <div class="card">
+      <h3>开始新竹节</h3>
+      <div class="section-buttons">
+        <button class="btn btn-primary" 
+                (click)="startSection('planning', 10)" 
+                [disabled]="currentSection !== null">
+          制定计划 (10分钟)
+        </button>
+        <button class="btn btn-primary" 
+                (click)="startSection('sprint', 30)" 
+                [disabled]="currentSection !== null">
+          冲刺 (30分钟)
+        </button>
+        <button class="btn btn-primary" 
+                (click)="startSection('rest', 5)" 
+                [disabled]="currentSection !== null">
+          休息 (5分钟)
+        </button>
+        <button class="btn btn-primary" 
+                (click)="startSection('review', 10)" 
+                [disabled]="currentSection !== null">
+          今日回顾 (10分钟)
+        </button>
+      </div>
+      
+      <div *ngIf="tasks.length > 0" class="task-selection">
+        <h4>选择任务进行冲刺：</h4>
+        <div class="task-buttons">
+          <button class="btn btn-secondary" 
+                  *ngFor="let task of tasks" 
+                  (click)="startSection('sprint', 30, task.id)"
+                  [disabled]="currentSection !== null">
+            {{ task.name }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sections-history">
+    <div class="card">
+      <h3>竹节历史</h3>
+      <div class="sections-list">
+        <div class="section-item" *ngFor="let section of sections">
+          <div class="section-info">
+            <h4>{{ getSectionTypeName(section.type) }}</h4>
+            <p>开始时间：{{ section.startTime | date:'yyyy-MM-dd HH:mm:ss' }}</p>
+            <p *ngIf="section.endTime">结束时间：{{ section.endTime | date:'yyyy-MM-dd HH:mm:ss' }}</p>
+            <p>持续时间：{{ section.duration }} 分钟</p>
+          </div>
+          <div class="section-status">
+            <span class="badge" [ngClass]="{
+              'badge-info': section.status === 'scheduled',
+              'badge-warning': section.status === 'active',
+              'badge-success': section.status === 'completed',
+              'badge-danger': section.status === 'skipped'
+            }">
+              {{ section.status === 'scheduled' ? '已安排' : 
+                 section.status === 'active' ? '进行中' : 
+                 section.status === 'completed' ? '已完成' : '已跳过' }}
+            </span>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="sections.length === 0" class="empty-state">
+        <p>还没有竹节记录</p>
+      </div>
+    </div>
+  </div>
+</div>
+

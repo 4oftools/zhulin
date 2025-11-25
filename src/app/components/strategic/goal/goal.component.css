@@ -1,0 +1,64 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.header h2 {
+  margin: 0;
+  color: #333;
+}
+
+.goals-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.card.completed {
+  opacity: 0.7;
+  border-left: 4px solid #4CAF50;
+}
+
+.card.paused {
+  opacity: 0.8;
+  border-left: 4px solid #ff9800;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.card-header h3 {
+  margin: 0;
+  color: #333;
+}
+
+.goal-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.description {
+  color: #666;
+  margin: 10px 0;
+  line-height: 1.5;
+}
+
+.goal-meta {
+  margin-top: 15px;
+  display: flex;
+  gap: 20px;
+  color: #666;
+  font-size: 14px;
+}
+

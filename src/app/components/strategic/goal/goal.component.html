@@ -1,0 +1,59 @@
+<div class="container">
+  <div class="header">
+    <button class="btn btn-secondary" (click)="router.navigate(['/strategic/fields', forest?.id])">← 返回竹田</button>
+    <h2>目标管理 - {{ field?.name }}</h2>
+    <button class="btn btn-primary" (click)="showAddForm = !showAddForm" [disabled]="goals.length >= 7">
+      {{ showAddForm ? '取消' : '新建目标' }} ({{ goals.length }}/7)
+    </button>
+  </div>
+
+  <div class="card" *ngIf="showAddForm">
+    <h3>新建目标</h3>
+    <form (ngSubmit)="addGoal()">
+      <div class="form-group">
+        <label>名称：</label>
+        <input type="text" [(ngModel)]="newGoal.name" name="name" required>
+      </div>
+      <div class="form-group">
+        <label>描述：</label>
+        <textarea [(ngModel)]="newGoal.description" name="description"></textarea>
+      </div>
+      <div class="form-group">
+        <label>优先级：</label>
+        <input type="number" [(ngModel)]="newGoal.priority" name="priority" min="1" max="10" required>
+      </div>
+      <button type="submit" class="btn btn-primary">创建</button>
+    </form>
+  </div>
+
+  <div class="goals-list">
+    <div class="card" [class.completed]="goal.status === 'completed'" 
+         [class.paused]="goal.status === 'paused'"
+         *ngFor="let goal of goals">
+      <div class="card-header">
+        <h3>{{ goal.name }}</h3>
+        <div class="goal-actions">
+          <span class="badge" [ngClass]="{
+            'badge-success': goal.status === 'completed',
+            'badge-warning': goal.status === 'paused',
+            'badge-info': goal.status === 'active'
+          }">
+            {{ goal.status === 'active' ? '进行中' : goal.status === 'completed' ? '已完成' : '已暂停' }}
+          </span>
+          <button class="btn btn-secondary btn-small" (click)="toggleStatus(goal)">切换状态</button>
+          <button class="btn btn-danger btn-small" (click)="deleteGoal(goal.id)">删除</button>
+        </div>
+      </div>
+      <p *ngIf="goal.description" class="description">{{ goal.description }}</p>
+      <div class="goal-meta">
+        <span>优先级：{{ goal.priority }}</span>
+        <span>创建时间：{{ goal.createdAt | date:'yyyy-MM-dd' }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="goals.length === 0" class="empty-state">
+    <p>还没有创建任何目标，开始创建第一个吧！</p>
+  </div>
+</div>
+
