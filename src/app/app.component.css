@@ -2,23 +2,22 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  background: #f0f7f0;
 }
 
 .app-header {
+  background: linear-gradient(135deg, #2e7d32 0%, #4CAF50 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
   position: sticky;
   top: 0;
   z-index: 1000;
-  box-shadow: 0 2px 4px rgba(0,0,0,.1);
-}
-
-.app-header .mat-toolbar {
-  padding: 0 24px;
 }
 
 .header-content {
-  width: 100%;
   max-width: 1400px;
   margin: 0 auto;
+  padding: 16px 24px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -36,119 +35,152 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  cursor: pointer;
-  padding: 8px 12px;
-  border-radius: 8px;
-  transition: background-color 0.3s;
-}
-
-.logo:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-}
-
-.logo-icon-wrapper {
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.15) 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  transition: transform 0.3s, box-shadow 0.3s;
-}
-
-.logo:hover .logo-icon-wrapper {
-  transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .logo-icon {
-  font-size: 28px;
-  height: 28px;
-  width: 28px;
-  color: white;
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  animation: logoFloat 3s ease-in-out infinite;
+}
+
+@keyframes logoFloat {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+.logo-icon .bamboo-left,
+.logo-icon .bamboo-center,
+.logo-icon .bamboo-right {
+  animation: bambooGrow 2s ease-out;
+}
+
+@keyframes bambooGrow {
+  0% {
+    opacity: 0;
+    transform: scaleY(0);
+    transform-origin: bottom;
+  }
+  100% {
+    opacity: 1;
+    transform: scaleY(1);
+  }
 }
 
 .logo-text {
-  font-size: 20px;
-  font-weight: 600;
   margin: 0;
-  letter-spacing: 0.5px;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 1px;
 }
 
 .main-nav {
   display: flex;
-  gap: 4px;
+  gap: 8px;
 }
 
-.main-nav a.nav-item {
+.main-nav a {
+  color: white;
+  text-decoration: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  transition: all 0.3s;
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 16px;
-  border-radius: 8px;
-  transition: all 0.3s;
-  position: relative;
-  overflow: hidden;
+  font-size: 14px;
+  font-weight: 500;
 }
 
-.main-nav a.nav-item::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 3px;
-  height: 100%;
-  background: white;
-  transform: scaleY(0);
-  transition: transform 0.3s;
-}
-
-.main-nav a.nav-item:hover {
+.main-nav a:hover {
   background-color: rgba(255, 255, 255, 0.15);
+  transform: translateY(-1px);
 }
 
-.main-nav a.nav-item.active {
+.main-nav a.active {
   background-color: rgba(255, 255, 255, 0.25);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
-.main-nav a.nav-item.active::before {
-  transform: scaleY(1);
+.nav-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  color: currentColor;
+  transition: transform 0.2s ease;
 }
 
-.nav-icon-wrapper {
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.15);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s;
-}
-
-.main-nav a.nav-item:hover .nav-icon-wrapper {
-  background: rgba(255, 255, 255, 0.25);
+.main-nav a:hover .nav-icon {
   transform: scale(1.1);
 }
 
-.main-nav a.nav-item.active .nav-icon-wrapper {
-  background: rgba(255, 255, 255, 0.3);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.main-nav a.nav-item mat-icon {
-  font-size: 20px;
-  height: 20px;
-  width: 20px;
-  margin: 0;
+.main-nav a.active .nav-icon {
+  transform: scale(1.15);
+  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.5));
 }
 
 .header-right {
   display: flex;
   align-items: center;
+  gap: 24px;
+}
+
+.task-progress {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border-radius: 8px;
+  padding: 8px 12px;
+  min-width: 180px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.progress-label {
+  font-size: 11px;
+  opacity: 0.9;
+  font-weight: 500;
+}
+
+.progress-value {
+  font-size: 16px;
+  font-weight: 700;
+  color: #4CAF50;
+}
+
+.progress-bar {
+  height: 4px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 4px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4CAF50 0%, #45a049 100%);
+  border-radius: 2px;
+  transition: width 0.5s ease;
+  box-shadow: 0 0 8px rgba(76, 175, 80, 0.5);
+}
+
+.progress-stats {
+  font-size: 10px;
+  opacity: 0.8;
+  text-align: right;
+}
+
+.stat-item {
+  font-weight: 500;
 }
 
 .user-section {
@@ -156,18 +188,52 @@
   align-items: center;
 }
 
-.user-menu-header {
+.user-info {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 16px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  padding: 8px 16px;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.user-menu-header mat-icon {
-  font-size: 40px;
-  width: 40px;
-  height: 40px;
-  color: #666;
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #66BB6A 0%, #4CAF50 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  box-shadow: 0 2px 4px rgba(46, 125, 50, 0.3);
+}
+
+.user-name {
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.btn-logout,
+.btn-login {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 6px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.3s;
+}
+
+.btn-logout:hover,
+.btn-login:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
 }
 
 .app-main {

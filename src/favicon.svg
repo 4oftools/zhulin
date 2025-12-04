@@ -1,0 +1,42 @@
+<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <!-- 背景圆形 -->
+  <circle cx="60" cy="60" r="58" fill="#2e7d32" stroke="#4CAF50" stroke-width="2"/>
+  
+  <!-- 竹子主体 - 左侧 -->
+  <g>
+    <!-- 竹节 -->
+    <rect x="35" y="25" width="8" height="70" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+    <!-- 竹节分隔线 -->
+    <line x1="33" y1="35" x2="43" y2="35" stroke="white" stroke-width="2"/>
+    <line x1="33" y1="50" x2="43" y2="50" stroke="white" stroke-width="2"/>
+    <line x1="33" y1="65" x2="43" y2="65" stroke="white" stroke-width="2"/>
+    <line x1="33" y1="80" x2="43" y2="80" stroke="white" stroke-width="2"/>
+    <!-- 竹叶 -->
+    <path d="M 30 30 Q 20 25, 15 30" stroke="white" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <path d="M 30 30 Q 25 20, 20 15" stroke="white" stroke-width="2" fill="none" stroke-linecap="round"/>
+  </g>
+  
+  <!-- 竹子主体 - 中间 -->
+  <g>
+    <rect x="56" y="20" width="8" height="75" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="54" y1="32" x2="64" y2="32" stroke="white" stroke-width="2"/>
+    <line x1="54" y1="47" x2="64" y2="47" stroke="white" stroke-width="2"/>
+    <line x1="54" y1="62" x2="64" y2="62" stroke="white" stroke-width="2"/>
+    <line x1="54" y1="77" x2="64" y2="77" stroke="white" stroke-width="2"/>
+    <path d="M 51 25 Q 40 20, 35 25" stroke="white" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <path d="M 51 25 Q 46 15, 41 10" stroke="white" stroke-width="2" fill="none" stroke-linecap="round"/>
+  </g>
+  
+  <!-- 竹子主体 - 右侧 -->
+  <g>
+    <rect x="77" y="28" width="8" height="67" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="75" y1="38" x2="85" y2="38" stroke="white" stroke-width="2"/>
+    <line x1="75" y1="53" x2="85" y2="53" stroke="white" stroke-width="2"/>
+    <line x1="75" y1="68" x2="85" y2="68" stroke="white" stroke-width="2"/>
+    <line x1="75" y1="83" x2="85" y2="83" stroke="white" stroke-width="2"/>
+    <path d="M 90 33 Q 100 28, 105 33" stroke="white" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <path d="M 90 33 Q 95 23, 100 18" stroke="white" stroke-width="2" fill="none" stroke-linecap="round"/>
+  </g>
+</svg>
+
+

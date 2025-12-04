@@ -1,58 +1,112 @@
 <div class="app-container">
-  <mat-toolbar color="primary" class="app-header">
+  <header class="app-header">
     <div class="header-content">
       <div class="header-left">
         <div class="logo">
-          <div class="logo-icon-wrapper">
-            <mat-icon class="logo-icon">eco</mat-icon>
-          </div>
-          <span class="logo-text">竹林工作法</span>
+          <svg class="logo-icon" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+            <!-- 背景圆形 -->
+            <circle cx="60" cy="60" r="58" fill="rgba(255, 255, 255, 0.15)" stroke="rgba(255, 255, 255, 0.3)" stroke-width="2"/>
+            
+            <!-- 竹子主体 - 左侧 -->
+            <g class="bamboo-left">
+              <!-- 竹节 -->
+              <rect x="35" y="25" width="8" height="70" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+              <!-- 竹节分隔线 -->
+              <line x1="33" y1="35" x2="43" y2="35" stroke="white" stroke-width="2"/>
+              <line x1="33" y1="50" x2="43" y2="50" stroke="white" stroke-width="2"/>
+              <line x1="33" y1="65" x2="43" y2="65" stroke="white" stroke-width="2"/>
+              <line x1="33" y1="80" x2="43" y2="80" stroke="white" stroke-width="2"/>
+              <!-- 竹叶 -->
+              <path d="M 30 30 Q 20 25, 15 30" stroke="white" stroke-width="2" fill="none" stroke-linecap="round"/>
+              <path d="M 30 30 Q 25 20, 20 15" stroke="white" stroke-width="2" fill="none" stroke-linecap="round"/>
+            </g>
+            
+            <!-- 竹子主体 - 中间 -->
+            <g class="bamboo-center">
+              <rect x="56" y="20" width="8" height="75" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+              <line x1="54" y1="32" x2="64" y2="32" stroke="white" stroke-width="2"/>
+              <line x1="54" y1="47" x2="64" y2="47" stroke="white" stroke-width="2"/>
+              <line x1="54" y1="62" x2="64" y2="62" stroke="white" stroke-width="2"/>
+              <line x1="54" y1="77" x2="64" y2="77" stroke="white" stroke-width="2"/>
+              <path d="M 51 25 Q 40 20, 35 25" stroke="white" stroke-width="2" fill="none" stroke-linecap="round"/>
+              <path d="M 51 25 Q 46 15, 41 10" stroke="white" stroke-width="2" fill="none" stroke-linecap="round"/>
+            </g>
+            
+            <!-- 竹子主体 - 右侧 -->
+            <g class="bamboo-right">
+              <rect x="77" y="28" width="8" height="67" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+              <line x1="75" y1="38" x2="85" y2="38" stroke="white" stroke-width="2"/>
+              <line x1="75" y1="53" x2="85" y2="53" stroke="white" stroke-width="2"/>
+              <line x1="75" y1="68" x2="85" y2="68" stroke="white" stroke-width="2"/>
+              <line x1="75" y1="83" x2="85" y2="83" stroke="white" stroke-width="2"/>
+              <path d="M 90 33 Q 100 28, 105 33" stroke="white" stroke-width="2" fill="none" stroke-linecap="round"/>
+              <path d="M 90 33 Q 95 23, 100 18" stroke="white" stroke-width="2" fill="none" stroke-linecap="round"/>
+            </g>
+          </svg>
+          <h1 class="logo-text">竹林工作法</h1>
         </div>
         <nav class="main-nav">
-          <a mat-button routerLink="/dashboard" routerLinkActive="active" class="nav-item">
-            <div class="nav-icon-wrapper">
-              <mat-icon>dashboard</mat-icon>
-            </div>
+          <a routerLink="/dashboard" routerLinkActive="active">
+            <svg class="nav-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <!-- 仪表盘背景 -->
+              <rect x="3" y="3" width="18" height="18" rx="2" fill="none" stroke="currentColor" stroke-width="2"/>
+              <!-- 数据柱状图 -->
+              <rect x="6" y="14" width="3" height="4" fill="currentColor" opacity="0.8"/>
+              <rect x="10.5" y="10" width="3" height="8" fill="currentColor" opacity="0.8"/>
+              <rect x="15" y="7" width="3" height="11" fill="currentColor" opacity="0.8"/>
+              <!-- 趋势线 -->
+              <path d="M 6 16 L 10.5 12 L 15 8" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+            </svg>
             <span>大屏展示</span>
           </a>
-          <a mat-button routerLink="/strategic/forests" routerLinkActive="active" class="nav-item">
-            <div class="nav-icon-wrapper">
-              <mat-icon>track_changes</mat-icon>
-            </div>
+          <a routerLink="/strategic" routerLinkActive="active">
+            <svg class="nav-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <!-- 目标圆环 -->
+              <circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="2"/>
+              <circle cx="12" cy="12" r="4" fill="currentColor" opacity="0.3"/>
+              <!-- 中心点 -->
+              <circle cx="12" cy="12" r="1.5" fill="currentColor"/>
+              <!-- 竹子元素 - 左侧 -->
+              <line x1="4" y1="8" x2="4" y2="16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <line x1="3" y1="10" x2="5" y2="10" stroke="currentColor" stroke-width="1.5"/>
+              <line x1="3" y1="14" x2="5" y2="14" stroke="currentColor" stroke-width="1.5"/>
+              <!-- 竹子元素 - 右侧 -->
+              <line x1="20" y1="8" x2="20" y2="16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <line x1="19" y1="10" x2="21" y2="10" stroke="currentColor" stroke-width="1.5"/>
+              <line x1="19" y1="14" x2="21" y2="14" stroke="currentColor" stroke-width="1.5"/>
+            </svg>
             <span>战略管理</span>
           </a>
-          <a mat-button routerLink="/tactical/activities" routerLinkActive="active" class="nav-item">
-            <div class="nav-icon-wrapper">
-              <mat-icon>flash_on</mat-icon>
-            </div>
+          <a routerLink="/tactical/activities" routerLinkActive="active">
+            <svg class="nav-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <!-- 竹子与箭头组合 - 表示行动 -->
+              <g>
+                <!-- 竹子主体 -->
+                <line x1="8" y1="4" x2="8" y2="20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <line x1="7" y1="8" x2="9" y2="8" stroke="currentColor" stroke-width="1.5"/>
+                <line x1="7" y1="12" x2="9" y2="12" stroke="currentColor" stroke-width="1.5"/>
+                <line x1="7" y1="16" x2="9" y2="16" stroke="currentColor" stroke-width="1.5"/>
+                <!-- 箭头 - 表示执行 -->
+                <path d="M 14 8 L 20 12 L 14 16 Z" fill="currentColor" opacity="0.9"/>
+                <line x1="12" y1="12" x2="20" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </g>
+            </svg>
             <span>战术管理</span>
           </a>
         </nav>
       </div>
       <div class="header-right">
         <div class="user-section">
-          <button mat-icon-button [matMenuTriggerFor]="userMenu" *ngIf="isLoggedIn">
-            <mat-icon>account_circle</mat-icon>
-          </button>
-          <mat-menu #userMenu="matMenu">
-            <div class="user-menu-header">
-              <mat-icon>account_circle</mat-icon>
-              <span>{{ userName }}</span>
-            </div>
-            <mat-divider></mat-divider>
-            <button mat-menu-item (click)="logout()">
-              <mat-icon>exit_to_app</mat-icon>
-              <span>退出登录</span>
-            </button>
-          </mat-menu>
-          <button mat-raised-button color="accent" *ngIf="!isLoggedIn" (click)="login()">
-            <mat-icon>login</mat-icon>
-            <span>登录</span>
-          </button>
+          <div class="user-info" *ngIf="isLoggedIn">
+            <span class="user-avatar">{{ userName.charAt(0) }}</span>
+            <span class="user-name">{{ userName }}</span>
+            <button class="btn-logout" (click)="logout()" title="退出登录">退出</button>
+          </div>
+          <button class="btn-login" *ngIf="!isLoggedIn" (click)="login()">登录</button>
         </div>
       </div>
     </div>
-  </mat-toolbar>
+  </header>
   <main class="app-main">
     <router-outlet></router-outlet>
   </main>

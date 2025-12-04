@@ -29,26 +29,52 @@
 }
 
 .stat-card {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  display: flex;
+  align-items: center;
+  gap: 20px;
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .stat-card:hover {
   transform: translateY(-2px);
-}
-
-.stat-content {
-  display: flex;
-  align-items: center;
-  gap: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
 .stat-icon {
-  font-size: 48px;
   width: 80px;
   height: 80px;
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #66BB6A 0%, #4CAF50 100%);
+  flex-shrink: 0;
+}
+
+.stat-icon svg {
+  width: 100%;
+  height: 100%;
+  padding: 12px;
+}
+
+.stat-icon.forests {
+  background: linear-gradient(135deg, #2e7d32 0%, #4CAF50 100%);
+}
+
+.stat-icon.fields {
+  background: linear-gradient(135deg, #4CAF50 0%, #66BB6A 100%);
+}
+
+.stat-icon.bamboos {
+  background: linear-gradient(135deg, #66BB6A 0%, #81C784 100%);
+}
+
+.stat-icon.tasks {
+  background: linear-gradient(135deg, #8BC34A 0%, #4CAF50 100%);
 }
 
 .stat-content h3 {
@@ -72,7 +98,18 @@
 
 .progress-card,
 .task-status-card {
-  height: 100%;
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.progress-card h3,
+.task-status-card h3 {
+  margin: 0 0 20px 0;
+  font-size: 20px;
+  color: #333;
+  font-weight: 600;
 }
 
 .progress-circle {
@@ -89,7 +126,7 @@
   transform: translate(-50%, -50%);
   font-size: 28px;
   font-weight: 700;
-  color: #667eea;
+  color: #4CAF50;
 }
 
 .progress-ring {
@@ -104,7 +141,7 @@
 
 .progress-ring-circle {
   fill: none;
-  stroke: #667eea;
+  stroke: #4CAF50;
   stroke-width: 8;
   stroke-linecap: round;
   transition: stroke-dashoffset 0.5s ease;
@@ -117,23 +154,45 @@
 }
 
 .status-item {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  position: relative;
+  padding: 12px;
+  background: #f5f5f5;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
-.status-info {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.status-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  transition: width 0.5s ease;
+  opacity: 0.3;
+}
+
+.status-item.completed .status-bar {
+  background: #4CAF50;
+}
+
+.status-item.in-progress .status-bar {
+  background: #66BB6A;
+}
+
+.status-item.pending .status-bar {
+  background: #ff9800;
 }
 
 .status-label {
+  position: relative;
+  z-index: 1;
   font-weight: 500;
   color: #333;
 }
 
 .status-count {
+  position: relative;
+  z-index: 1;
+  float: right;
   font-weight: 600;
   color: #666;
 }

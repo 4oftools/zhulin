@@ -16,10 +16,12 @@ import { BambooSectionComponent } from './components/tactical/bamboo-section/bam
 
 // Dashboard
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { StrategicNavigationComponent } from './components/strategic/strategic-navigation/strategic-navigation.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
   { path: 'dashboard', component: DashboardComponent },
+  { path: 'strategic', component: StrategicNavigationComponent },
   { path: 'strategic/forests', component: BambooForestComponent },
   { path: 'strategic/fields/:forestId', component: BambooFieldComponent },
   { path: 'strategic/bamboos/:fieldId', component: BambooComponent },
