@@ -6,9 +6,7 @@ import { StrategicNavigationComponent } from './components/strategic/strategic-n
 import { BambooFieldsComponent } from './components/strategic/bamboo-fields/bamboo-fields.component';
 
 // Tactical
-import { ActivityListComponent } from './components/tactical/activity-list/activity-list.component';
-import { BambooTodoComponent } from './components/tactical/bamboo-todo/bamboo-todo.component';
-import { BambooSectionComponent } from './components/tactical/bamboo-section/bamboo-section.component';
+import { TacticalManagementComponent } from './components/tactical/tactical-management/tactical-management.component';
 
 // Dashboard
 import { DashboardComponent } from './components/dashboard/dashboard.component';
@@ -23,9 +21,7 @@ const routes: Routes = [
       { path: 'forests/:forestId', component: BambooFieldsComponent }
     ]
   },
-  { path: 'tactical/activities', component: ActivityListComponent },
-  { path: 'tactical/todo/:bambooId', component: BambooTodoComponent },
-  { path: 'tactical/sections/:bambooId', component: BambooSectionComponent }
+  { path: 'tactical', component: TacticalManagementComponent }
 ];
 
 @NgModule({

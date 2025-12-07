@@ -1,0 +1,355 @@
+<div class="tactical-management-container">
+  <!-- 左侧：活动列表 -->
+  <div class="activities-panel">
+    <div class="panel-header">
+      <h3>活动列表</h3>
+      <div class="header-actions">
+        <span class="badge">{{ activities.length }}</span>
+        <button class="btn-add-activity" (click)="openAddActivityDialog()" title="添加新活动">
+          <span appSvgIcon="assets/icons/common/add.svg"></span>
+        </button>
+      </div>
+    </div>
+    <div class="activities-list">
+      <div 
+        class="activity-item" 
+        *ngFor="let activity of activities"
+        [class.expanded]="activity.expanded">
+        <div class="activity-header" (click)="toggleActivityExpanded(activity, $event)">
+          <div class="activity-info">
+            <div class="activity-name">{{ activity.bamboo.name }}</div>
+            <div class="activity-meta" *ngIf="activity.bamboo.description">
+              {{ activity.bamboo.description }}
+            </div>
+            <div class="activity-stats">
+              <span>竹节数: {{ activity.sections.length }}</span>
+              <span class="status-badge" [class.completed]="activity.bamboo.completed">
+                {{ activity.bamboo.completed ? '已完成' : '进行中' }}
+              </span>
+            </div>
+          </div>
+          <button class="expand-btn" (click)="toggleActivityExpanded(activity, $event)">
+            <span [class.expanded]="activity.expanded">▼</span>
+          </button>
+        </div>
+        <div class="activity-sections" *ngIf="activity.expanded">
+          <div 
+            class="task-item" 
+            *ngFor="let section of activity.sections"
+            [class.selected]="selectedTask?.id === section.id"
+            [class.completed]="section.completed"
+            (click)="selectActivity(section)">
+            <input type="checkbox" 
+                   class="task-checkbox" 
+                   [checked]="section.completed"
+                   (change)="toggleSectionCompleted(section, $event)"
+                   (click)="$event.stopPropagation()"
+                   (mousedown)="$event.stopPropagation()">
+            <div class="task-content">
+              <div class="task-name" [class.completed]="section.completed">{{ section.name }}</div>
+              <div class="task-meta" *ngIf="section.description" [class.completed]="section.completed">{{ section.description }}</div>
+            </div>
+            <button class="task-delete-btn" 
+                    (click)="deleteSection(section, $event)"
+                    (mousedown)="$event.stopPropagation()"
+                    title="删除竹节">
+              <span appSvgIcon="assets/icons/common/delete.svg"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="empty-state" *ngIf="activities.length === 0">
+        <p>暂无活动</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 中间：竹内待办 -->
+  <div class="todos-panel">
+    <div class="panel-header">
+      <h3>竹内待办</h3>
+      <span class="badge" *ngIf="selectedBamboo">{{ selectedBamboo.name }}</span>
+    </div>
+    <div class="todos-list">
+      <div 
+        class="todo-item" 
+        *ngFor="let todo of bambooTodos"
+        [class.selected]="selectedTask?.id === todo.id"
+        (click)="selectedTask = todo">
+        <div class="todo-info">
+          <div class="todo-name">{{ todo.name }}</div>
+          <div class="todo-meta" *ngIf="todo.description">
+            {{ todo.description }}
+          </div>
+        </div>
+        <div class="todo-checkbox">
+          <input 
+            type="checkbox" 
+            [checked]="todo.completed"
+            (change)="toggleTodoComplete(todo, $event)"
+            (click)="$event.stopPropagation()">
+        </div>
+      </div>
+      <div class="empty-state" *ngIf="!selectedBamboo">
+        <p>请从活动列表中选择任务</p>
+      </div>
+      <div class="empty-state" *ngIf="selectedBamboo && bambooTodos.length === 0">
+        <p>该竹子暂无待办任务</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 中间偏右：定时器冲刺管理器 -->
+  <div class="timer-panel">
+    <div class="panel-header">
+      <h3>冲刺管理器</h3>
+    </div>
+    <div class="timer-content">
+      <!-- 当前状态显示 -->
+      <div class="timer-display">
+        <div class="timer-time">{{ formatTime(elapsedSeconds) }}</div>
+        <div class="timer-status">
+          <span *ngIf="timerStatus === 'idle'">待开始</span>
+          <span *ngIf="timerStatus === 'sprint'">冲刺中</span>
+          <span *ngIf="timerStatus === 'paused'">已暂停</span>
+          <span *ngIf="timerStatus === 'rest'">休息中</span>
+          <span *ngIf="timerStatus === 'break'">中断中</span>
+        </div>
+        <div class="timer-remaining" *ngIf="timerStatus !== 'idle'">
+          剩余: {{ getRemainingTime() }}
+        </div>
+      </div>
+
+      <!-- 当前任务显示 -->
+      <div class="current-task" *ngIf="selectedTask">
+        <div class="task-label">当前任务</div>
+        <div class="task-name">{{ selectedTask.name }}</div>
+      </div>
+
+      <!-- 控制按钮 -->
+      <div class="timer-controls">
+        <!-- 待开始状态：显示开始冲刺和开始休息 -->
+        <button 
+          class="btn btn-primary btn-large" 
+          *ngIf="timerStatus === 'idle'"
+          (click)="startSprint(selectedTask || undefined)">
+          开始冲刺
+        </button>
+        
+        <button 
+          class="btn btn-outline btn-large" 
+          *ngIf="timerStatus === 'idle'"
+          (click)="startRest()">
+          开始休息
+        </button>
+        
+        <!-- 冲刺中状态：显示暂停、完成冲刺、中断 -->
+        <button 
+          class="btn btn-secondary" 
+          *ngIf="timerStatus === 'sprint'"
+          (click)="pauseSprint()">
+          暂停
+        </button>
+        
+        <button 
+          class="btn btn-success" 
+          *ngIf="timerStatus === 'sprint'"
+          (click)="completeSprint()">
+          完成冲刺
+        </button>
+        
+        <button 
+          class="btn btn-danger" 
+          *ngIf="timerStatus === 'sprint'"
+          (click)="interruptSprint()">
+          中断
+        </button>
+        
+        <!-- 已暂停状态：显示恢复继续、完成冲刺、中断 -->
+        <button 
+          class="btn btn-primary" 
+          *ngIf="timerStatus === 'paused'"
+          (click)="resumeSprint()">
+          恢复继续
+        </button>
+        
+        <button 
+          class="btn btn-success" 
+          *ngIf="timerStatus === 'paused'"
+          (click)="completeSprint()">
+          完成冲刺
+        </button>
+        
+        <button 
+          class="btn btn-danger" 
+          *ngIf="timerStatus === 'paused'"
+          (click)="interruptSprint()">
+          中断
+        </button>
+        
+        <!-- 休息中状态：显示结束休息、继续冲刺 -->
+        <button 
+          class="btn btn-primary" 
+          *ngIf="timerStatus === 'rest'"
+          (click)="completeRest()">
+          结束休息
+        </button>
+        
+        <button 
+          class="btn btn-outline" 
+          *ngIf="timerStatus === 'rest'"
+          (click)="startSprint(selectedTask || undefined)">
+          继续冲刺
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 右侧：冲刺列表 -->
+  <div class="sprints-panel">
+    <div class="panel-header">
+      <h3>冲刺列表</h3>
+      <span class="badge">{{ sprintHistory.length }}</span>
+    </div>
+    <div class="sprints-list">
+      <div class="sprint-item" *ngFor="let sprint of sprintHistory">
+        <div class="sprint-info">
+          <div class="sprint-name">{{ sprint.taskName }}</div>
+          <div class="sprint-meta">
+            <span class="sprint-time">{{ formatTime(sprint.duration) }}</span>
+            <span class="sprint-status" [class.completed]="sprint.status === 'completed'"
+                  [class.interrupted]="sprint.status === 'interrupted'"
+                  [class.paused]="sprint.status === 'paused'">
+              {{ sprint.status === 'completed' ? '已完成' : 
+                 sprint.status === 'interrupted' ? '已中断' : '已暂停' }}
+            </span>
+          </div>
+          <div class="sprint-date">
+            {{ sprint.startTime | date:'yyyy-MM-dd HH:mm' }}
+          </div>
+        </div>
+      </div>
+      <div class="empty-state" *ngIf="sprintHistory.length === 0">
+        <p>暂无冲刺记录</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 添加活动对话框 -->
+  <div class="dialog-overlay" *ngIf="showAddActivityDialog" (click)="closeAddActivityDialog()">
+    <div class="dialog-content add-activity-dialog" (click)="$event.stopPropagation()">
+      <div class="dialog-header">
+        <h3>添加新活动</h3>
+        <button class="dialog-close" (click)="closeAddActivityDialog()">×</button>
+      </div>
+      <div class="dialog-body-three-column">
+        <!-- 左侧：竹林列表 -->
+        <div class="column forests-column">
+          <div class="column-header">
+            <h4>竹林</h4>
+          </div>
+          <div class="column-list">
+            <div 
+              class="list-item forest-item"
+              *ngFor="let forest of enabledForests"
+              [class.selected]="selectedForest?.id === forest.id"
+              (click)="selectForest(forest)">
+              <div class="item-content">
+                <span class="item-icon" appSvgIcon="assets/icons/strategic/forest.svg"></span>
+                <div class="item-info">
+                  <div class="item-name">{{ forest.name }}</div>
+                  <div class="item-meta">
+                    {{ forest.startDate | date:'yyyy-MM-dd' }} - {{ forest.endDate | date:'yyyy-MM-dd' }}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="empty-state" *ngIf="enabledForests.length === 0">
+              <p>暂无已启用的竹林</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 中间：竹田列表 -->
+        <div class="column fields-column" *ngIf="selectedForest">
+          <div class="column-header">
+            <h4>竹田</h4>
+            <span class="badge">{{ availableFields.length }}</span>
+          </div>
+          <div class="column-list">
+            <div 
+              class="list-item field-item"
+              *ngFor="let field of availableFields"
+              [class.selected]="selectedField?.id === field.id"
+              (click)="selectField(field)">
+              <div class="item-content">
+                <span class="item-icon" appSvgIcon="assets/icons/strategic/field.svg"></span>
+                <div class="item-info">
+                  <div class="item-name">{{ field.name }}</div>
+                  <div class="item-meta">
+                    {{ field.startDate | date:'yyyy-MM-dd' }} - {{ field.endDate | date:'yyyy-MM-dd' }}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="empty-state" *ngIf="availableFields.length === 0">
+              <p>该竹林暂无竹田</p>
+            </div>
+          </div>
+        </div>
+        <div class="column fields-column" *ngIf="!selectedForest">
+          <div class="column-header">
+            <h4>竹田</h4>
+          </div>
+          <div class="empty-state">
+            <p>请先选择竹林</p>
+          </div>
+        </div>
+
+        <!-- 右侧：竹子列表 -->
+        <div class="column bamboos-column" *ngIf="selectedField">
+          <div class="column-header">
+            <h4>竹子</h4>
+            <span class="badge">{{ availableBamboos.length }}</span>
+          </div>
+          <div class="column-list">
+            <div 
+              class="list-item bamboo-item"
+              *ngFor="let bamboo of availableBamboos"
+              [class.added]="isBambooAdded(bamboo)">
+              <div class="item-content">
+                <span class="item-icon" appSvgIcon="assets/icons/strategic/bamboo.svg"></span>
+                <div class="item-info">
+                  <div class="item-name" [class.completed]="bamboo.completed">{{ bamboo.name }}</div>
+                  <div class="item-meta">
+                    <span>竹节数: {{ (bamboo.tasks || []).length }}</span>
+                    <span class="status-badge completed" *ngIf="bamboo.completed">已完成</span>
+                    <span class="status-badge pending" *ngIf="!bamboo.completed">未完成</span>
+                    <span class="added-badge" *ngIf="isBambooAdded(bamboo)">已添加</span>
+                  </div>
+                </div>
+              </div>
+              <div class="item-action" *ngIf="!isBambooAdded(bamboo)">
+                <button class="btn-add" (click)="addBambooToActivities(bamboo, $event)" title="添加到活动列表">
+                  <span appSvgIcon="assets/icons/common/add.svg"></span>
+                </button>
+              </div>
+            </div>
+            <div class="empty-state" *ngIf="availableBamboos.length === 0">
+              <p>该竹田暂无竹子</p>
+            </div>
+          </div>
+        </div>
+        <div class="column bamboos-column" *ngIf="!selectedField">
+          <div class="column-header">
+            <h4>竹子</h4>
+          </div>
+          <div class="empty-state">
+            <p>请先选择竹田</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

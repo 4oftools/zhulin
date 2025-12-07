@@ -18,10 +18,15 @@
           <div class="item-info">
             <div class="item-name">
               {{ forest.name }}
-              <span class="archived-badge" *ngIf="forest.archived">已归档</span>
             </div>
             <div class="item-meta">
-              {{ forest.startDate | date:'yyyy-MM-dd' }} - {{ forest.endDate | date:'yyyy-MM-dd' }}
+              <div class="item-meta-date">
+                {{ forest.startDate | date:'yyyy-MM-dd' }} - {{ forest.endDate | date:'yyyy-MM-dd' }}
+              </div>
+              <div class="item-meta-status">
+                <span class="enabled-badge enabled" *ngIf="!forest.archived">已启用</span>
+                <span class="enabled-badge archived" *ngIf="forest.archived">已归档</span>
+              </div>
             </div>
           </div>
         </div>

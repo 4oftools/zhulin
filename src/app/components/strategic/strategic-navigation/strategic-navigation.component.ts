@@ -49,10 +49,8 @@ export class StrategicNavigationComponent implements OnInit {
   }
 
   selectForest(forest: BambooForest): void {
-    if (forest.archived) {
-      return; // 已归档的竹林不能选择
-    }
     // 导航到竹田页面（使用相对路径，因为现在是子路由）
+    // 归档的竹林也可以访问，只是显示"已归档"标签
     this.router.navigate(['forests', forest.id], { relativeTo: this.route });
   }
 
@@ -143,6 +141,7 @@ export class StrategicNavigationComponent implements OnInit {
       this.loadData();
     }
   }
+
 
   archiveForest(forest: BambooForest, event: Event): void {
     event.stopPropagation();

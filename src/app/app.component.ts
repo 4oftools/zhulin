@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService } from './services/data.service';
-import { TaskService } from './services/task.service';
-import { Task } from './models/task.model';
+import { BambooSection } from './models/bamboo-forest.model';
 
 @Component({
   selector: 'app-root',
@@ -22,8 +21,7 @@ export class AppComponent implements OnInit {
   };
 
   constructor(
-    private dataService: DataService,
-    private taskService: TaskService
+    private dataService: DataService
   ) {}
 
   ngOnInit(): void {
@@ -43,7 +41,7 @@ export class AppComponent implements OnInit {
 
   loadTaskProgress(): void {
     this.dataService.getForests().subscribe(forests => {
-      let allTasks: Task[] = [];
+      let allTasks: BambooSection[] = [];
       forests.forEach(forest => {
         forest.bambooFields.forEach(field => {
           field.bamboos.forEach(bamboo => {

@@ -142,7 +142,7 @@
               <input type="checkbox" 
                      class="task-checkbox" 
                      [checked]="task.completed"
-                     (change)="toggleTaskCompleted(task, $event)"
+                     (change)="toggleSectionCompleted(bamboo, task, $event)"
                      (click)="$event.stopPropagation()"
                      (mousedown)="$event.stopPropagation()">
               <div class="task-content">
@@ -150,7 +150,7 @@
                 <div class="task-meta" *ngIf="task.description" [class.completed]="task.completed">{{ task.description }}</div>
               </div>
               <button class="task-delete-btn" 
-                      (click)="deleteTask(bamboo, task, $event)"
+                      (click)="deleteSection(bamboo, task, $event)"
                       (mousedown)="$event.stopPropagation()"
                       title="删除竹节">
                 <span appSvgIcon="assets/icons/common/delete.svg"></span>
@@ -244,14 +244,14 @@
         <div class="form-group">
           <div class="task-list-header">
             <label>竹节列表</label>
-            <button type="button" class="btn-add-task" (click)="openTaskDialog()">
+            <button type="button" class="btn-add-task" (click)="openSectionDialog()">
               <span appSvgIcon="assets/icons/common/add.svg"></span>
               <span>添加竹节</span>
             </button>
           </div>
-          <div class="task-list-container" cdkDropList (cdkDropListDropped)="dropTask($event)">
+          <div class="task-list-container" cdkDropList (cdkDropListDropped)="dropSection($event)">
             <div class="task-list-item" 
-                 *ngFor="let task of dialogTasks; let i = index" 
+                 *ngFor="let task of dialogSections; let i = index" 
                  cdkDrag>
               <div class="task-list-item-content" cdkDragHandle>
                 <span class="drag-handle">⋮⋮</span>
@@ -261,15 +261,15 @@
                 </div>
               </div>
               <div class="task-list-item-actions">
-                <button type="button" class="btn-edit-task" (click)="openTaskDialog(task)" title="修改">
+                <button type="button" class="btn-edit-task" (click)="openSectionDialog(task)" title="修改">
                   <span appSvgIcon="assets/icons/common/edit.svg"></span>
                 </button>
-                <button type="button" class="btn-delete-task" (click)="deleteTaskFromDialog(task)" title="删除">
+                <button type="button" class="btn-delete-task" (click)="deleteSectionFromDialog(task)" title="删除">
                   <span appSvgIcon="assets/icons/common/delete.svg"></span>
                 </button>
               </div>
             </div>
-            <div class="task-list-empty" *ngIf="dialogTasks.length === 0">
+            <div class="task-list-empty" *ngIf="dialogSections.length === 0">
               <span>暂无竹节，点击"添加竹节"创建</span>
             </div>
           </div>
@@ -283,32 +283,32 @@
   </div>
 
   <!-- 竹节对话框 -->
-  <div class="dialog-overlay" *ngIf="showTaskDialog" (click)="closeTaskDialog()">
+  <div class="dialog-overlay" *ngIf="showSectionDialog" (click)="closeSectionDialog()">
     <div class="dialog-content task-dialog" (click)="$event.stopPropagation()">
       <div class="dialog-header">
-        <h3>{{ isEditingTask ? '修改竹节' : '新建竹节' }}</h3>
-        <button class="dialog-close" (click)="closeTaskDialog()">×</button>
+        <h3>{{ isEditingSection ? '修改竹节' : '新建竹节' }}</h3>
+        <button class="dialog-close" (click)="closeSectionDialog()">×</button>
       </div>
       <div class="dialog-body">
         <div class="form-group">
           <label>名称 <span class="required">*</span></label>
-          <input type="text" [(ngModel)]="newTask.name" placeholder="请输入竹节名称" required>
+          <input type="text" [(ngModel)]="newSection.name" placeholder="请输入竹节名称" required>
         </div>
         <div class="form-group">
           <label>描述</label>
-          <textarea [(ngModel)]="newTask.description" placeholder="请输入描述（可选）" rows="3"></textarea>
+          <textarea [(ngModel)]="newSection.description" placeholder="请输入描述（可选）" rows="3"></textarea>
         </div>
         <div class="form-group">
           <label>状态</label>
-          <select [(ngModel)]="newTask.completed">
+          <select [(ngModel)]="newSection.completed">
             <option [value]="false">未完成</option>
             <option [value]="true">已完成</option>
           </select>
         </div>
       </div>
       <div class="dialog-footer">
-        <button class="btn-cancel" (click)="closeTaskDialog()">取消</button>
-        <button class="btn-confirm" (click)="addTask()">{{ isEditingTask ? '保存' : '创建' }}</button>
+        <button class="btn-cancel" (click)="closeSectionDialog()">取消</button>
+        <button class="btn-confirm" (click)="addSection()">{{ isEditingSection ? '保存' : '创建' }}</button>
       </div>
     </div>
   </div>

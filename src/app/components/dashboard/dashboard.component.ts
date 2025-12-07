@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService } from '../../services/data.service';
-import { TaskService } from '../../services/task.service';
 import { BambooForest } from '../../models/bamboo-forest.model';
-import { Task } from '../../models/task.model';
+import { BambooSection } from '../../models/bamboo-forest.model';
 
 @Component({
   selector: 'app-dashboard',
@@ -12,7 +11,7 @@ import { Task } from '../../models/task.model';
 })
 export class DashboardComponent implements OnInit {
   forests: BambooForest[] = [];
-  allTasks: Task[] = [];
+  allTasks: BambooSection[] = [];
   stats = {
     totalForests: 0,
     totalFields: 0,
@@ -30,8 +29,7 @@ export class DashboardComponent implements OnInit {
   readonly CIRCLE_CIRCUMFERENCE = 2 * Math.PI * 54;
 
   constructor(
-    private dataService: DataService,
-    private taskService: TaskService
+    private dataService: DataService
   ) {}
 
   getProgressDashArray(): string {

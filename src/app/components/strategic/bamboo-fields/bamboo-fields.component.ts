@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DataService } from '../../../services/data.service';
 import { BambooForest, BambooField, Bamboo } from '../../../models/bamboo-forest.model';
-import { Task } from '../../../models/task.model';
+import { BambooSection } from '../../../models/bamboo-forest.model';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
@@ -55,11 +55,11 @@ export class BambooFieldsComponent implements OnInit {
   editingBambooId: string | null = null;
 
   // 竹节管理
-  dialogTasks: Task[] = [];
-  showTaskDialog = false;
-  isEditingTask = false;
-  editingTaskId: string | null = null;
-  newTask: {
+  dialogSections: BambooSection[] = [];
+  showSectionDialog = false;
+  isEditingSection = false;
+  editingSectionId: string | null = null;
+  newSection: {
     name: string;
     description: string;
     completed: boolean;
@@ -89,7 +89,7 @@ export class BambooFieldsComponent implements OnInit {
       this.forest = forests.find(f => f.id === forestId) || null;
       if (this.forest) {
         this.fields = this.forest.bambooFields.filter(f => !f.archived);
-        // 为每个竹子添加假任务数据（如果还没有任务）
+        // 为每个竹子添加假竹节数据（如果还没有竹节）
         this.addMockTasksToBamboos();
       } else {
         // 如果找不到竹林，重定向到战略管理页面
@@ -101,15 +101,15 @@ export class BambooFieldsComponent implements OnInit {
   addMockTasksToBamboos(): void {
     if (!this.forest) return;
     
-    const mockTasks: { [key: string]: Task[] } = {
+    const mockTasks: { [key: string]: BambooSection[] } = {
       'task1': [
         {
           id: 't1',
           bambooId: '',
           name: '完成项目需求分析',
           description: '梳理用户需求，编写需求文档',
-          type: 'regular',
-          status: 'in-progress',
+          type: 'regular' as const,
+          status: 'in-progress' as const,
           priority: 1,
           tags: ['重要', '紧急'],
           createdAt: new Date(),
@@ -120,8 +120,8 @@ export class BambooFieldsComponent implements OnInit {
           bambooId: '',
           name: '设计系统架构',
           description: '绘制架构图，确定技术栈',
-          type: 'regular',
-          status: 'pending',
+          type: 'regular' as const,
+          status: 'pending' as const,
           priority: 2,
           tags: ['设计'],
           createdAt: new Date(),
@@ -132,8 +132,8 @@ export class BambooFieldsComponent implements OnInit {
           bambooId: '',
           name: '代码审查',
           description: '审查团队提交的代码',
-          type: 'regular',
-          status: 'completed',
+          type: 'regular' as const,
+          status: 'completed' as const,
           priority: 3,
           tags: ['审查'],
           createdAt: new Date(),
@@ -146,8 +146,8 @@ export class BambooFieldsComponent implements OnInit {
           bambooId: '',
           name: '编写单元测试',
           description: '为核心功能编写测试用例',
-          type: 'regular',
-          status: 'pending',
+          type: 'regular' as const,
+          status: 'pending' as const,
           priority: 1,
           tags: ['测试'],
           createdAt: new Date(),
@@ -158,8 +158,8 @@ export class BambooFieldsComponent implements OnInit {
           bambooId: '',
           name: '优化数据库查询',
           description: '分析慢查询，优化SQL语句',
-          type: 'regular',
-          status: 'in-progress',
+          type: 'regular' as const,
+          status: 'in-progress' as const,
           priority: 2,
           tags: ['优化'],
           createdAt: new Date(),
@@ -172,8 +172,8 @@ export class BambooFieldsComponent implements OnInit {
           bambooId: '',
           name: '部署到生产环境',
           description: '配置服务器，部署应用',
-          type: 'regular',
-          status: 'pending',
+          type: 'regular' as const,
+          status: 'pending' as const,
           priority: 1,
           tags: ['部署'],
           createdAt: new Date(),
@@ -184,8 +184,8 @@ export class BambooFieldsComponent implements OnInit {
           bambooId: '',
           name: '性能测试',
           description: '进行压力测试和性能分析',
-          type: 'regular',
-          status: 'pending',
+          type: 'regular' as const,
+          status: 'pending' as const,
           priority: 2,
           tags: ['测试'],
           createdAt: new Date(),
@@ -196,8 +196,8 @@ export class BambooFieldsComponent implements OnInit {
           bambooId: '',
           name: '修复已知bug',
           description: '修复测试中发现的问题',
-          type: 'regular',
-          status: 'completed',
+          type: 'regular' as const,
+          status: 'completed' as const,
           priority: 1,
           tags: ['修复'],
           createdAt: new Date(),
@@ -209,15 +209,15 @@ export class BambooFieldsComponent implements OnInit {
     // 为每个竹田的每个竹子添加假任务
     this.fields.forEach((field, fieldIndex) => {
       field.bamboos.forEach((bamboo, bambooIndex) => {
-        // 如果竹子还没有任务，添加假任务
+        // 如果竹子还没有竹节，添加假竹节
         if (!bamboo.tasks || bamboo.tasks.length === 0) {
-          const taskKey = `task${(bambooIndex % 3) + 1}`;
-          const tasks = mockTasks[taskKey] || [];
-          // 为每个任务设置正确的 bambooId
-          bamboo.tasks = tasks.map(task => ({
-            ...task,
+          const sectionKey = `task${(bambooIndex % 3) + 1}`;
+          const sections = mockTasks[sectionKey] || [];
+          // 为每个竹节设置正确的 bambooId
+          bamboo.tasks = sections.map((section: BambooSection) => ({
+            ...section,
             bambooId: bamboo.id,
-            id: `${bamboo.id}-${task.id}`
+            id: `${bamboo.id}-${section.id}`
           }));
         }
       });
@@ -285,11 +285,11 @@ export class BambooFieldsComponent implements OnInit {
       // 从原竹田移除
       const [movedBamboo] = previousBamboos.splice(event.previousIndex, 1);
       
-      // 更新竹子的fieldId和所有任务的bambooId
+      // 更新竹子的fieldId和所有竹节的bambooId
       movedBamboo.fieldId = targetField.id;
       if (movedBamboo.tasks) {
-        movedBamboo.tasks = movedBamboo.tasks.map(task => ({
-          ...task,
+        movedBamboo.tasks = movedBamboo.tasks.map(section => ({
+          ...section,
           bambooId: movedBamboo.id
         }));
       }
@@ -416,7 +416,7 @@ export class BambooFieldsComponent implements OnInit {
         completed: bamboo.completed || false
       };
       // 复制竹节列表到对话框
-      this.dialogTasks = (bamboo.tasks || []).map(task => ({ ...task }));
+      this.dialogSections = (bamboo.tasks || []).map(section => ({ ...section }));
     } else {
       this.isEditingBamboo = false;
       this.editingBambooId = null;
@@ -428,7 +428,7 @@ export class BambooFieldsComponent implements OnInit {
         completed: false
       };
       // 新建时，竹节列表为空
-      this.dialogTasks = [];
+      this.dialogSections = [];
     }
     this.showBambooDialog = true;
     this.closeMenu();
@@ -437,8 +437,8 @@ export class BambooFieldsComponent implements OnInit {
   closeBambooDialog(): void {
     this.showBambooDialog = false;
     this.resetBambooForm();
-    this.dialogTasks = [];
-    this.closeTaskDialog();
+    this.dialogSections = [];
+    this.closeSectionDialog();
   }
 
   addBamboo(): void {
@@ -463,8 +463,8 @@ export class BambooFieldsComponent implements OnInit {
           description: this.newBamboo.description || '',
           completed: this.newBamboo.completed,
           completedAt: this.newBamboo.completed ? new Date() : undefined,
-          tasks: this.dialogTasks.map(task => ({
-            ...task,
+          tasks: this.dialogSections.map(section => ({
+            ...section,
             bambooId: currentBamboo.id
           })),
           updatedAt: new Date()
@@ -482,10 +482,10 @@ export class BambooFieldsComponent implements OnInit {
         description: this.newBamboo.description || '',
         completed: this.newBamboo.completed,
         completedAt: this.newBamboo.completed ? new Date() : undefined,
-        tasks: this.dialogTasks.map(task => ({
-          ...task,
+        tasks: this.dialogSections.map(section => ({
+          ...section,
           bambooId: bambooId,
-          id: task.id || this.generateId()
+          id: section.id || this.generateId()
         })),
         createdAt: new Date(),
         updatedAt: new Date()
@@ -598,43 +598,38 @@ export class BambooFieldsComponent implements OnInit {
     }
   }
 
-  toggleTaskCompleted(task: Task, event: Event): void {
+  toggleSectionCompleted(bamboo: Bamboo, section: BambooSection, event: Event): void {
     event.stopPropagation();
     if (!this.forest) return;
     
-    task.completed = !task.completed;
-    if (task.completed) {
-      task.completedAt = new Date();
+    section.completed = !section.completed;
+    if (section.completed) {
+      section.completedAt = new Date();
     } else {
-      task.completedAt = undefined;
+      section.completedAt = undefined;
     }
-    task.updatedAt = new Date();
+    section.updatedAt = new Date();
     
-    // 找到任务所属的竹子并更新
-    for (const field of this.fields) {
-      for (const bamboo of field.bamboos) {
-        const taskIndex = bamboo.tasks.findIndex(t => t.id === task.id);
-        if (taskIndex !== -1) {
-          bamboo.tasks[taskIndex] = task;
-          this.dataService.updateBamboo(bamboo);
-          if (this.forest) {
-            this.loadForest(this.forest.id);
-          }
-          return;
-        }
+    // 更新竹节
+    const sectionIndex = bamboo.tasks.findIndex(s => s.id === section.id);
+    if (sectionIndex !== -1) {
+      bamboo.tasks[sectionIndex] = section;
+      this.dataService.updateBamboo(bamboo);
+      if (this.forest) {
+        this.loadForest(this.forest.id);
       }
     }
   }
 
-  deleteTask(bamboo: Bamboo, task: Task, event: Event): void {
+  deleteSection(bamboo: Bamboo, section: BambooSection, event: Event): void {
     event.stopPropagation();
     if (!this.forest) return;
     
     if (confirm('确定要删除这个竹节吗？此操作不可恢复！')) {
-      // 从竹子的任务列表中移除该任务
-      const taskIndex = bamboo.tasks.findIndex(t => t.id === task.id);
-      if (taskIndex !== -1) {
-        bamboo.tasks.splice(taskIndex, 1);
+      // 从竹子的竹节列表中移除该竹节
+      const sectionIndex = bamboo.tasks.findIndex(s => s.id === section.id);
+      if (sectionIndex !== -1) {
+        bamboo.tasks.splice(sectionIndex, 1);
         bamboo.updatedAt = new Date();
         this.dataService.updateBamboo(bamboo);
         if (this.forest) {
@@ -645,87 +640,87 @@ export class BambooFieldsComponent implements OnInit {
   }
 
   // 竹节管理方法
-  openTaskDialog(task?: Task): void {
-    if (task) {
-      this.isEditingTask = true;
-      this.editingTaskId = task.id;
-      this.newTask = {
-        name: task.name,
-        description: task.description || '',
-        completed: task.completed || false
+  openSectionDialog(section?: BambooSection): void {
+    if (section) {
+      this.isEditingSection = true;
+      this.editingSectionId = section.id;
+      this.newSection = {
+        name: section.name,
+        description: section.description || '',
+        completed: section.completed || false
       };
     } else {
-      this.isEditingTask = false;
-      this.editingTaskId = null;
-      this.newTask = {
+      this.isEditingSection = false;
+      this.editingSectionId = null;
+      this.newSection = {
         name: '',
         description: '',
         completed: false
       };
     }
-    this.showTaskDialog = true;
+    this.showSectionDialog = true;
   }
 
-  closeTaskDialog(): void {
-    this.showTaskDialog = false;
-    this.isEditingTask = false;
-    this.editingTaskId = null;
-    this.newTask = {
+  closeSectionDialog(): void {
+    this.showSectionDialog = false;
+    this.isEditingSection = false;
+    this.editingSectionId = null;
+    this.newSection = {
       name: '',
       description: '',
       completed: false
     };
   }
 
-  addTask(): void {
-    if (!this.newTask.name) {
+  addSection(): void {
+    if (!this.newSection.name) {
       alert('请输入竹节名称');
       return;
     }
 
-    if (this.isEditingTask && this.editingTaskId) {
-      const taskIndex = this.dialogTasks.findIndex(t => t.id === this.editingTaskId);
-      if (taskIndex !== -1) {
-        this.dialogTasks[taskIndex] = {
-          ...this.dialogTasks[taskIndex],
-          name: this.newTask.name,
-          description: this.newTask.description,
-          completed: this.newTask.completed,
-          completedAt: this.newTask.completed ? new Date() : undefined,
+    if (this.isEditingSection && this.editingSectionId) {
+      const sectionIndex = this.dialogSections.findIndex(s => s.id === this.editingSectionId);
+      if (sectionIndex !== -1) {
+        this.dialogSections[sectionIndex] = {
+          ...this.dialogSections[sectionIndex],
+          name: this.newSection.name,
+          description: this.newSection.description,
+          completed: this.newSection.completed,
+          completedAt: this.newSection.completed ? new Date() : undefined,
           updatedAt: new Date()
         };
       }
     } else {
-      const task: Task = {
+      const section: BambooSection = {
         id: this.generateId(),
         bambooId: this.editingBambooId || '',
-        name: this.newTask.name,
-        description: this.newTask.description,
+        name: this.newSection.name,
+        description: this.newSection.description,
         type: 'regular',
         status: 'pending',
-        completed: this.newTask.completed,
-        completedAt: this.newTask.completed ? new Date() : undefined,
+        completed: this.newSection.completed,
+        completedAt: this.newSection.completed ? new Date() : undefined,
         priority: 0,
         tags: [],
         createdAt: new Date(),
         updatedAt: new Date()
       };
-      this.dialogTasks.push(task);
+      this.dialogSections.push(section);
     }
-    this.closeTaskDialog();
+    this.closeSectionDialog();
   }
 
-  deleteTaskFromDialog(task: Task): void {
+  deleteSectionFromDialog(section: BambooSection): void {
     if (confirm('确定要删除这个竹节吗？')) {
-      const index = this.dialogTasks.findIndex(t => t.id === task.id);
+      const index = this.dialogSections.findIndex(s => s.id === section.id);
       if (index !== -1) {
-        this.dialogTasks.splice(index, 1);
+        this.dialogSections.splice(index, 1);
       }
     }
   }
 
-  dropTask(event: CdkDragDrop<Task[]>): void {
-    moveItemInArray(this.dialogTasks, event.previousIndex, event.currentIndex);
+  dropSection(event: CdkDragDrop<BambooSection[]>): void {
+    moveItemInArray(this.dialogSections, event.previousIndex, event.currentIndex);
   }
 
   generateId(): string {

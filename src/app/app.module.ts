@@ -11,14 +11,7 @@ import { SvgIconDirective } from './directives/svg-icon.directive';
 import { BambooFieldsComponent } from './components/strategic/bamboo-fields/bamboo-fields.component';
 
 // Tactical Components
-import { ActivityListComponent } from './components/tactical/activity-list/activity-list.component';
-import { BambooTodoComponent } from './components/tactical/bamboo-todo/bamboo-todo.component';
-import { BambooSectionComponent } from './components/tactical/bamboo-section/bamboo-section.component';
-import { PlanningComponent } from './components/tactical/planning/planning.component';
-import { SprintComponent } from './components/tactical/sprint/sprint.component';
-import { RestComponent } from './components/tactical/rest/rest.component';
-import { InterruptionComponent } from './components/tactical/interruption/interruption.component';
-import { DailyReviewComponent } from './components/tactical/daily-review/daily-review.component';
+import { TacticalManagementComponent } from './components/tactical/tactical-management/tactical-management.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { StrategicNavigationComponent } from './components/strategic/strategic-navigation/strategic-navigation.component';
 
@@ -28,14 +21,7 @@ import { StrategicNavigationComponent } from './components/strategic/strategic-n
     DashboardComponent,
     StrategicNavigationComponent,
     BambooFieldsComponent,
-    ActivityListComponent,
-    BambooTodoComponent,
-    BambooSectionComponent,
-    PlanningComponent,
-    SprintComponent,
-    RestComponent,
-    InterruptionComponent,
-    DailyReviewComponent,
+    TacticalManagementComponent,
     SvgIconDirective
   ],
   imports: [

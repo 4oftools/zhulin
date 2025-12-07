@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { BambooForest, BambooField, Bamboo } from '../models/bamboo-forest.model';
-import { Goal } from '../models/goal.model';
-import { Task } from '../models/task.model';
+import { BambooSection } from '../models/bamboo-forest.model';
 
 @Injectable({
   providedIn: 'root'
@@ -229,69 +228,6 @@ export class DataService {
     this.saveToLocalStorage(forests);
   }
 
-  // Goal CRUD
-  addGoal(goal: Goal): void {
-    const forests = this.forestsSubject.value.map(forest => {
-      const field = forest.bambooFields.find(f => f.id === goal.fieldId);
-      if (field) {
-        const updatedField = {
-          ...field,
-          goals: [...field.goals, goal]
-        };
-        return {
-          ...forest,
-          bambooFields: forest.bambooFields.map(f =>
-            f.id === field.id ? updatedField : f
-          )
-        };
-      }
-      return forest;
-    });
-    this.forestsSubject.next(forests);
-    this.saveToLocalStorage(forests);
-  }
-
-  updateGoal(goal: Goal): void {
-    const forests = this.forestsSubject.value.map(forest => {
-      const field = forest.bambooFields.find(f => f.id === goal.fieldId);
-      if (field) {
-        const updatedField = {
-          ...field,
-          goals: field.goals.map(g => g.id === goal.id ? goal : g)
-        };
-        return {
-          ...forest,
-          bambooFields: forest.bambooFields.map(f =>
-            f.id === field.id ? updatedField : f
-          )
-        };
-      }
-      return forest;
-    });
-    this.forestsSubject.next(forests);
-    this.saveToLocalStorage(forests);
-  }
-
-  deleteGoal(fieldId: string, goalId: string): void {
-    const forests = this.forestsSubject.value.map(forest => {
-      const field = forest.bambooFields.find(f => f.id === fieldId);
-      if (field) {
-        const updatedField = {
-          ...field,
-          goals: field.goals.filter(g => g.id !== goalId)
-        };
-        return {
-          ...forest,
-          bambooFields: forest.bambooFields.map(f =>
-            f.id === field.id ? updatedField : f
-          )
-        };
-      }
-      return forest;
-    });
-    this.forestsSubject.next(forests);
-    this.saveToLocalStorage(forests);
-  }
 
   private loadFromLocalStorage(): BambooForest[] {
     const data = localStorage.getItem('zhulin-data');
@@ -324,7 +260,7 @@ export class DataService {
     const bamboo6Id = this.generateId();
     
     // 生成竹节（任务）
-    const generateTasks = (bambooId: string, count: number): Task[] => {
+    const generateTasks = (bambooId: string, count: number): BambooSection[] => {
       const taskNames = [
         '完成需求分析',
         '设计系统架构',
@@ -335,8 +271,8 @@ export class DataService {
         '文档编写',
         '部署上线'
       ];
-      const statuses: Task['status'][] = ['pending', 'in-progress', 'completed'];
-      const tasks: Task[] = [];
+      const statuses: BambooSection['status'][] = ['pending', 'in-progress', 'completed'];
+      const tasks: BambooSection[] = [];
       
       for (let i = 0; i < count; i++) {
         const status = statuses[i % statuses.length];
@@ -489,6 +425,7 @@ export class DataService {
       startDate: new Date(now.getTime() - 10 * 24 * 60 * 60 * 1000),
       endDate: new Date(now.getTime() + 12 * 24 * 60 * 60 * 1000),
       description: '2024年度的主要产品开发项目',
+      enabled: true,
       bambooFields: [field1, field2],
       createdAt: new Date(now.getTime() - 10 * 24 * 60 * 60 * 1000),
       updatedAt: new Date(now.getTime() + 12 * 24 * 60 * 60 * 1000)
@@ -500,6 +437,7 @@ export class DataService {
       startDate: new Date(now.getTime() - 15 * 24 * 60 * 60 * 1000),
       endDate: new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000),
       description: '产品长期战略规划和运营',
+      enabled: false, // 设置为禁用状态，用于测试
       bambooFields: [field3, field4],
       createdAt: new Date(now.getTime() - 15 * 24 * 60 * 60 * 1000),
       updatedAt: new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000)
@@ -523,6 +461,7 @@ export class DataService {
       endDate: new Date(forest.endDate),
       createdAt: new Date(forest.createdAt),
       updatedAt: new Date(forest.updatedAt),
+      enabled: forest.enabled !== undefined ? forest.enabled : true, // 默认为启用
       archived: forest.archived || false,
       archivedAt: forest.archivedAt ? new Date(forest.archivedAt) : undefined,
       bambooFields: forest.bambooFields.map((field: any) => ({

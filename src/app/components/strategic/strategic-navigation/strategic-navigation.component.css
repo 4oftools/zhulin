@@ -364,13 +364,9 @@
 }
 
 .list-item.archived {
-  opacity: 0.6;
-  background: #f0f0f0;
+  /* 归档的竹林仍然可以正常使用，只是标签不同 */
 }
 
-.list-item.archived:hover {
-  background: #e8e8e8;
-}
 
 .field-panel.archived {
   opacity: 0.7;
@@ -589,6 +585,20 @@
 .item-meta {
   font-size: 12px;
   color: #666;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.item-meta-date {
+  font-size: 12px;
+  color: #666;
+}
+
+.item-meta-status {
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .btn-delete {
@@ -622,6 +632,27 @@
   border-radius: 10px;
   font-size: 10px;
   font-weight: 500;
+}
+
+.enabled-badge {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 2px 6px;
+  background: #e0e0e0;
+  color: #666;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: 500;
+}
+
+.enabled-badge.enabled {
+  background: #c8e6c9;
+  color: #2e7d32;
+}
+
+.enabled-badge.archived {
+  background: #e0e0e0;
+  color: #757575;
 }
 
 .archived-badge-header {
