@@ -1,11 +1,15 @@
 .dashboard-container {
-  padding: 30px;
-  max-width: 1400px;
-  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .dashboard-header {
   margin-bottom: 30px;
+  width: 100%;
+  text-align: left;
 }
 
 .dashboard-header h2 {
@@ -26,6 +30,24 @@
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 20px;
   margin-bottom: 30px;
+  justify-items: stretch;
+  width: 100%;
+  max-width: 100%;
+}
+
+/* 确保在大屏幕上4个卡片均匀分布并居中 */
+@media (min-width: 1100px) {
+  .stats-grid {
+    grid-template-columns: repeat(4, 1fr);
+    max-width: 100%;
+  }
+}
+
+/* 中等屏幕显示2-3列 */
+@media (min-width: 768px) and (max-width: 1099px) {
+  .stats-grid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
 }
 
 .stat-card {
@@ -55,10 +77,11 @@
   flex-shrink: 0;
 }
 
-.stat-icon svg {
+.stat-icon img {
   width: 100%;
   height: 100%;
   padding: 12px;
+  object-fit: contain;
 }
 
 .stat-icon.forests {
@@ -94,6 +117,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
   gap: 20px;
+  width: 100%;
 }
 
 .progress-card,

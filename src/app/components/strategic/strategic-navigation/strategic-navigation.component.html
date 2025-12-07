@@ -1,26 +1,53 @@
-<div class="strategic-navigation-container">
+<div class="strategic-navigation-container" (click)="closeMenu()">
   <!-- 左侧：竹林列表 -->
   <div class="left-panel">
     <div class="panel-header">
       <h3>竹林</h3>
-      <button class="btn-add" (click)="openForestDialog()" title="新建竹林">+</button>
+      <button class="btn-add" (click)="openForestDialog()" title="新建竹林">
+        <span appSvgIcon="assets/icons/common/add.svg"></span>
+      </button>
     </div>
     <div class="list-container">
       <div 
         class="list-item" 
-        [class.active]="selectedForest?.id === forest.id"
-        *ngFor="let forest of forests"
-        (click)="selectForest(forest)">
-        <div class="item-content">
-          <span class="item-icon">🌲</span>
+        [class.active]="router.url.includes('/strategic/forests/' + forest.id)"
+        [class.archived]="forest.archived"
+        *ngFor="let forest of forests">
+        <div class="item-content" (click)="selectForest(forest)">
+          <span class="item-icon" appSvgIcon="assets/icons/strategic/forest.svg"></span>
           <div class="item-info">
-            <div class="item-name">{{ forest.name }}</div>
+            <div class="item-name">
+              {{ forest.name }}
+              <span class="archived-badge" *ngIf="forest.archived">已归档</span>
+            </div>
             <div class="item-meta">
               {{ forest.startDate | date:'yyyy-MM-dd' }} - {{ forest.endDate | date:'yyyy-MM-dd' }}
             </div>
           </div>
         </div>
-        <button class="btn-delete" (click)="deleteForest(forest, $event)" title="删除">×</button>
+        <div class="item-actions">
+          <div class="menu-container">
+            <button class="btn-menu" (click)="toggleMenu('forest-' + forest.id, $event)" title="更多操作">
+              <span class="dot"></span>
+              <span class="dot"></span>
+              <span class="dot"></span>
+            </button>
+            <div class="dropdown-menu" *ngIf="openMenuId === 'forest-' + forest.id">
+              <button class="menu-item" (click)="openForestDialog(forest)">
+                <span class="menu-icon" appSvgIcon="assets/icons/common/edit.svg"></span>
+                <span>修改</span>
+              </button>
+              <button class="menu-item" (click)="archiveForest(forest, $event)">
+                <span class="menu-icon" [appSvgIcon]="forest.archived ? 'assets/icons/common/unarchive.svg' : 'assets/icons/common/archive.svg'"></span>
+                <span>{{ forest.archived ? '取消归档' : '归档' }}</span>
+              </button>
+              <button class="menu-item danger" (click)="deleteForest(forest, $event)">
+                <span class="menu-icon" appSvgIcon="assets/icons/common/delete.svg"></span>
+                <span>删除</span>
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
       <div *ngIf="forests.length === 0" class="empty-state">
         <p>还没有竹林，点击 + 创建</p>
@@ -28,88 +55,16 @@
     </div>
   </div>
 
-  <!-- 中间：竹田列表 -->
-  <div class="middle-panel">
-    <div class="panel-header">
-      <h3>竹田</h3>
-      <button class="btn-add" (click)="openFieldDialog()" [disabled]="!selectedForest" title="新建竹田">+</button>
-    </div>
-    <div class="list-container">
-      <div 
-        class="list-item" 
-        [class.active]="selectedField?.id === field.id"
-        *ngFor="let field of fields"
-        (click)="selectField(field)">
-        <div class="item-content">
-          <span class="item-icon">🌾</span>
-          <div class="item-info">
-            <div class="item-name">{{ field.name }}</div>
-            <div class="item-meta">
-              {{ field.startDate | date:'yyyy-MM-dd' }} - {{ field.endDate | date:'yyyy-MM-dd' }}
-            </div>
-          </div>
-        </div>
-        <button class="btn-delete" (click)="deleteField(field, $event)" title="删除">×</button>
-      </div>
-      <div *ngIf="!selectedForest" class="empty-state">
-        <p>请先选择竹林</p>
-      </div>
-      <div *ngIf="selectedForest && fields.length === 0" class="empty-state">
-        <p>还没有竹田，点击 + 创建</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- 右侧：竹子卡片列表 -->
-  <div class="right-panel">
-    <div class="panel-header">
-      <h3>竹子</h3>
-      <button class="btn-add" (click)="openBambooDialog()" [disabled]="!selectedField" title="新建竹子">+</button>
-    </div>
-    <div class="cards-container">
-      <div class="bamboo-card" *ngFor="let bamboo of bamboos">
-        <div class="card-header">
-          <span class="card-icon">🎋</span>
-          <h4>{{ bamboo.name }}</h4>
-          <button class="btn-delete-card" (click)="deleteBamboo(bamboo)" title="删除">×</button>
-        </div>
-        <div class="card-body">
-          <div class="card-meta">
-            <span class="meta-item">
-              <span class="meta-label">开始：</span>
-              {{ bamboo.startDate | date:'yyyy-MM-dd' }}
-            </span>
-            <span class="meta-item">
-              <span class="meta-label">结束：</span>
-              {{ bamboo.endDate | date:'yyyy-MM-dd' }}
-            </span>
-          </div>
-          <div class="card-stats">
-            <span class="stat-badge">
-              <span class="stat-label">任务数：</span>
-              <span class="stat-value">{{ (bamboo.tasks || []).length }}</span>
-            </span>
-          </div>
-          <div class="card-actions">
-            <a [routerLink]="['/strategic/tasks', bamboo.id]" class="btn-card-action">管理任务</a>
-            <a [routerLink]="['/tactical/todo', bamboo.id]" class="btn-card-action">竹内待办</a>
-          </div>
-        </div>
-      </div>
-      <div *ngIf="!selectedField" class="empty-state">
-        <p>请先选择竹田</p>
-      </div>
-      <div *ngIf="selectedField && bamboos.length === 0" class="empty-state">
-        <p>还没有竹子，点击 + 创建</p>
-      </div>
-    </div>
+  <!-- 右侧：竹田面板（通过路由加载） -->
+  <div class="fields-section">
+    <router-outlet></router-outlet>
   </div>
 
   <!-- 竹林对话框 -->
   <div class="dialog-overlay" *ngIf="showForestDialog" (click)="closeForestDialog()">
     <div class="dialog-content" (click)="$event.stopPropagation()">
       <div class="dialog-header">
-        <h3>新建竹林</h3>
+        <h3>{{ isEditingForest ? '修改竹林' : '新建竹林' }}</h3>
         <button class="dialog-close" (click)="closeForestDialog()">×</button>
       </div>
       <div class="dialog-body">
@@ -132,73 +87,10 @@
       </div>
       <div class="dialog-footer">
         <button class="btn-cancel" (click)="closeForestDialog()">取消</button>
-        <button class="btn-confirm" (click)="addForest()">创建</button>
+        <button class="btn-confirm" (click)="addForest()">{{ isEditingForest ? '保存' : '创建' }}</button>
       </div>
     </div>
   </div>
 
-  <!-- 竹田对话框 -->
-  <div class="dialog-overlay" *ngIf="showFieldDialog" (click)="closeFieldDialog()">
-    <div class="dialog-content" (click)="$event.stopPropagation()">
-      <div class="dialog-header">
-        <h3>新建竹田</h3>
-        <button class="dialog-close" (click)="closeFieldDialog()">×</button>
-      </div>
-      <div class="dialog-body">
-        <div class="form-group">
-          <label>名称 <span class="required">*</span></label>
-          <input type="text" [(ngModel)]="newField.name" placeholder="请输入竹田名称" required>
-        </div>
-        <div class="form-group">
-          <label>开始日期 <span class="required">*</span></label>
-          <input type="date" [(ngModel)]="newField.startDate" required>
-        </div>
-        <div class="form-group">
-          <label>结束日期 <span class="required">*</span></label>
-          <input type="date" [(ngModel)]="newField.endDate" required>
-        </div>
-        <div class="form-group">
-          <label>描述</label>
-          <textarea [(ngModel)]="newField.description" placeholder="请输入描述（可选）" rows="3"></textarea>
-        </div>
-      </div>
-      <div class="dialog-footer">
-        <button class="btn-cancel" (click)="closeFieldDialog()">取消</button>
-        <button class="btn-confirm" (click)="addField()">创建</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- 竹子对话框 -->
-  <div class="dialog-overlay" *ngIf="showBambooDialog" (click)="closeBambooDialog()">
-    <div class="dialog-content" (click)="$event.stopPropagation()">
-      <div class="dialog-header">
-        <h3>新建竹子</h3>
-        <button class="dialog-close" (click)="closeBambooDialog()">×</button>
-      </div>
-      <div class="dialog-body">
-        <div class="form-group">
-          <label>名称 <span class="required">*</span></label>
-          <input type="text" [(ngModel)]="newBamboo.name" placeholder="请输入竹子名称" required>
-        </div>
-        <div class="form-group">
-          <label>开始日期 <span class="required">*</span></label>
-          <input type="date" [(ngModel)]="newBamboo.startDate" required>
-        </div>
-        <div class="form-group">
-          <label>结束日期 <span class="required">*</span></label>
-          <input type="date" [(ngModel)]="newBamboo.endDate" required>
-        </div>
-        <div class="form-group">
-          <label>描述</label>
-          <textarea [(ngModel)]="newBamboo.description" placeholder="请输入描述（可选）" rows="3"></textarea>
-        </div>
-      </div>
-      <div class="dialog-footer">
-        <button class="btn-cancel" (click)="closeBambooDialog()">取消</button>
-        <button class="btn-confirm" (click)="addBamboo()">创建</button>
-      </div>
-    </div>
-  </div>
 </div>
 

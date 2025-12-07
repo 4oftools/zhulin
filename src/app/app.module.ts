@@ -1,16 +1,14 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { SvgIconDirective } from './directives/svg-icon.directive';
 
 // Strategic Components
-import { BambooForestComponent } from './components/strategic/bamboo-forest/bamboo-forest.component';
-import { BambooFieldComponent } from './components/strategic/bamboo-field/bamboo-field.component';
-import { BambooComponent } from './components/strategic/bamboo/bamboo.component';
-import { GoalComponent } from './components/strategic/goal/goal.component';
-import { TaskComponent } from './components/strategic/task/task.component';
-import { PlanReviewComponent } from './components/strategic/plan-review/plan-review.component';
+import { BambooFieldsComponent } from './components/strategic/bamboo-fields/bamboo-fields.component';
 
 // Tactical Components
 import { ActivityListComponent } from './components/tactical/activity-list/activity-list.component';
@@ -29,12 +27,7 @@ import { StrategicNavigationComponent } from './components/strategic/strategic-n
     AppComponent,
     DashboardComponent,
     StrategicNavigationComponent,
-    BambooForestComponent,
-    BambooFieldComponent,
-    BambooComponent,
-    GoalComponent,
-    TaskComponent,
-    PlanReviewComponent,
+    BambooFieldsComponent,
     ActivityListComponent,
     BambooTodoComponent,
     BambooSectionComponent,
@@ -42,12 +35,15 @@ import { StrategicNavigationComponent } from './components/strategic/strategic-n
     SprintComponent,
     RestComponent,
     InterruptionComponent,
-    DailyReviewComponent
+    DailyReviewComponent,
+    SvgIconDirective
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    FormsModule
+    FormsModule,
+    HttpClientModule,
+    DragDropModule
   ],
   providers: [],
   bootstrap: [AppComponent]

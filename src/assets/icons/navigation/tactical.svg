@@ -1,0 +1,14 @@
+<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <!-- 竹子与箭头组合 - 表示行动 -->
+  <g>
+    <!-- 竹子主体 -->
+    <line x1="8" y1="4" x2="8" y2="20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    <line x1="7" y1="8" x2="9" y2="8" stroke="currentColor" stroke-width="1.5"/>
+    <line x1="7" y1="12" x2="9" y2="12" stroke="currentColor" stroke-width="1.5"/>
+    <line x1="7" y1="16" x2="9" y2="16" stroke="currentColor" stroke-width="1.5"/>
+    <!-- 箭头 - 表示执行 -->
+    <path d="M 14 8 L 20 12 L 14 16 Z" fill="currentColor" opacity="0.9"/>
+    <line x1="12" y1="12" x2="20" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  </g>
+</svg>
+

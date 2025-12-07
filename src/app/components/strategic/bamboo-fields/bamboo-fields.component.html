@@ -1,0 +1,316 @@
+<div class="fields-section" (click)="closeMenu()">
+  <div class="fields-header" *ngIf="forest">
+    <div class="fields-header-left">
+      <h3 class="fields-header-title">
+        <span class="header-icon" appSvgIcon="assets/icons/strategic/forest-white.svg"></span>
+        <span>{{ forest.name }}</span>
+      </h3>
+      <div class="fields-header-meta">
+        <span class="header-meta-item">
+          {{ forest.startDate | date:'yyyy-MM-dd' }} - {{ forest.endDate | date:'yyyy-MM-dd' }}
+        </span>
+      </div>
+    </div>
+    <div class="fields-header-actions">
+      <button class="header-action-btn" (click)="openFieldDialog()" title="新建竹田">
+        <span class="btn-icon" appSvgIcon="assets/icons/common/add.svg"></span>
+        <span class="btn-text">新建竹田</span>
+      </button>
+      <div class="header-actions-divider"></div>
+      <button class="header-action-btn" (click)="openGoalDialog()" title="目标管理">
+        <span class="btn-icon" appSvgIcon="assets/icons/strategic/goal.svg"></span>
+        <span class="btn-text">目标管理</span>
+      </button>
+      <button class="header-action-btn" (click)="openKeyOutputDialog()" title="关键产出管理">
+        <span class="btn-icon" appSvgIcon="assets/icons/strategic/key-output.svg"></span>
+        <span class="btn-text">关键产出</span>
+      </button>
+      <button class="header-action-btn" (click)="openLearningDialog()" title="习得管理">
+        <span class="btn-icon" appSvgIcon="assets/icons/strategic/learning.svg"></span>
+        <span class="btn-text">习得管理</span>
+      </button>
+      <button class="header-action-btn" (click)="openFieldDialog(selectedField || undefined)" title="修改竹田">
+        <span class="btn-icon" appSvgIcon="assets/icons/common/edit.svg"></span>
+        <span class="btn-text">修改</span>
+      </button>
+    </div>
+  </div>
+  <div class="fields-panel-container" 
+       cdkDropList 
+       (cdkDropListDropped)="dropField($event)"
+       [cdkDropListDisabled]="!forest"
+       cdkDropListGroup>
+    <div 
+      class="field-panel" 
+      *ngFor="let field of fields; let i = index"
+      cdkDrag
+      [class.active]="selectedField?.id === field.id"
+      [class.archived]="field.archived"
+      [cdkDragDisabled]="field.archived"
+      (click)="selectField(field)">
+        <div class="panel-header" cdkDragHandle>
+          <h3>
+            {{ field.name }}
+            <span class="archived-badge-header" *ngIf="field.archived">已归档</span>
+          </h3>
+          <div class="panel-header-actions">
+            <button class="btn-add" (click)="openBambooDialog(field, undefined, $event)" [disabled]="field.archived" title="新建竹子">
+              <span appSvgIcon="assets/icons/common/add.svg"></span>
+            </button>
+            <div class="menu-container">
+              <button class="btn-menu" (click)="toggleMenu('field-' + field.id, $event)" title="更多操作">
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+              </button>
+              <div class="dropdown-menu" *ngIf="openMenuId === 'field-' + field.id">
+                <button class="menu-item" (click)="openFieldDialog(field)">
+                  <span class="menu-icon" appSvgIcon="assets/icons/common/edit.svg"></span>
+                  <span>修改</span>
+                </button>
+                <button class="menu-item" (click)="archiveField(field, $event)">
+                  <span class="menu-icon" [appSvgIcon]="field.archived ? 'assets/icons/common/unarchive.svg' : 'assets/icons/common/archive.svg'"></span>
+                  <span>{{ field.archived ? '取消归档' : '归档' }}</span>
+                </button>
+                <button class="menu-item danger" (click)="deleteField(field, $event)">
+                  <span class="menu-icon" appSvgIcon="assets/icons/common/delete.svg"></span>
+                  <span>删除</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="list-container"
+             cdkDropList
+             [id]="'bamboo-list-' + field.id"
+             [cdkDropListData]="field.bamboos"
+             (cdkDropListDropped)="dropBamboo($event)"
+             [cdkDropListDisabled]="field.archived">
+        <div 
+          class="list-item bamboo-item" 
+          *ngFor="let bamboo of field.bamboos"
+          cdkDrag
+          [cdkDragDisabled]="bamboo.archived"
+          (click)="$event.stopPropagation()">
+          <div class="bamboo-header">
+            <div class="item-content" cdkDragHandle>
+              <span class="item-icon" appSvgIcon="assets/icons/strategic/bamboo.svg"></span>
+              <input type="checkbox" 
+                     class="bamboo-checkbox" 
+                     [checked]="bamboo.completed"
+                     (change)="toggleBambooCompleted(bamboo, $event)"
+                     (click)="$event.stopPropagation()"
+                     (mousedown)="$event.stopPropagation()">
+              <div class="item-info">
+                <div class="item-name" [class.completed]="bamboo.completed">{{ bamboo.name }}</div>
+                <div class="item-meta">
+                  {{ bamboo.startDate | date:'yyyy-MM-dd' }} - {{ bamboo.endDate | date:'yyyy-MM-dd' }}
+                </div>
+              </div>
+            </div>
+            <div class="item-actions" (mousedown)="$event.stopPropagation()" (click)="$event.stopPropagation()" (touchstart)="$event.stopPropagation()">
+              <div class="menu-container">
+                <button class="btn-menu-small" 
+                        (click)="toggleMenu('bamboo-' + bamboo.id, $event)" 
+                        (mousedown)="$event.stopPropagation(); $event.preventDefault()" 
+                        (touchstart)="$event.stopPropagation()"
+                        (pointerdown)="$event.stopPropagation()"
+                        title="更多操作">
+                  <span class="dot"></span>
+                  <span class="dot"></span>
+                  <span class="dot"></span>
+                </button>
+                <div class="dropdown-menu" *ngIf="openMenuId === 'bamboo-' + bamboo.id">
+                  <button class="menu-item" (click)="openBambooDialog(field, bamboo, $event)">
+                    <span class="menu-icon" appSvgIcon="assets/icons/common/edit.svg"></span>
+                    <span>修改</span>
+                  </button>
+                  <button class="menu-item" (click)="archiveBamboo(bamboo, $event)">
+                    <span class="menu-icon" appSvgIcon="assets/icons/common/archive.svg"></span>
+                    <span>归档</span>
+                  </button>
+                  <button class="menu-item danger" (click)="deleteBamboo(bamboo, $event)">
+                    <span class="menu-icon" appSvgIcon="assets/icons/common/delete.svg"></span>
+                    <span>删除</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="bamboo-tasks" *ngIf="(bamboo.tasks || []).length > 0">
+            <div class="task-item" *ngFor="let task of bamboo.tasks">
+              <input type="checkbox" 
+                     class="task-checkbox" 
+                     [checked]="task.completed"
+                     (change)="toggleTaskCompleted(task, $event)"
+                     (click)="$event.stopPropagation()"
+                     (mousedown)="$event.stopPropagation()">
+              <div class="task-content">
+                <div class="task-name" [class.completed]="task.completed">{{ task.name }}</div>
+                <div class="task-meta" *ngIf="task.description" [class.completed]="task.completed">{{ task.description }}</div>
+              </div>
+              <button class="task-delete-btn" 
+                      (click)="deleteTask(bamboo, task, $event)"
+                      (mousedown)="$event.stopPropagation()"
+                      title="删除竹节">
+                <span appSvgIcon="assets/icons/common/delete.svg"></span>
+              </button>
+            </div>
+          </div>
+          <div class="bamboo-tasks-empty" *ngIf="(bamboo.tasks || []).length === 0">
+            <span class="empty-text">暂无竹节</span>
+          </div>
+        </div>
+        <div *ngIf="field.bamboos.length === 0" class="empty-state">
+          <p>还没有竹子，点击 + 创建</p>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="!forest" class="empty-state-large">
+      <p>请先选择竹林</p>
+    </div>
+    <div *ngIf="forest && fields.length === 0" class="empty-state-large">
+      <p>还没有竹田，点击上方 + 创建</p>
+    </div>
+  </div>
+
+  <!-- 竹田对话框 -->
+  <div class="dialog-overlay" *ngIf="showFieldDialog" (click)="closeFieldDialog()">
+    <div class="dialog-content" (click)="$event.stopPropagation()">
+      <div class="dialog-header">
+        <h3>{{ isEditingField ? '修改竹田' : '新建竹田' }}</h3>
+        <button class="dialog-close" (click)="closeFieldDialog()">×</button>
+      </div>
+      <div class="dialog-body">
+        <div class="form-group">
+          <label>名称 <span class="required">*</span></label>
+          <input type="text" [(ngModel)]="newField.name" placeholder="请输入竹田名称" required>
+        </div>
+        <div class="form-group">
+          <label>开始日期 <span class="required">*</span></label>
+          <input type="date" [(ngModel)]="newField.startDate" required>
+        </div>
+        <div class="form-group">
+          <label>结束日期 <span class="required">*</span></label>
+          <input type="date" [(ngModel)]="newField.endDate" required>
+        </div>
+        <div class="form-group">
+          <label>描述</label>
+          <textarea [(ngModel)]="newField.description" placeholder="请输入描述（可选）" rows="3"></textarea>
+        </div>
+      </div>
+      <div class="dialog-footer">
+        <button class="btn-cancel" (click)="closeFieldDialog()">取消</button>
+        <button class="btn-confirm" (click)="addField()">{{ isEditingField ? '保存' : '创建' }}</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 竹子对话框 -->
+  <div class="dialog-overlay" *ngIf="showBambooDialog" (click)="closeBambooDialog()">
+    <div class="dialog-content" (click)="$event.stopPropagation()">
+      <div class="dialog-header">
+        <h3>{{ isEditingBamboo ? '修改竹子' : '新建竹子' }}</h3>
+        <button class="dialog-close" (click)="closeBambooDialog()">×</button>
+      </div>
+      <div class="dialog-body">
+        <div class="form-group">
+          <label>名称 <span class="required">*</span></label>
+          <input type="text" [(ngModel)]="newBamboo.name" placeholder="请输入竹子名称" required>
+        </div>
+        <div class="form-group form-row">
+          <div class="form-col">
+            <label>开始日期 <span class="required">*</span></label>
+            <input type="date" [(ngModel)]="newBamboo.startDate" required>
+          </div>
+          <div class="form-col">
+            <label>结束日期 <span class="required">*</span></label>
+            <input type="date" [(ngModel)]="newBamboo.endDate" required>
+          </div>
+          <div class="form-col">
+            <label>状态</label>
+            <select [(ngModel)]="newBamboo.completed">
+              <option [value]="false">未完成</option>
+              <option [value]="true">已完成</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>描述</label>
+          <textarea [(ngModel)]="newBamboo.description" placeholder="请输入描述（可选）" rows="3"></textarea>
+        </div>
+        
+        <!-- 竹节列表 -->
+        <div class="form-group">
+          <div class="task-list-header">
+            <label>竹节列表</label>
+            <button type="button" class="btn-add-task" (click)="openTaskDialog()">
+              <span appSvgIcon="assets/icons/common/add.svg"></span>
+              <span>添加竹节</span>
+            </button>
+          </div>
+          <div class="task-list-container" cdkDropList (cdkDropListDropped)="dropTask($event)">
+            <div class="task-list-item" 
+                 *ngFor="let task of dialogTasks; let i = index" 
+                 cdkDrag>
+              <div class="task-list-item-content" cdkDragHandle>
+                <span class="drag-handle">⋮⋮</span>
+                <div class="task-list-item-info">
+                  <div class="task-list-item-name">{{ task.name }}</div>
+                  <div class="task-list-item-meta" *ngIf="task.description">{{ task.description }}</div>
+                </div>
+              </div>
+              <div class="task-list-item-actions">
+                <button type="button" class="btn-edit-task" (click)="openTaskDialog(task)" title="修改">
+                  <span appSvgIcon="assets/icons/common/edit.svg"></span>
+                </button>
+                <button type="button" class="btn-delete-task" (click)="deleteTaskFromDialog(task)" title="删除">
+                  <span appSvgIcon="assets/icons/common/delete.svg"></span>
+                </button>
+              </div>
+            </div>
+            <div class="task-list-empty" *ngIf="dialogTasks.length === 0">
+              <span>暂无竹节，点击"添加竹节"创建</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="dialog-footer">
+        <button class="btn-cancel" (click)="closeBambooDialog()">取消</button>
+        <button class="btn-confirm" (click)="addBamboo()">{{ isEditingBamboo ? '保存' : '创建' }}</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 竹节对话框 -->
+  <div class="dialog-overlay" *ngIf="showTaskDialog" (click)="closeTaskDialog()">
+    <div class="dialog-content task-dialog" (click)="$event.stopPropagation()">
+      <div class="dialog-header">
+        <h3>{{ isEditingTask ? '修改竹节' : '新建竹节' }}</h3>
+        <button class="dialog-close" (click)="closeTaskDialog()">×</button>
+      </div>
+      <div class="dialog-body">
+        <div class="form-group">
+          <label>名称 <span class="required">*</span></label>
+          <input type="text" [(ngModel)]="newTask.name" placeholder="请输入竹节名称" required>
+        </div>
+        <div class="form-group">
+          <label>描述</label>
+          <textarea [(ngModel)]="newTask.description" placeholder="请输入描述（可选）" rows="3"></textarea>
+        </div>
+        <div class="form-group">
+          <label>状态</label>
+          <select [(ngModel)]="newTask.completed">
+            <option [value]="false">未完成</option>
+            <option [value]="true">已完成</option>
+          </select>
+        </div>
+      </div>
+      <div class="dialog-footer">
+        <button class="btn-cancel" (click)="closeTaskDialog()">取消</button>
+        <button class="btn-confirm" (click)="addTask()">{{ isEditingTask ? '保存' : '创建' }}</button>
+      </div>
+    </div>
+  </div>
+</div>
+

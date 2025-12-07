@@ -10,6 +10,8 @@ export interface Task {
   estimatedDuration?: number; // in minutes
   actualDuration?: number; // in minutes
   tags: string[];
+  completed?: boolean;
+  completedAt?: Date;
   createdAt: Date;
   updatedAt: Date;
   dueDate?: Date;

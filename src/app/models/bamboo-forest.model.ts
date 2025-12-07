@@ -8,6 +8,8 @@ export interface BambooForest {
   endDate: Date;
   description?: string;
   bambooFields: BambooField[];
+  archived?: boolean;
+  archivedAt?: Date;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -21,6 +23,8 @@ export interface BambooField {
   description?: string;
   bamboos: Bamboo[];
   goals: Goal[];
+  archived?: boolean;
+  archivedAt?: Date;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -33,6 +37,10 @@ export interface Bamboo {
   endDate: Date;
   description?: string;
   tasks: Task[];
+  completed?: boolean;
+  completedAt?: Date;
+  archived?: boolean;
+  archivedAt?: Date;
   createdAt: Date;
   updatedAt: Date;
 }

@@ -7,37 +7,7 @@
   <div class="stats-grid">
     <div class="stat-card">
       <div class="stat-icon forests">
-        <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
-          <!-- 竹林 - 用圆形边界表示集合概念 -->
-          <g>
-            <!-- 圆形边界 - 表示竹林范围 -->
-            <circle cx="40" cy="40" r="32" fill="none" stroke="white" stroke-width="2.5" stroke-dasharray="3,3" opacity="0.6"/>
-            <!-- 中心区域的竹子群组 -->
-            <!-- 左侧竹子 -->
-            <line x1="25" y1="25" x2="25" y2="55" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
-            <line x1="24" y1="32" x2="26" y2="32" stroke="white" stroke-width="2"/>
-            <line x1="24" y1="40" x2="26" y2="40" stroke="white" stroke-width="2"/>
-            <line x1="24" y1="48" x2="26" y2="48" stroke="white" stroke-width="2"/>
-            <!-- 中间竹子 -->
-            <line x1="40" y1="22" x2="40" y2="58" stroke="white" stroke-width="3" stroke-linecap="round"/>
-            <line x1="38.5" y1="28" x2="41.5" y2="28" stroke="white" stroke-width="2"/>
-            <line x1="38.5" y1="36" x2="41.5" y2="36" stroke="white" stroke-width="2"/>
-            <line x1="38.5" y1="44" x2="41.5" y2="44" stroke="white" stroke-width="2"/>
-            <line x1="38.5" y1="52" x2="41.5" y2="52" stroke="white" stroke-width="2"/>
-            <!-- 右侧竹子 -->
-            <line x1="55" y1="28" x2="55" y2="58" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
-            <line x1="54" y1="35" x2="56" y2="35" stroke="white" stroke-width="2"/>
-            <line x1="54" y1="43" x2="56" y2="43" stroke="white" stroke-width="2"/>
-            <line x1="54" y1="51" x2="56" y2="51" stroke="white" stroke-width="2"/>
-            <!-- 背景竹子（更小更淡，表示密集） -->
-            <line x1="18" y1="35" x2="18" y2="50" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.4"/>
-            <line x1="62" y1="38" x2="62" y2="52" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.4"/>
-            <!-- 顶部竹叶群 -->
-            <path d="M 24 27 Q 18 22, 15 27" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.7"/>
-            <path d="M 39 24 Q 33 19, 30 24" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.7"/>
-            <path d="M 55 30 Q 61 25, 65 30" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.7"/>
-          </g>
-        </svg>
+        <img src="assets/icons/dashboard/forests.svg" alt="竹林总数" />
       </div>
       <div class="stat-content">
         <h3>{{ stats.totalForests }}</h3>
@@ -47,23 +17,7 @@
 
     <div class="stat-card">
       <div class="stat-icon fields">
-        <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
-          <!-- 竹田 - 区域划分 -->
-          <g>
-            <!-- 田地网格 -->
-            <rect x="10" y="15" width="25" height="25" fill="none" stroke="white" stroke-width="2.5" rx="2"/>
-            <rect x="45" y="15" width="25" height="25" fill="none" stroke="white" stroke-width="2.5" rx="2"/>
-            <rect x="10" y="50" width="25" height="15" fill="none" stroke="white" stroke-width="2.5" rx="2"/>
-            <rect x="45" y="50" width="25" height="15" fill="none" stroke="white" stroke-width="2.5" rx="2"/>
-            <!-- 每块田地的竹子 -->
-            <line x1="20" y1="20" x2="20" y2="35" stroke="white" stroke-width="2" stroke-linecap="round"/>
-            <line x1="19" y1="25" x2="21" y2="25" stroke="white" stroke-width="1.5"/>
-            <line x1="55" y1="20" x2="55" y2="35" stroke="white" stroke-width="2" stroke-linecap="round"/>
-            <line x1="54" y1="25" x2="56" y2="25" stroke="white" stroke-width="1.5"/>
-            <line x1="20" y1="55" x2="20" y2="60" stroke="white" stroke-width="2" stroke-linecap="round"/>
-            <line x1="55" y1="55" x2="55" y2="60" stroke="white" stroke-width="2" stroke-linecap="round"/>
-          </g>
-        </svg>
+        <img src="assets/icons/dashboard/fields.svg" alt="竹田总数" />
       </div>
       <div class="stat-content">
         <h3>{{ stats.totalFields }}</h3>
@@ -73,29 +27,7 @@
 
     <div class="stat-card">
       <div class="stat-icon bamboos">
-        <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
-          <!-- 竹子总数 - 单根竹子 -->
-          <g>
-            <!-- 竹子主体 -->
-            <line x1="40" y1="10" x2="40" y2="70" stroke="white" stroke-width="4.5" stroke-linecap="round"/>
-            <!-- 竹节分隔线 -->
-            <line x1="35" y1="18" x2="45" y2="18" stroke="white" stroke-width="3.5"/>
-            <line x1="35" y1="26" x2="45" y2="26" stroke="white" stroke-width="3.5"/>
-            <line x1="35" y1="34" x2="45" y2="34" stroke="white" stroke-width="3.5"/>
-            <line x1="35" y1="42" x2="45" y2="42" stroke="white" stroke-width="3.5"/>
-            <line x1="35" y1="50" x2="45" y2="50" stroke="white" stroke-width="3.5"/>
-            <line x1="35" y1="58" x2="45" y2="58" stroke="white" stroke-width="3.5"/>
-            <line x1="35" y1="66" x2="45" y2="66" stroke="white" stroke-width="3.5"/>
-            <!-- 竹叶 - 左侧 -->
-            <path d="M 35 13 Q 25 8, 18 13" stroke="white" stroke-width="3" fill="none" stroke-linecap="round"/>
-            <path d="M 35 13 Q 28 3, 22 0" stroke="white" stroke-width="3" fill="none" stroke-linecap="round"/>
-            <!-- 竹叶 - 右侧 -->
-            <path d="M 45 13 Q 55 8, 62 13" stroke="white" stroke-width="3" fill="none" stroke-linecap="round"/>
-            <path d="M 45 13 Q 52 3, 58 0" stroke="white" stroke-width="3" fill="none" stroke-linecap="round"/>
-            <!-- 竹叶 - 中间顶部 -->
-            <path d="M 40 10 Q 40 0, 40 0" stroke="white" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-          </g>
-        </svg>
+        <img src="assets/icons/dashboard/bamboos.svg" alt="竹子总数" />
       </div>
       <div class="stat-content">
         <h3>{{ stats.totalBamboos }}</h3>
@@ -105,26 +37,7 @@
 
     <div class="stat-card">
       <div class="stat-icon tasks">
-        <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
-          <!-- 任务列表 - 结合竹子元素 -->
-          <g>
-            <!-- 任务卡片背景 -->
-            <rect x="12" y="15" width="56" height="50" rx="4" fill="none" stroke="white" stroke-width="3"/>
-            <!-- 任务项 -->
-            <line x1="20" y1="28" x2="60" y2="28" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
-            <line x1="20" y1="38" x2="60" y2="38" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
-            <line x1="20" y1="48" x2="50" y2="48" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
-            <!-- 复选框 -->
-            <rect x="20" y="24" width="8" height="8" fill="none" stroke="white" stroke-width="2" rx="1"/>
-            <rect x="20" y="34" width="8" height="8" fill="none" stroke="white" stroke-width="2" rx="1"/>
-            <rect x="20" y="44" width="8" height="8" fill="none" stroke="white" stroke-width="2" rx="1"/>
-            <!-- 竹子装饰元素 -->
-            <line x1="55" y1="20" x2="55" y2="60" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
-            <line x1="54" y1="30" x2="56" y2="30" stroke="white" stroke-width="1.5" opacity="0.6"/>
-            <line x1="54" y1="40" x2="56" y2="40" stroke="white" stroke-width="1.5" opacity="0.6"/>
-            <line x1="54" y1="50" x2="56" y2="50" stroke="white" stroke-width="1.5" opacity="0.6"/>
-          </g>
-        </svg>
+        <img src="assets/icons/dashboard/tasks.svg" alt="任务总数" />
       </div>
       <div class="stat-content">
         <h3>{{ stats.totalTasks }}</h3>

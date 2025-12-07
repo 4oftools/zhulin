@@ -26,6 +26,7 @@
             "tsConfig": "tsconfig.app.json",
             "assets": [
               "src/favicon.ico",
+              "src/favicon.svg",
               "src/assets"
             ],
             "styles": [
@@ -37,7 +38,8 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "buildTarget": "zhulin-work-method:build"
+            "buildTarget": "zhulin-work-method:build",
+            "port": 4300
           }
         }
       }

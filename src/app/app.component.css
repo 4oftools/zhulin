@@ -2,7 +2,7 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: #f0f7f0;
+  background: #f8fbf8;
 }
 
 .app-header {
@@ -42,6 +42,10 @@
   height: 48px;
   flex-shrink: 0;
   animation: logoFloat 3s ease-in-out infinite;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
 }
 
 @keyframes logoFloat {
@@ -53,10 +57,11 @@
   }
 }
 
-.logo-icon .bamboo-left,
-.logo-icon .bamboo-center,
-.logo-icon .bamboo-right {
-  animation: bambooGrow 2s ease-out;
+.logo-icon img,
+.logo-icon svg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 @keyframes bambooGrow {
@@ -110,8 +115,18 @@
   width: 18px;
   height: 18px;
   flex-shrink: 0;
-  color: currentColor;
   transition: transform 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: currentColor;
+}
+
+.nav-icon img,
+.nav-icon svg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .main-nav a:hover .nav-icon {

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import { DataService } from '../../../services/data.service';
-import { BambooForest, BambooField, Bamboo } from '../../../models/bamboo-forest.model';
+import { BambooForest } from '../../../models/bamboo-forest.model';
 
 @Component({
   selector: 'app-strategic-navigation',
@@ -10,15 +11,13 @@ import { BambooForest, BambooField, Bamboo } from '../../../models/bamboo-forest
 })
 export class StrategicNavigationComponent implements OnInit {
   forests: BambooForest[] = [];
-  selectedForest: BambooForest | null = null;
-  selectedField: BambooField | null = null;
-  fields: BambooField[] = [];
-  bamboos: Bamboo[] = [];
 
   // 对话框状态
   showForestDialog = false;
-  showFieldDialog = false;
-  showBambooDialog = false;
+  isEditingForest = false;
+
+  // 下拉菜单状态
+  openMenuId: string | null = null;
 
   // 表单数据（使用字符串类型用于 HTML input）
   newForest: {
@@ -33,31 +32,11 @@ export class StrategicNavigationComponent implements OnInit {
     description: ''
   };
 
-  newField: {
-    name: string;
-    startDate: string;
-    endDate: string;
-    description: string;
-  } = {
-    name: '',
-    startDate: new Date().toISOString().split('T')[0],
-    endDate: new Date().toISOString().split('T')[0],
-    description: ''
-  };
-
-  newBamboo: {
-    name: string;
-    startDate: string;
-    endDate: string;
-    description: string;
-  } = {
-    name: '',
-    startDate: new Date().toISOString().split('T')[0],
-    endDate: new Date().toISOString().split('T')[0],
-    description: ''
-  };
-
-  constructor(private dataService: DataService) {}
+  constructor(
+    private dataService: DataService,
+    public router: Router,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
     this.loadData();
@@ -70,25 +49,33 @@ export class StrategicNavigationComponent implements OnInit {
   }
 
   selectForest(forest: BambooForest): void {
-    this.selectedForest = forest;
-    this.selectedField = null;
-    this.fields = forest.bambooFields;
-    this.bamboos = [];
+    if (forest.archived) {
+      return; // 已归档的竹林不能选择
+    }
+    // 导航到竹田页面（使用相对路径，因为现在是子路由）
+    this.router.navigate(['forests', forest.id], { relativeTo: this.route });
   }
 
-  selectField(field: BambooField): void {
-    this.selectedField = field;
-    this.bamboos = field.bamboos;
-  }
-
-  openForestDialog(): void {
-    this.newForest = {
-      name: '',
-      startDate: new Date().toISOString().split('T')[0],
-      endDate: new Date().toISOString().split('T')[0],
-      description: ''
-    };
+  openForestDialog(forest?: BambooForest): void {
+    if (forest) {
+      this.isEditingForest = true;
+      this.newForest = {
+        name: forest.name,
+        startDate: new Date(forest.startDate).toISOString().split('T')[0],
+        endDate: new Date(forest.endDate).toISOString().split('T')[0],
+        description: forest.description || ''
+      };
+    } else {
+      this.isEditingForest = false;
+      this.newForest = {
+        name: '',
+        startDate: new Date().toISOString().split('T')[0],
+        endDate: new Date().toISOString().split('T')[0],
+        description: ''
+      };
+    }
     this.showForestDialog = true;
+    this.closeMenu();
   }
 
   closeForestDialog(): void {
@@ -102,18 +89,40 @@ export class StrategicNavigationComponent implements OnInit {
       return;
     }
 
-    const forest: BambooForest = {
-      id: this.generateId(),
-      name: this.newForest.name!,
-      startDate: new Date(this.newForest.startDate!),
-      endDate: new Date(this.newForest.endDate!),
-      description: this.newForest.description || '',
-      bambooFields: [],
-      createdAt: new Date(),
-      updatedAt: new Date()
-    };
+    let editingForest: BambooForest | null = null;
+    if (this.isEditingForest) {
+      // 从路由中获取当前编辑的竹林ID
+      const currentUrl = this.router.url;
+      const match = currentUrl.match(/\/strategic\/forests\/([^\/]+)/);
+      if (match) {
+        const forestId = match[1];
+        editingForest = this.forests.find(f => f.id === forestId) || null;
+      }
+    }
 
-    this.dataService.addForest(forest);
+    if (this.isEditingForest && editingForest) {
+      const updatedForest: BambooForest = {
+        ...editingForest,
+        name: this.newForest.name!,
+        startDate: new Date(this.newForest.startDate!),
+        endDate: new Date(this.newForest.endDate!),
+        description: this.newForest.description || '',
+        updatedAt: new Date()
+      };
+      this.dataService.updateForest(updatedForest);
+    } else {
+      const forest: BambooForest = {
+        id: this.generateId(),
+        name: this.newForest.name!,
+        startDate: new Date(this.newForest.startDate!),
+        endDate: new Date(this.newForest.endDate!),
+        description: this.newForest.description || '',
+        bambooFields: [],
+        createdAt: new Date(),
+        updatedAt: new Date()
+      };
+      this.dataService.addForest(forest);
+    }
     this.loadData();
     this.closeForestDialog();
   }
@@ -127,162 +136,30 @@ export class StrategicNavigationComponent implements OnInit {
     };
   }
 
-  openFieldDialog(): void {
-    if (!this.selectedForest) {
-      alert('请先选择竹林');
-      return;
-    }
-    this.newField = {
-      name: '',
-      startDate: new Date().toISOString().split('T')[0],
-      endDate: new Date().toISOString().split('T')[0],
-      description: ''
-    };
-    this.showFieldDialog = true;
-  }
-
-  closeFieldDialog(): void {
-    this.showFieldDialog = false;
-    this.resetFieldForm();
-  }
-
-  addField(): void {
-    if (!this.selectedForest) {
-      alert('请先选择竹林');
-      return;
-    }
-
-    if (!this.newField.name || !this.newField.startDate || !this.newField.endDate) {
-      alert('请填写所有必填项');
-      return;
-    }
-
-    const field: BambooField = {
-      id: this.generateId(),
-      forestId: this.selectedForest.id,
-      name: this.newField.name!,
-      startDate: new Date(this.newField.startDate!),
-      endDate: new Date(this.newField.endDate!),
-      description: this.newField.description || '',
-      bamboos: [],
-      goals: [],
-      createdAt: new Date(),
-      updatedAt: new Date()
-    };
-
-    this.dataService.addField(field);
-    this.loadData();
-    if (this.selectedForest) {
-      this.selectForest(this.selectedForest);
-    }
-    this.closeFieldDialog();
-  }
-
-  resetFieldForm(): void {
-    this.newField = {
-      name: '',
-      startDate: new Date().toISOString().split('T')[0],
-      endDate: new Date().toISOString().split('T')[0],
-      description: ''
-    };
-  }
-
-  openBambooDialog(): void {
-    if (!this.selectedField) {
-      alert('请先选择竹田');
-      return;
-    }
-    this.newBamboo = {
-      name: '',
-      startDate: new Date().toISOString().split('T')[0],
-      endDate: new Date().toISOString().split('T')[0],
-      description: ''
-    };
-    this.showBambooDialog = true;
-  }
-
-  closeBambooDialog(): void {
-    this.showBambooDialog = false;
-    this.resetBambooForm();
-  }
-
-  addBamboo(): void {
-    if (!this.selectedField) {
-      alert('请先选择竹田');
-      return;
-    }
-
-    if (!this.newBamboo.name || !this.newBamboo.startDate || !this.newBamboo.endDate) {
-      alert('请填写所有必填项');
-      return;
-    }
-
-    const bamboo: Bamboo = {
-      id: this.generateId(),
-      fieldId: this.selectedField.id,
-      name: this.newBamboo.name!,
-      startDate: new Date(this.newBamboo.startDate!),
-      endDate: new Date(this.newBamboo.endDate!),
-      description: this.newBamboo.description || '',
-      tasks: [],
-      createdAt: new Date(),
-      updatedAt: new Date()
-    };
-
-    this.dataService.addBamboo(bamboo);
-    this.loadData();
-    if (this.selectedField) {
-      this.selectField(this.selectedField);
-    }
-    this.closeBambooDialog();
-  }
-
-  resetBambooForm(): void {
-    this.newBamboo = {
-      name: '',
-      startDate: new Date().toISOString().split('T')[0],
-      endDate: new Date().toISOString().split('T')[0],
-      description: ''
-    };
-  }
-
   deleteForest(forest: BambooForest, event: Event): void {
     event.stopPropagation();
-    if (confirm(`确定要删除竹林"${forest.name}"吗？`)) {
+    if (confirm(`确定要删除竹林"${forest.name}"吗？此操作不可恢复！`)) {
       this.dataService.deleteForest(forest.id);
-      if (this.selectedForest?.id === forest.id) {
-        this.selectedForest = null;
-        this.selectedField = null;
-        this.fields = [];
-        this.bamboos = [];
-      }
       this.loadData();
     }
   }
 
-  deleteField(field: BambooField, event: Event): void {
+  archiveForest(forest: BambooForest, event: Event): void {
     event.stopPropagation();
-    if (confirm(`确定要删除竹田"${field.name}"吗？`)) {
-      this.dataService.deleteField(field.forestId, field.id);
-      if (this.selectedField?.id === field.id) {
-        this.selectedField = null;
-        this.bamboos = [];
-      }
+    const action = forest.archived ? '取消归档' : '归档';
+    if (confirm(`确定要${action}竹林"${forest.name}"吗？`)) {
+      this.dataService.archiveForest(forest.id, !forest.archived);
       this.loadData();
-      if (this.selectedForest) {
-        this.selectForest(this.selectedForest);
-      }
     }
   }
 
-  deleteBamboo(bamboo: Bamboo): void {
-    if (confirm(`确定要删除竹子"${bamboo.name}"吗？`)) {
-      this.dataService.deleteBamboo(bamboo.fieldId, bamboo.id);
-      this.loadData();
-      if (this.selectedField) {
-        this.selectField(this.selectedField);
-      }
-    }
+  toggleMenu(menuId: string, event: Event): void {
+    event.stopPropagation();
+    this.openMenuId = this.openMenuId === menuId ? null : menuId;
+  }
+
+  closeMenu(): void {
+    this.openMenuId = null;
   }
 
   private generateId(): string {

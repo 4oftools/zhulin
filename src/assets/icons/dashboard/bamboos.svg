@@ -1,0 +1,24 @@
+<svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+  <!-- 竹子总数 - 单根竹子 -->
+  <g>
+    <!-- 竹子主体 -->
+    <line x1="40" y1="10" x2="40" y2="70" stroke="white" stroke-width="4.5" stroke-linecap="round"/>
+    <!-- 竹节分隔线 -->
+    <line x1="35" y1="18" x2="45" y2="18" stroke="white" stroke-width="3.5"/>
+    <line x1="35" y1="26" x2="45" y2="26" stroke="white" stroke-width="3.5"/>
+    <line x1="35" y1="34" x2="45" y2="34" stroke="white" stroke-width="3.5"/>
+    <line x1="35" y1="42" x2="45" y2="42" stroke="white" stroke-width="3.5"/>
+    <line x1="35" y1="50" x2="45" y2="50" stroke="white" stroke-width="3.5"/>
+    <line x1="35" y1="58" x2="45" y2="58" stroke="white" stroke-width="3.5"/>
+    <line x1="35" y1="66" x2="45" y2="66" stroke="white" stroke-width="3.5"/>
+    <!-- 竹叶 - 左侧 -->
+    <path d="M 35 13 Q 25 8, 18 13" stroke="white" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M 35 13 Q 28 3, 22 0" stroke="white" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <!-- 竹叶 - 右侧 -->
+    <path d="M 45 13 Q 55 8, 62 13" stroke="white" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M 45 13 Q 52 3, 58 0" stroke="white" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <!-- 竹叶 - 中间顶部 -->
+    <path d="M 40 10 Q 40 0, 40 0" stroke="white" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  </g>
+</svg>
+

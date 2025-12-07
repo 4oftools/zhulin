@@ -1,0 +1,32 @@
+<svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+  <!-- 竹林 - 用圆形边界表示集合概念 -->
+  <g>
+    <!-- 圆形边界 - 表示竹林范围 -->
+    <circle cx="40" cy="40" r="32" fill="none" stroke="white" stroke-width="2.5" stroke-dasharray="3,3" opacity="0.6"/>
+    <!-- 中心区域的竹子群组 -->
+    <!-- 左侧竹子 -->
+    <line x1="25" y1="25" x2="25" y2="55" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="24" y1="32" x2="26" y2="32" stroke="white" stroke-width="2"/>
+    <line x1="24" y1="40" x2="26" y2="40" stroke="white" stroke-width="2"/>
+    <line x1="24" y1="48" x2="26" y2="48" stroke="white" stroke-width="2"/>
+    <!-- 中间竹子 -->
+    <line x1="40" y1="22" x2="40" y2="58" stroke="white" stroke-width="3" stroke-linecap="round"/>
+    <line x1="38.5" y1="28" x2="41.5" y2="28" stroke="white" stroke-width="2"/>
+    <line x1="38.5" y1="36" x2="41.5" y2="36" stroke="white" stroke-width="2"/>
+    <line x1="38.5" y1="44" x2="41.5" y2="44" stroke="white" stroke-width="2"/>
+    <line x1="38.5" y1="52" x2="41.5" y2="52" stroke="white" stroke-width="2"/>
+    <!-- 右侧竹子 -->
+    <line x1="55" y1="28" x2="55" y2="58" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="54" y1="35" x2="56" y2="35" stroke="white" stroke-width="2"/>
+    <line x1="54" y1="43" x2="56" y2="43" stroke="white" stroke-width="2"/>
+    <line x1="54" y1="51" x2="56" y2="51" stroke="white" stroke-width="2"/>
+    <!-- 背景竹子（更小更淡，表示密集） -->
+    <line x1="18" y1="35" x2="18" y2="50" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.4"/>
+    <line x1="62" y1="38" x2="62" y2="52" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.4"/>
+    <!-- 顶部竹叶群 -->
+    <path d="M 24 27 Q 18 22, 15 27" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.7"/>
+    <path d="M 39 24 Q 33 19, 30 24" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.7"/>
+    <path d="M 55 30 Q 61 25, 65 30" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.7"/>
+  </g>
+</svg>
+
