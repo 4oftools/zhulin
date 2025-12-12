@@ -185,6 +185,10 @@
   overflow: hidden;
 }
 
+.status-item.in-progress {
+  background: #e3f2fd;
+}
+
 .status-bar {
   position: absolute;
   top: 0;
@@ -199,7 +203,7 @@
 }
 
 .status-item.in-progress .status-bar {
-  background: #66BB6A;
+  background: #2196F3;
 }
 
 .status-item.pending .status-bar {
@@ -219,5 +223,281 @@
   float: right;
   font-weight: 600;
   color: #666;
+}
+
+.forests-stats-section {
+  width: 100%;
+  margin-top: 30px;
+}
+
+.section-title {
+  margin: 0 0 20px 0;
+  font-size: 24px;
+  color: #333;
+  font-weight: 600;
+}
+
+.forests-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 20px;
+  width: 100%;
+}
+
+.forest-card {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.forest-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.forest-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.forest-info {
+  flex: 1;
+}
+
+.forest-name {
+  margin: 0 0 8px 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+}
+
+.forest-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  color: #666;
+}
+
+.forest-date {
+  color: #666;
+}
+
+.forest-status {
+  padding: 4px 12px;
+  border-radius: 12px;
+  background: #e8f5e9;
+  color: #2e7d32;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.forest-status.archived {
+  background: #f5f5f5;
+  color: #757575;
+}
+
+.forest-completion {
+  text-align: center;
+  min-width: 80px;
+}
+
+.completion-rate {
+  font-size: 28px;
+  font-weight: 700;
+  color: #4CAF50;
+  line-height: 1;
+}
+
+.completion-label {
+  font-size: 12px;
+  color: #666;
+  margin-top: 4px;
+}
+
+.forest-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.forest-stat-item {
+  text-align: center;
+  padding: 12px;
+  background: #f5f5f5;
+  border-radius: 8px;
+}
+
+.forest-stat-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: #333;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.forest-stat-label {
+  font-size: 12px;
+  color: #666;
+}
+
+.forest-goals-section {
+  margin-top: 20px;
+}
+
+.forest-goals-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  background: #f5f5f5;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-bottom: 12px;
+}
+
+.forest-goals-header:hover {
+  background: #eeeeee;
+}
+
+.goals-title {
+  font-weight: 600;
+  color: #333;
+  font-size: 14px;
+}
+
+.goals-toggle-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  transition: transform 0.3s ease, color 0.2s;
+  flex-shrink: 0;
+}
+
+.goals-toggle-btn:hover {
+  color: #333;
+}
+
+.goals-toggle-btn.expanded {
+  transform: rotate(180deg);
+}
+
+.goals-toggle-btn span {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+}
+
+.forest-goals-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    max-height: 1000px;
+  }
+}
+
+.goal-item {
+  padding: 12px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  border-left: 3px solid #4CAF50;
+}
+
+.goal-item.empty {
+  border-left-color: #e0e0e0;
+  color: #999;
+}
+
+.goal-name {
+  font-weight: 600;
+  color: #333;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.goal-tasks-status {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.goal-task-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.goal-task-badge.completed {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.goal-task-badge.in-progress {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+
+.goal-task-badge.pending {
+  background: #fff3e0;
+  color: #f57c00;
+}
+
+.goal-task-label {
+  font-size: 12px;
+}
+
+.goal-task-count {
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.empty-state {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 40px;
+  color: #999;
+  font-size: 16px;
+}
+
+@media (max-width: 768px) {
+  .forests-list {
+    grid-template-columns: 1fr;
+  }
+  
+  .forest-header {
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .forest-completion {
+    align-self: flex-start;
+  }
 }
 

@@ -11,6 +11,7 @@ import { BambooForest } from '../../../models/bamboo-forest.model';
 })
 export class StrategicNavigationComponent implements OnInit {
   forests: BambooForest[] = [];
+  selectedForest: BambooForest | null = null;
 
   // 对话框状态
   showForestDialog = false;
@@ -32,6 +33,7 @@ export class StrategicNavigationComponent implements OnInit {
     description: ''
   };
 
+
   constructor(
     private dataService: DataService,
     public router: Router,
@@ -49,6 +51,7 @@ export class StrategicNavigationComponent implements OnInit {
   }
 
   selectForest(forest: BambooForest): void {
+    this.selectedForest = forest;
     // 导航到竹田页面（使用相对路径，因为现在是子路由）
     // 归档的竹林也可以访问，只是显示"已归档"标签
     this.router.navigate(['forests', forest.id], { relativeTo: this.route });
@@ -65,12 +68,12 @@ export class StrategicNavigationComponent implements OnInit {
       };
     } else {
       this.isEditingForest = false;
-      this.newForest = {
-        name: '',
-        startDate: new Date().toISOString().split('T')[0],
-        endDate: new Date().toISOString().split('T')[0],
-        description: ''
-      };
+    this.newForest = {
+      name: '',
+      startDate: new Date().toISOString().split('T')[0],
+      endDate: new Date().toISOString().split('T')[0],
+      description: ''
+    };
     }
     this.showForestDialog = true;
     this.closeMenu();
@@ -109,17 +112,20 @@ export class StrategicNavigationComponent implements OnInit {
       };
       this.dataService.updateForest(updatedForest);
     } else {
-      const forest: BambooForest = {
-        id: this.generateId(),
-        name: this.newForest.name!,
-        startDate: new Date(this.newForest.startDate!),
-        endDate: new Date(this.newForest.endDate!),
-        description: this.newForest.description || '',
-        bambooFields: [],
-        createdAt: new Date(),
-        updatedAt: new Date()
-      };
-      this.dataService.addForest(forest);
+    const forest: BambooForest = {
+      id: this.generateId(),
+      name: this.newForest.name!,
+      startDate: new Date(this.newForest.startDate!),
+      endDate: new Date(this.newForest.endDate!),
+      description: this.newForest.description || '',
+      bambooFields: [],
+      goals: [],
+      keyOutputs: [],
+      learnings: [],
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+    this.dataService.addForest(forest);
     }
     this.loadData();
     this.closeForestDialog();

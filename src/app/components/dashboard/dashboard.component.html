@@ -82,5 +82,76 @@
       </div>
     </div>
   </div>
+
+  <!-- 竹林统计列表 -->
+  <div class="forests-stats-section">
+    <h3 class="section-title">竹林详情</h3>
+    <div class="forests-list">
+      <div class="forest-card" *ngFor="let forest of forests">
+        <div class="forest-header">
+          <div class="forest-info">
+            <h4 class="forest-name">{{ forest.name }}</h4>
+            <div class="forest-meta">
+              <span class="forest-date">{{ forest.startDate | date:'yyyy-MM-dd' }} - {{ forest.endDate | date:'yyyy-MM-dd' }}</span>
+              <span class="forest-status" [class.archived]="forest.archived">
+                {{ forest.archived ? '已归档' : '进行中' }}
+              </span>
+            </div>
+          </div>
+          <div class="forest-completion">
+            <div class="completion-rate">{{ getForestStats(forest).completionRate }}%</div>
+            <div class="completion-label">完成率</div>
+          </div>
+        </div>
+        
+        <div class="forest-stats-grid">
+          <div class="forest-stat-item">
+            <div class="forest-stat-value">{{ getForestStats(forest).totalFields }}</div>
+            <div class="forest-stat-label">竹田</div>
+          </div>
+          <div class="forest-stat-item">
+            <div class="forest-stat-value">{{ getForestStats(forest).totalBamboos }}</div>
+            <div class="forest-stat-label">竹子</div>
+          </div>
+          <div class="forest-stat-item">
+            <div class="forest-stat-value">{{ getForestStats(forest).totalTasks }}</div>
+            <div class="forest-stat-label">任务</div>
+          </div>
+        </div>
+
+        <div class="forest-goals-section" *ngIf="forest.goals && forest.goals.length > 0">
+          <div class="forest-goals-header" (click)="toggleForestGoals(forest.id)">
+            <span class="goals-title">目标列表 ({{ forest.goals.length }})</span>
+            <button class="goals-toggle-btn" [class.expanded]="isForestGoalsExpanded(forest.id)">
+              <span appSvgIcon="assets/icons/common/chevron-down.svg"></span>
+            </button>
+          </div>
+          <div class="forest-goals-list" *ngIf="isForestGoalsExpanded(forest.id)">
+            <div class="goal-item" *ngFor="let goal of forest.goals">
+              <div class="goal-name">{{ goal.name }}</div>
+              <div class="goal-tasks-status">
+                <div class="goal-task-badge completed">
+                  <span class="goal-task-label">已完成</span>
+                  <span class="goal-task-count">{{ getGoalStats(forest, goal).completedTasks }}</span>
+                </div>
+                <div class="goal-task-badge in-progress">
+                  <span class="goal-task-label">进行中</span>
+                  <span class="goal-task-count">{{ getGoalStats(forest, goal).inProgressTasks }}</span>
+                </div>
+                <div class="goal-task-badge pending">
+                  <span class="goal-task-label">待办</span>
+                  <span class="goal-task-count">{{ getGoalStats(forest, goal).pendingTasks }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="empty-state" *ngIf="forests.length === 0">
+        <p>还没有竹林，去创建第一个吧</p>
+      </div>
+    </div>
+  </div>
 </div>
 

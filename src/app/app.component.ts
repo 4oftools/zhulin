@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService } from './services/data.service';
+import { SettingsService, AppSettings } from './services/settings.service';
 import { BambooSection } from './models/bamboo-forest.model';
 
 @Component({
@@ -10,8 +11,6 @@ import { BambooSection } from './models/bamboo-forest.model';
 })
 export class AppComponent implements OnInit {
   title = '竹林工作法';
-  isLoggedIn = false;
-  userName = '用户';
   taskProgress = {
     total: 0,
     completed: 0,
@@ -20,23 +19,21 @@ export class AppComponent implements OnInit {
     completionRate: 0
   };
 
-  constructor(
-    private dataService: DataService
-  ) {}
+  showSettingsDialog = false;
+  settings: AppSettings;
 
-  ngOnInit(): void {
-    this.checkLoginStatus();
-    this.loadTaskProgress();
+  constructor(
+    private dataService: DataService,
+    private settingsService: SettingsService
+  ) {
+    this.settings = this.settingsService.getSettings();
   }
 
-  checkLoginStatus(): void {
-    // 从 localStorage 检查登录状态
-    const userInfo = localStorage.getItem('zhulin-user');
-    if (userInfo) {
-      const user = JSON.parse(userInfo);
-      this.isLoggedIn = true;
-      this.userName = user.name || '用户';
-    }
+  ngOnInit(): void {
+    this.loadTaskProgress();
+    this.settingsService.getSettingsObservable().subscribe(settings => {
+      this.settings = settings;
+    });
   }
 
   loadTaskProgress(): void {
@@ -62,19 +59,42 @@ export class AppComponent implements OnInit {
     });
   }
 
-  login(): void {
-    const userName = prompt('请输入您的姓名：');
-    if (userName) {
-      localStorage.setItem('zhulin-user', JSON.stringify({ name: userName }));
-      this.isLoggedIn = true;
-      this.userName = userName;
+  openSettings(): void {
+    this.showSettingsDialog = true;
+  }
+
+  closeSettings(): void {
+    this.showSettingsDialog = false;
+  }
+
+  onSettingsChange(key: keyof AppSettings, value: any): void {
+    this.settingsService.updateSettings({ [key]: value });
+  }
+
+  onCheckboxChange(key: keyof AppSettings, event: Event): void {
+    const target = event.target as HTMLInputElement;
+    if (target) {
+      this.onSettingsChange(key, target.checked);
     }
   }
 
-  logout(): void {
-    localStorage.removeItem('zhulin-user');
-    this.isLoggedIn = false;
-    this.userName = '用户';
+  onNumberChange(key: keyof AppSettings, event: Event): void {
+    const target = event.target as HTMLInputElement;
+    if (target) {
+      this.onSettingsChange(key, +target.value);
+    }
+  }
+
+  resetSettings(): void {
+    if (confirm('确定要重置所有设置吗？')) {
+      this.settingsService.resetSettings();
+    }
+  }
+
+  onDialogOverlayClick(event: Event): void {
+    if (event.target === event.currentTarget) {
+      this.closeSettings();
+    }
   }
 }
 

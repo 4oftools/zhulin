@@ -11,6 +11,9 @@ import { TacticalManagementComponent } from './components/tactical/tactical-mana
 // Dashboard
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 
+// Statistics
+import { StatisticsComponent } from './components/statistics/statistics.component';
+
 const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
   { path: 'dashboard', component: DashboardComponent },
@@ -21,7 +24,8 @@ const routes: Routes = [
       { path: 'forests/:forestId', component: BambooFieldsComponent }
     ]
   },
-  { path: 'tactical', component: TacticalManagementComponent }
+  { path: 'tactical', component: TacticalManagementComponent },
+  { path: 'statistics', component: StatisticsComponent }
 ];
 
 @NgModule({

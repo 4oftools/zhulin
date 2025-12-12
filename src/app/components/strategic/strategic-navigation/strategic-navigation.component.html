@@ -21,7 +21,7 @@
             </div>
             <div class="item-meta">
               <div class="item-meta-date">
-                {{ forest.startDate | date:'yyyy-MM-dd' }} - {{ forest.endDate | date:'yyyy-MM-dd' }}
+              {{ forest.startDate | date:'yyyy-MM-dd' }} - {{ forest.endDate | date:'yyyy-MM-dd' }}
               </div>
               <div class="item-meta-status">
                 <span class="enabled-badge enabled" *ngIf="!forest.archived">已启用</span>
@@ -98,4 +98,3 @@
   </div>
 
 </div>
-

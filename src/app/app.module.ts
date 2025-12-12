@@ -14,6 +14,7 @@ import { BambooFieldsComponent } from './components/strategic/bamboo-fields/bamb
 import { TacticalManagementComponent } from './components/tactical/tactical-management/tactical-management.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { StrategicNavigationComponent } from './components/strategic/strategic-navigation/strategic-navigation.component';
+import { StatisticsComponent } from './components/statistics/statistics.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { StrategicNavigationComponent } from './components/strategic/strategic-n
     StrategicNavigationComponent,
     BambooFieldsComponent,
     TacticalManagementComponent,
+    StatisticsComponent,
     SvgIconDirective
   ],
   imports: [

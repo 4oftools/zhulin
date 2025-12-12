@@ -1003,11 +1003,15 @@
   }
   
   .dialog-body {
-    padding: 24px;
+    padding: 28px;
   }
   
   .dialog-body .form-group {
-    margin-bottom: 20px;
+    margin-bottom: 24px;
+  }
+  
+  .dialog-body .form-group:last-child {
+    margin-bottom: 0;
   }
   
   .dialog-body .form-group.form-row {
@@ -1312,5 +1316,240 @@
     outline: none;
     border-color: #4CAF50;
     box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+  }
+  
+  /* 列表管理样式 */
+  .list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #e8f5e9;
+  }
+
+  .list-header label {
+    font-weight: 600;
+    color: #2d5016;
+    font-size: 15px;
+  }
+
+  .btn-add-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+
+  .btn-add-item:hover {
+    background: #45a049;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(76, 175, 80, 0.3);
+  }
+
+  .btn-add-item span {
+    display: flex;
+    align-items: center;
+  }
+
+  .btn-add-item span[appSvgIcon] {
+    width: 14px;
+    height: 14px;
+  }
+
+  .item-list {
+    max-height: 500px;
+    overflow-y: auto;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 12px;
+    background: #fafafa;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .item-list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 14px 16px;
+    background: white;
+    border-radius: 8px;
+    border: 1px solid #e8f5e9;
+    transition: all 0.2s;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  }
+
+  .item-list-item:hover {
+    border-color: #4CAF50;
+    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.15);
+    transform: translateY(-1px);
+  }
+
+  .item-list-item-content {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .checkbox-wrapper {
+    display: flex;
+    align-items: flex-start;
+    padding-top: 2px;
+    flex-shrink: 0;
+  }
+
+  .item-list-item-content input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    margin: 0;
+    flex-shrink: 0;
+    accent-color: #4CAF50;
+  }
+
+  .item-list-item-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .item-list-item-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: #2d5016;
+    line-height: 1.5;
+    word-break: break-word;
+  }
+
+  .item-list-item-name.completed {
+    text-decoration: line-through;
+    color: #999;
+    opacity: 0.7;
+  }
+
+  .item-list-item-meta {
+    font-size: 13px;
+    color: #666;
+    line-height: 1.6;
+    word-break: break-word;
+  }
+  
+  .item-list-item-meta-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 6px;
+  }
+  
+  .item-list-item-meta-wrapper .content-text {
+    display: block;
+    color: #666;
+    line-height: 1.6;
+  }
+  
+  .learning-item .item-list-item-info {
+    width: 100%;
+  }
+
+  .item-list-item-actions {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    flex-shrink: 0;
+    margin-left: 16px;
+    padding-top: 2px;
+  }
+
+  .btn-edit-item,
+  .btn-delete-item {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    padding: 0;
+    color: #666;
+  }
+
+  .btn-edit-item:hover {
+    background: #e8f5e9;
+    color: #4CAF50;
+  }
+
+  .btn-delete-item:hover {
+    background: #ffebee;
+    color: #f44336;
+  }
+
+  .btn-edit-item span,
+  .btn-delete-item span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .btn-edit-item span[appSvgIcon],
+  .btn-delete-item span[appSvgIcon] {
+    width: 16px;
+    height: 16px;
+  }
+
+  .item-list-empty {
+    padding: 60px 20px;
+    text-align: center;
+    color: #999;
+    font-size: 14px;
+    background: white;
+    border-radius: 8px;
+    border: 2px dashed #e0e0e0;
+  }
+
+  .meta-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    background: #e8f5e9;
+    color: #2e7d32;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+    margin-right: 8px;
+    margin-top: 6px;
+  }
+
+  .item-list-item-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+  }
+
+  .item-list-item-tags .tag {
+    display: inline-block;
+    padding: 4px 10px;
+    background: #f5f5f5;
+    color: #666;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+    border: 1px solid #e0e0e0;
   }
   

@@ -29,7 +29,7 @@
         <span class="btn-icon" appSvgIcon="assets/icons/strategic/learning.svg"></span>
         <span class="btn-text">习得管理</span>
       </button>
-      <button class="header-action-btn" (click)="openFieldDialog(selectedField || undefined)" title="修改竹田">
+      <button class="header-action-btn" (click)="openForestDialog()" title="修改竹林">
         <span class="btn-icon" appSvgIcon="assets/icons/common/edit.svg"></span>
         <span class="btn-text">修改</span>
       </button>
@@ -215,6 +215,16 @@
       </div>
       <div class="dialog-body">
         <div class="form-group">
+          <label>目标 <span class="required">*</span></label>
+          <select [(ngModel)]="newBamboo.goalId" required>
+            <option value="">请选择目标</option>
+            <option *ngFor="let goal of goals" [value]="goal.id">{{ goal.name }}</option>
+          </select>
+          <div class="form-hint" *ngIf="goals.length === 0">
+            <span>还没有目标，请先创建目标</span>
+          </div>
+        </div>
+        <div class="form-group">
           <label>名称 <span class="required">*</span></label>
           <input type="text" [(ngModel)]="newBamboo.name" placeholder="请输入竹子名称" required>
         </div>
@@ -309,6 +319,284 @@
       <div class="dialog-footer">
         <button class="btn-cancel" (click)="closeSectionDialog()">取消</button>
         <button class="btn-confirm" (click)="addSection()">{{ isEditingSection ? '保存' : '创建' }}</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 竹林对话框 -->
+  <div class="dialog-overlay" *ngIf="showForestDialog" (click)="closeForestDialog()">
+    <div class="dialog-content" (click)="$event.stopPropagation()">
+      <div class="dialog-header">
+        <h3>修改竹林</h3>
+        <button class="dialog-close" (click)="closeForestDialog()">×</button>
+      </div>
+      <div class="dialog-body">
+        <div class="form-group">
+          <label>名称 <span class="required">*</span></label>
+          <input type="text" [(ngModel)]="newForest.name" placeholder="请输入竹林名称" required>
+        </div>
+        <div class="form-group">
+          <label>开始日期 <span class="required">*</span></label>
+          <input type="date" [(ngModel)]="newForest.startDate" required>
+        </div>
+        <div class="form-group">
+          <label>结束日期 <span class="required">*</span></label>
+          <input type="date" [(ngModel)]="newForest.endDate" required>
+        </div>
+        <div class="form-group">
+          <label>描述</label>
+          <textarea [(ngModel)]="newForest.description" placeholder="请输入描述（可选）" rows="3"></textarea>
+        </div>
+      </div>
+      <div class="dialog-footer">
+        <button class="btn-cancel" (click)="closeForestDialog()">取消</button>
+        <button class="btn-confirm" (click)="updateForest()">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 目标管理对话框 -->
+  <div class="dialog-overlay" *ngIf="showGoalDialog" (click)="closeGoalDialog()">
+    <div class="dialog-content" (click)="$event.stopPropagation()">
+      <div class="dialog-header">
+        <h3>目标管理</h3>
+        <button class="dialog-close" (click)="closeGoalDialog()">×</button>
+      </div>
+      <div class="dialog-body">
+        <div class="form-group">
+          <div class="list-header">
+            <label>目标列表（最多7个）</label>
+            <button type="button" class="btn-add-item" (click)="openGoalEditDialog(); $event.stopPropagation()">
+              <span appSvgIcon="assets/icons/common/add.svg"></span>
+              <span>添加目标</span>
+            </button>
+          </div>
+          <div class="item-list">
+            <div class="item-list-item goal-item" *ngFor="let goal of goals">
+              <div class="item-list-item-content">
+                <div class="checkbox-wrapper">
+                  <input type="checkbox" [checked]="goal.completed" disabled>
+                </div>
+                <div class="item-list-item-info">
+                  <div class="item-list-item-name" [class.completed]="goal.completed">
+                    {{ goal.name }}
+                  </div>
+                  <div class="item-list-item-meta" *ngIf="goal.description">
+                    {{ goal.description }}
+                  </div>
+                </div>
+              </div>
+              <div class="item-list-item-actions">
+                <button type="button" class="btn-edit-item" (click)="openGoalEditDialog(goal); $event.stopPropagation()" title="修改">
+                  <span appSvgIcon="assets/icons/common/edit.svg"></span>
+                </button>
+                <button type="button" class="btn-delete-item" (click)="deleteGoal(goal, $event)" title="删除">
+                  <span appSvgIcon="assets/icons/common/delete.svg"></span>
+                </button>
+              </div>
+            </div>
+            <div class="item-list-empty" *ngIf="goals.length === 0">
+              <span>暂无目标，点击"添加目标"创建</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="dialog-footer">
+        <button class="btn-cancel" (click)="closeGoalDialog()">关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 目标编辑对话框 -->
+  <div class="dialog-overlay" *ngIf="showGoalEditDialog" (click)="closeGoalEditDialog()">
+    <div class="dialog-content" (click)="$event.stopPropagation()">
+      <div class="dialog-header">
+        <h3>{{ editingGoalId ? '修改目标' : '新建目标' }}</h3>
+        <button class="dialog-close" (click)="closeGoalEditDialog()">×</button>
+      </div>
+      <div class="dialog-body">
+        <div class="form-group">
+          <label>名称 <span class="required">*</span></label>
+          <input type="text" [(ngModel)]="newGoal.name" placeholder="请输入目标名称" required>
+        </div>
+        <div class="form-group">
+          <label>描述</label>
+          <textarea [(ngModel)]="newGoal.description" placeholder="请输入描述（可选）" rows="3"></textarea>
+        </div>
+        <div class="form-group">
+          <label>状态</label>
+          <select [(ngModel)]="newGoal.completed">
+            <option [value]="false">未完成</option>
+            <option [value]="true">已完成</option>
+          </select>
+        </div>
+      </div>
+      <div class="dialog-footer">
+        <button class="btn-cancel" (click)="closeGoalEditDialog()">取消</button>
+        <button class="btn-confirm" (click)="addGoal()">{{ editingGoalId ? '保存' : '创建' }}</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 关键产出管理对话框 -->
+  <div class="dialog-overlay" *ngIf="showKeyOutputDialog" (click)="closeKeyOutputDialog()">
+    <div class="dialog-content" (click)="$event.stopPropagation()">
+      <div class="dialog-header">
+        <h3>关键产出管理</h3>
+        <button class="dialog-close" (click)="closeKeyOutputDialog()">×</button>
+      </div>
+      <div class="dialog-body">
+        <div class="form-group">
+          <div class="list-header">
+            <label>关键产出列表</label>
+            <button type="button" class="btn-add-item" (click)="openKeyOutputEditDialog(); $event.stopPropagation()">
+              <span appSvgIcon="assets/icons/common/add.svg"></span>
+              <span>添加关键产出</span>
+            </button>
+          </div>
+          <div class="item-list">
+            <div class="item-list-item key-output-item" *ngFor="let keyOutput of keyOutputs">
+              <div class="item-list-item-content">
+                <div class="checkbox-wrapper">
+                  <input type="checkbox" [checked]="keyOutput.completed" disabled>
+                </div>
+                <div class="item-list-item-info">
+                  <div class="item-list-item-name" [class.completed]="keyOutput.completed">
+                    {{ keyOutput.name }}
+                  </div>
+                  <div class="item-list-item-meta" *ngIf="keyOutput.description">
+                    {{ keyOutput.description }}
+                  </div>
+                </div>
+              </div>
+              <div class="item-list-item-actions">
+                <button type="button" class="btn-edit-item" (click)="openKeyOutputEditDialog(keyOutput); $event.stopPropagation()" title="修改">
+                  <span appSvgIcon="assets/icons/common/edit.svg"></span>
+                </button>
+                <button type="button" class="btn-delete-item" (click)="deleteKeyOutput(keyOutput, $event)" title="删除">
+                  <span appSvgIcon="assets/icons/common/delete.svg"></span>
+                </button>
+              </div>
+            </div>
+            <div class="item-list-empty" *ngIf="keyOutputs.length === 0">
+              <span>暂无关键产出，点击"添加关键产出"创建</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="dialog-footer">
+        <button class="btn-cancel" (click)="closeKeyOutputDialog()">关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 关键产出编辑对话框 -->
+  <div class="dialog-overlay" *ngIf="showKeyOutputEditDialog" (click)="closeKeyOutputEditDialog()">
+    <div class="dialog-content" (click)="$event.stopPropagation()">
+      <div class="dialog-header">
+        <h3>{{ editingKeyOutputId ? '修改关键产出' : '新建关键产出' }}</h3>
+        <button class="dialog-close" (click)="closeKeyOutputEditDialog()">×</button>
+      </div>
+      <div class="dialog-body">
+        <div class="form-group">
+          <label>名称 <span class="required">*</span></label>
+          <input type="text" [(ngModel)]="newKeyOutput.name" placeholder="请输入关键产出名称" required>
+        </div>
+        <div class="form-group">
+          <label>描述</label>
+          <textarea [(ngModel)]="newKeyOutput.description" placeholder="请输入描述（可选）" rows="3"></textarea>
+        </div>
+        <div class="form-group">
+          <label>状态</label>
+          <select [(ngModel)]="newKeyOutput.completed">
+            <option [value]="false">未完成</option>
+            <option [value]="true">已完成</option>
+          </select>
+        </div>
+      </div>
+      <div class="dialog-footer">
+        <button class="btn-cancel" (click)="closeKeyOutputEditDialog()">取消</button>
+        <button class="btn-confirm" (click)="addKeyOutput()">{{ editingKeyOutputId ? '保存' : '创建' }}</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 习得管理对话框 -->
+  <div class="dialog-overlay" *ngIf="showLearningDialog" (click)="closeLearningDialog()">
+    <div class="dialog-content" (click)="$event.stopPropagation()">
+      <div class="dialog-header">
+        <h3>习得管理</h3>
+        <button class="dialog-close" (click)="closeLearningDialog()">×</button>
+      </div>
+      <div class="dialog-body">
+        <div class="form-group">
+          <div class="list-header">
+            <label>习得列表</label>
+            <button type="button" class="btn-add-item" (click)="openLearningEditDialog(); $event.stopPropagation()">
+              <span appSvgIcon="assets/icons/common/add.svg"></span>
+              <span>添加习得</span>
+            </button>
+          </div>
+          <div class="item-list">
+            <div class="item-list-item learning-item" *ngFor="let learning of learnings">
+              <div class="item-list-item-content">
+                <div class="item-list-item-info">
+                  <div class="item-list-item-name">{{ learning.title }}</div>
+                  <div class="item-list-item-meta-wrapper">
+                    <div class="item-list-item-meta" *ngIf="learning.content">
+                      <span class="content-text">{{ learning.content }}</span>
+                    </div>
+                    <div class="item-list-item-tags" *ngIf="learning.tags && learning.tags.length > 0">
+                      <span class="tag" *ngFor="let tag of learning.tags">{{ tag }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="item-list-item-actions">
+                <button type="button" class="btn-edit-item" (click)="openLearningEditDialog(learning)" title="修改">
+                  <span appSvgIcon="assets/icons/common/edit.svg"></span>
+                </button>
+                <button type="button" class="btn-delete-item" (click)="deleteLearning(learning, $event)" title="删除">
+                  <span appSvgIcon="assets/icons/common/delete.svg"></span>
+                </button>
+              </div>
+            </div>
+            <div class="item-list-empty" *ngIf="learnings.length === 0">
+              <span>暂无习得，点击"添加习得"创建</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="dialog-footer">
+        <button class="btn-cancel" (click)="closeLearningDialog()">关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 习得编辑对话框 -->
+  <div class="dialog-overlay" *ngIf="showLearningEditDialog" (click)="closeLearningEditDialog()">
+    <div class="dialog-content" (click)="$event.stopPropagation()">
+      <div class="dialog-header">
+        <h3>{{ editingLearningId ? '修改习得' : '新建习得' }}</h3>
+        <button class="dialog-close" (click)="closeLearningEditDialog()">×</button>
+      </div>
+      <div class="dialog-body">
+        <div class="form-group">
+          <label>标题 <span class="required">*</span></label>
+          <input type="text" [(ngModel)]="newLearning.title" placeholder="请输入习得标题" required>
+        </div>
+        <div class="form-group">
+          <label>内容</label>
+          <textarea [(ngModel)]="newLearning.content" placeholder="请输入习得内容（可选）" rows="5"></textarea>
+        </div>
+        <div class="form-group">
+          <label>标签</label>
+          <input type="text" [(ngModel)]="newLearning.tags" placeholder="请输入标签，用逗号分隔（可选）">
+        </div>
+      </div>
+      <div class="dialog-footer">
+        <button class="btn-cancel" (click)="closeLearningEditDialog()">取消</button>
+        <button class="btn-confirm" (click)="addLearning()">{{ editingLearningId ? '保存' : '创建' }}</button>
       </div>
     </div>
   </div>

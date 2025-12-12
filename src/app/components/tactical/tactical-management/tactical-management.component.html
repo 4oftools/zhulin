@@ -13,41 +13,81 @@
     <div class="activities-list">
       <div 
         class="activity-item" 
-        *ngFor="let activity of activities"
-        [class.expanded]="activity.expanded">
-        <div class="activity-header" (click)="toggleActivityExpanded(activity, $event)">
+        *ngFor="let activity of activities">
+        <div class="activity-header">
           <div class="activity-info">
-            <div class="activity-name">{{ activity.bamboo.name }}</div>
+            <div class="activity-name-row">
+              <div class="activity-name">{{ activity.bamboo.name }}</div>
+              <div class="activity-header-actions">
+                <button class="btn-expand" 
+                        (click)="toggleActivityExpanded(activity, $event)"
+                        title="展开/收起">
+                  <span [class.expanded]="isActivityExpanded(activity)">▼</span>
+                </button>
+                <div class="menu-container" (click)="$event.stopPropagation()" (mousedown)="$event.stopPropagation()">
+                  <button class="btn-menu-vertical" 
+                          #activityMenuButton
+                          (click)="toggleActivityMenu('activity-' + activity.bamboo.id, $event, activityMenuButton)"
+                          (mousedown)="$event.stopPropagation()"
+                          title="更多操作">
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                  </button>
+                  <div class="dropdown-menu" 
+                       *ngIf="openMenuId === 'activity-' + activity.bamboo.id"
+                       #activityDropdownMenu
+                       (click)="$event.stopPropagation()"
+                       (mousedown)="$event.stopPropagation()">
+                    <button class="menu-item" (click)="openBambooDialog(activity, $event)">
+                      <span class="menu-icon" appSvgIcon="assets/icons/common/edit.svg"></span>
+                      <span>修改</span>
+                    </button>
+                    <button class="menu-item" (click)="openSectionDialogForActivity(activity, $event)">
+                      <span class="menu-icon" appSvgIcon="assets/icons/common/add.svg"></span>
+                      <span>添加竹节</span>
+                    </button>
+                    <button class="menu-item" (click)="completeBamboo(activity, $event)">
+                      <span class="menu-icon" appSvgIcon="assets/icons/common/edit.svg"></span>
+                      <span>完成任务</span>
+                    </button>
+                    <button class="menu-item danger" (click)="removeFromActivities(activity, $event)">
+                      <span class="menu-icon" appSvgIcon="assets/icons/common/delete.svg"></span>
+                      <span>移除活动列表</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
             <div class="activity-meta" *ngIf="activity.bamboo.description">
               {{ activity.bamboo.description }}
             </div>
             <div class="activity-stats">
-              <span>竹节数: {{ activity.sections.length }}</span>
+              <span>竹节数: {{ getCompletedCount(activity) }}/{{ getTotalCount(activity) }}</span>
               <span class="status-badge" [class.completed]="activity.bamboo.completed">
                 {{ activity.bamboo.completed ? '已完成' : '进行中' }}
               </span>
             </div>
           </div>
-          <button class="expand-btn" (click)="toggleActivityExpanded(activity, $event)">
-            <span [class.expanded]="activity.expanded">▼</span>
-          </button>
         </div>
-        <div class="activity-sections" *ngIf="activity.expanded">
+        <div class="activity-sections" 
+             *ngIf="isActivityExpanded(activity)"
+             cdkDropList
+             [id]="'activity-sections-' + activity.bamboo.id"
+             [cdkDropListData]="activity.sections"
+             [cdkDropListConnectedTo]="['todos-drop-list']"
+             (cdkDropListDropped)="dropSectionFromActivity($event, activity)">
           <div 
             class="task-item" 
             *ngFor="let section of activity.sections"
-            [class.selected]="selectedTask?.id === section.id"
+            cdkDrag
+            [cdkDragData]="section"
+            [cdkDragDisabled]="isSectionInTodos(section)"
             [class.completed]="section.completed"
-            (click)="selectActivity(section)">
-            <input type="checkbox" 
-                   class="task-checkbox" 
-                   [checked]="section.completed"
-                   (change)="toggleSectionCompleted(section, $event)"
-                   (click)="$event.stopPropagation()"
-                   (mousedown)="$event.stopPropagation()">
-            <div class="task-content">
+            [class.in-todos]="isSectionInTodos(section)">
+            <div class="task-content" cdkDragHandle>
               <div class="task-name" [class.completed]="section.completed">{{ section.name }}</div>
-              <div class="task-meta" *ngIf="section.description" [class.completed]="section.completed">{{ section.description }}</div>
+              <span class="in-todos-badge" *ngIf="isSectionInTodos(section)">已在待办</span>
             </div>
             <button class="task-delete-btn" 
                     (click)="deleteSection(section, $event)"
@@ -68,33 +108,61 @@
   <div class="todos-panel">
     <div class="panel-header">
       <h3>竹内待办</h3>
-      <span class="badge" *ngIf="selectedBamboo">{{ selectedBamboo.name }}</span>
+      <span class="badge">{{ bambooTodos.length }}</span>
     </div>
-    <div class="todos-list">
+    <div class="todos-list"
+         cdkDropList
+         id="todos-drop-list"
+         [cdkDropListData]="bambooTodos"
+         [cdkDropListConnectedTo]="getActivityDropListIds()"
+         (cdkDropListDropped)="dropSectionToTodos($event)">
       <div 
         class="todo-item" 
         *ngFor="let todo of bambooTodos"
+        cdkDrag
+        [cdkDragData]="todo"
         [class.selected]="selectedTask?.id === todo.id"
-        (click)="selectedTask = todo">
-        <div class="todo-info">
-          <div class="todo-name">{{ todo.name }}</div>
-          <div class="todo-meta" *ngIf="todo.description">
-            {{ todo.description }}
-          </div>
+        [class.completed]="todo.completed"
+        (click)="selectTodoForSprint(todo, $event)">
+        <div class="todo-info" cdkDragHandle>
+          <div class="todo-name" [class.completed]="todo.completed">{{ todo.name }}</div>
         </div>
-        <div class="todo-checkbox">
+        <div class="todo-actions">
           <input 
             type="checkbox" 
+            class="todo-checkbox-input"
             [checked]="todo.completed"
             (change)="toggleTodoComplete(todo, $event)"
             (click)="$event.stopPropagation()">
+          <div class="menu-container" (click)="$event.stopPropagation()" (mousedown)="$event.stopPropagation()">
+            <button class="btn-menu-vertical" 
+                    #todoMenuButton
+                    (click)="toggleTodoMenu('todo-' + todo.id, $event, todoMenuButton)"
+                    (mousedown)="$event.stopPropagation()"
+                    title="更多操作">
+              <span class="dot"></span>
+              <span class="dot"></span>
+              <span class="dot"></span>
+            </button>
+            <div class="dropdown-menu" 
+                 *ngIf="openMenuId === 'todo-' + todo.id"
+                 #todoDropdownMenu
+                 (click)="$event.stopPropagation()"
+                 (mousedown)="$event.stopPropagation()">
+              <button class="menu-item" (click)="editTodoSection(todo, $event)">
+                <span class="menu-icon" appSvgIcon="assets/icons/common/edit.svg"></span>
+                <span>编辑</span>
+              </button>
+              <button class="menu-item danger" (click)="removeFromTodos(todo, $event)">
+                <span class="menu-icon" appSvgIcon="assets/icons/common/delete.svg"></span>
+                <span>移除</span>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="empty-state" *ngIf="!selectedBamboo">
-        <p>请从活动列表中选择任务</p>
-      </div>
-      <div class="empty-state" *ngIf="selectedBamboo && bambooTodos.length === 0">
-        <p>该竹子暂无待办任务</p>
+      <div class="empty-state" *ngIf="bambooTodos.length === 0">
+        <p>从活动列表拖拽竹节到这里</p>
       </div>
     </div>
   </div>
@@ -103,6 +171,76 @@
   <div class="timer-panel">
     <div class="panel-header">
       <h3>冲刺管理器</h3>
+      <div class="header-actions">
+        <button class="btn-review" (click)="openReviewDialog()" title="回顾">
+          <span appSvgIcon="assets/icons/common/review.svg"></span>
+        </button>
+        <button class="btn-calendar" (click)="toggleCalendar($event)" (mousedown)="$event.stopPropagation()" title="选择日期">
+          <span appSvgIcon="assets/icons/common/calendar.svg"></span>
+        </button>
+      </div>
+    </div>
+    <!-- 日历滚动条 -->
+    <div class="calendar-scroll" *ngIf="showCalendar">
+      <div class="calendar-header">
+        <button class="btn-year-nav" (click)="previousYear($event)" title="上一年">
+          <span>«</span>
+        </button>
+        <button class="btn-month-nav" (click)="previousMonth($event)" title="上一个月" (mousedown)="$event.stopPropagation()">
+          <span>‹</span>
+        </button>
+        <div class="calendar-month-year" (click)="$event.stopPropagation()">
+          <span class="year-text" (click)="showYearSelector = !showYearSelector; showMonthSelector = false; $event.stopPropagation()">{{ currentCalendarMonth.getFullYear() }}年</span>
+          <span class="month-text" (click)="showMonthSelector = !showMonthSelector; showYearSelector = false; $event.stopPropagation()">{{ currentCalendarMonth.getMonth() + 1 }}月</span>
+          <div class="year-selector" *ngIf="showYearSelector" (click)="$event.stopPropagation()">
+            <div class="year-selector-grid">
+              <button 
+                class="year-option" 
+                *ngFor="let year of availableYears"
+                [class.selected]="year === currentCalendarMonth.getFullYear()"
+                (click)="selectYear(year, $event); $event.stopPropagation()"
+                type="button">
+                {{ year }}
+              </button>
+            </div>
+          </div>
+          <div class="month-selector" *ngIf="showMonthSelector">
+            <div class="month-selector-grid">
+              <button 
+                class="month-option" 
+                *ngFor="let month of availableMonths"
+                [class.selected]="month.value === currentCalendarMonth.getMonth()"
+                (click)="selectMonth(month.value, $event)"
+                type="button">
+                {{ month.label }}
+              </button>
+            </div>
+          </div>
+        </div>
+        <button class="btn-today" (click)="selectToday($event)" title="今天" (mousedown)="$event.stopPropagation()">
+          今天
+        </button>
+        <button class="btn-month-nav" (click)="nextMonth($event)" title="下一个月" (mousedown)="$event.stopPropagation()">
+          <span>›</span>
+        </button>
+        <button class="btn-year-nav" (click)="nextYear($event)" title="下一年">
+          <span>»</span>
+        </button>
+      </div>
+      <div class="calendar-weekdays">
+        <div class="weekday" *ngFor="let weekday of ['日', '一', '二', '三', '四', '五', '六']">{{ weekday }}</div>
+      </div>
+      <div class="calendar-days-grid">
+        <div 
+          class="calendar-day" 
+          *ngFor="let day of calendarDays"
+          [class.selected]="isDateSelected(day)"
+          [class.today]="isToday(day)"
+          [class.other-month]="!isCurrentMonth(day)"
+          (click)="selectDate(day, $event)">
+          <div class="day-number">{{ getDayNumber(day) }}</div>
+        </div>
+      </div>
     </div>
     <div class="timer-content">
       <!-- 当前状态显示 -->
@@ -209,12 +347,51 @@
   <div class="sprints-panel">
     <div class="panel-header">
       <h3>冲刺列表</h3>
-      <span class="badge">{{ sprintHistory.length }}</span>
+      <span class="badge">{{ filteredSprintHistory.length }}</span>
     </div>
     <div class="sprints-list">
-      <div class="sprint-item" *ngFor="let sprint of sprintHistory">
+      <div class="sprint-item" *ngFor="let sprint of filteredSprintHistory" (click)="closeSprintMenu()">
         <div class="sprint-info">
-          <div class="sprint-name">{{ sprint.taskName }}</div>
+          <div class="sprint-name-row">
+            <div class="sprint-name">{{ sprint.taskName }}</div>
+            <div class="menu-container" (click)="$event.stopPropagation()" (mousedown)="$event.stopPropagation()">
+              <button class="btn-menu-vertical" 
+                      #sprintMenuButton
+                      (click)="toggleSprintMenu('sprint-' + sprint.id, $event, sprintMenuButton)"
+                      (mousedown)="$event.stopPropagation()"
+                      title="更多操作">
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+              </button>
+              <div class="dropdown-menu" 
+                   *ngIf="openMenuId === 'sprint-' + sprint.id"
+                   #sprintDropdownMenu
+                   (click)="$event.stopPropagation()"
+                   (mousedown)="$event.stopPropagation()">
+                <button class="menu-item" (click)="continueSprint(sprint, $event)">
+                  <span class="menu-icon" appSvgIcon="assets/icons/common/play.svg"></span>
+                  <span>继续</span>
+                </button>
+                <button class="menu-item" 
+                        *ngIf="sprint.type === 'sprint'"
+                        (click)="restartSprint(sprint, $event)">
+                  <span class="menu-icon" appSvgIcon="assets/icons/common/refresh.svg"></span>
+                  <span>重新开始</span>
+                </button>
+                <button class="menu-item" 
+                        *ngIf="sprint.type === 'sprint'"
+                        (click)="moveSprintToTodos(sprint, $event)">
+                  <span class="menu-icon" appSvgIcon="assets/icons/common/move.svg"></span>
+                  <span>挪回待办</span>
+                </button>
+                <button class="menu-item danger" (click)="deleteSprint(sprint, $event)">
+                  <span class="menu-icon" appSvgIcon="assets/icons/common/delete.svg"></span>
+                  <span>删除</span>
+                </button>
+              </div>
+            </div>
+          </div>
           <div class="sprint-meta">
             <span class="sprint-time">{{ formatTime(sprint.duration) }}</span>
             <span class="sprint-status" [class.completed]="sprint.status === 'completed'"
@@ -229,7 +406,7 @@
           </div>
         </div>
       </div>
-      <div class="empty-state" *ngIf="sprintHistory.length === 0">
+      <div class="empty-state" *ngIf="filteredSprintHistory.length === 0">
         <p>暂无冲刺记录</p>
       </div>
     </div>
@@ -349,6 +526,61 @@
           </div>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- 回顾对话框 -->
+<div class="dialog-overlay" *ngIf="showReviewDialog" (click)="closeReviewDialog()">
+  <div class="dialog-content review-dialog" (click)="$event.stopPropagation()">
+    <div class="dialog-header">
+      <h3>回顾 - {{ formatReviewDate(reviewDate) }}</h3>
+      <button class="dialog-close" (click)="closeReviewDialog()">×</button>
+    </div>
+    <div class="dialog-body">
+      <div class="form-group">
+        <label>打分</label>
+        <div class="star-rating">
+          <button 
+            *ngFor="let score of [1,2,3,4,5]; let i = index"
+            class="star-btn"
+            [class.active]="getStarActive(score)"
+            [class.selected]="reviewData.score === score"
+            (click)="reviewData.score = score"
+            (mouseenter)="hoveredScore = score"
+            (mouseleave)="hoveredScore = null"
+            title="{{ score }}星">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path 
+                d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" 
+                [attr.fill]="getStarActive(score) ? 'currentColor' : 'none'"
+                stroke="currentColor" 
+                stroke-width="1.5" 
+                stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>做的好</label>
+        <textarea 
+          class="review-textarea" 
+          [(ngModel)]="reviewData.goodThings" 
+          placeholder="记录今天做得好的地方..."
+          rows="5"></textarea>
+      </div>
+      <div class="form-group">
+        <label>做得不好</label>
+        <textarea 
+          class="review-textarea" 
+          [(ngModel)]="reviewData.badThings" 
+          placeholder="记录今天做得不好的地方，以及如何改进..."
+          rows="5"></textarea>
+      </div>
+    </div>
+    <div class="dialog-footer">
+      <button class="btn btn-secondary" (click)="closeReviewDialog()">取消</button>
+      <button class="btn btn-primary" (click)="saveReview()">保存</button>
     </div>
   </div>
 </div>

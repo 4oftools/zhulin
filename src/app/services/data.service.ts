@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { BambooForest, BambooField, Bamboo } from '../models/bamboo-forest.model';
+import { BambooForest, BambooField, Bamboo, Goal, KeyOutput, Learning } from '../models/bamboo-forest.model';
 import { BambooSection } from '../models/bamboo-forest.model';
 
 @Injectable({
@@ -201,28 +201,161 @@ export class DataService {
 
   archiveBamboo(fieldId: string, bambooId: string, archived: boolean): void {
     const forests = this.forestsSubject.value.map(forest => {
-      return {
-        ...forest,
+        return {
+          ...forest,
         bambooFields: forest.bambooFields.map(field => {
           if (field.id === fieldId) {
             return {
-              ...field,
+          ...field,
               bamboos: field.bamboos.map(bamboo => {
                 if (bamboo.id === bambooId) {
-                  return {
+        return {
                     ...bamboo,
                     archived: archived,
                     archivedAt: archived ? new Date() : undefined,
                     updatedAt: new Date()
-                  };
+        };
                 }
                 return bamboo;
               })
-            };
-          }
+        };
+      }
           return field;
         })
       };
+    });
+    this.forestsSubject.next(forests);
+    this.saveToLocalStorage(forests);
+  }
+
+  // Goal CRUD (Goals belong to BambooForest)
+  addGoal(goal: Goal): void {
+    const forests = this.forestsSubject.value.map(forest => {
+      if (forest.id === goal.forestId) {
+        return {
+          ...forest,
+          goals: [...(forest.goals || []), goal]
+        };
+      }
+      return forest;
+    });
+    this.forestsSubject.next(forests);
+    this.saveToLocalStorage(forests);
+  }
+
+  updateGoal(goal: Goal): void {
+    const forests = this.forestsSubject.value.map(forest => {
+      if (forest.id === goal.forestId) {
+        return {
+          ...forest,
+          goals: (forest.goals || []).map(g => g.id === goal.id ? goal : g)
+        };
+      }
+      return forest;
+    });
+    this.forestsSubject.next(forests);
+    this.saveToLocalStorage(forests);
+  }
+
+  deleteGoal(forestId: string, goalId: string): void {
+    const forests = this.forestsSubject.value.map(forest => {
+      if (forest.id === forestId) {
+        return {
+          ...forest,
+          goals: (forest.goals || []).filter(g => g.id !== goalId)
+        };
+      }
+      return forest;
+    });
+    this.forestsSubject.next(forests);
+    this.saveToLocalStorage(forests);
+  }
+
+  // KeyOutput CRUD (KeyOutputs belong to BambooForest)
+  addKeyOutput(keyOutput: KeyOutput): void {
+    const forests = this.forestsSubject.value.map(forest => {
+      if (forest.id === keyOutput.forestId) {
+        return {
+          ...forest,
+          keyOutputs: [...(forest.keyOutputs || []), keyOutput]
+        };
+      }
+      return forest;
+    });
+    this.forestsSubject.next(forests);
+    this.saveToLocalStorage(forests);
+  }
+
+  updateKeyOutput(keyOutput: KeyOutput): void {
+    const forests = this.forestsSubject.value.map(forest => {
+      if (forest.id === keyOutput.forestId) {
+        return {
+          ...forest,
+          keyOutputs: (forest.keyOutputs || []).map(ko => 
+            ko.id === keyOutput.id ? keyOutput : ko
+          )
+        };
+      }
+      return forest;
+    });
+    this.forestsSubject.next(forests);
+    this.saveToLocalStorage(forests);
+  }
+
+  deleteKeyOutput(forestId: string, keyOutputId: string): void {
+    const forests = this.forestsSubject.value.map(forest => {
+      if (forest.id === forestId) {
+        return {
+          ...forest,
+          keyOutputs: (forest.keyOutputs || []).filter(ko => ko.id !== keyOutputId)
+        };
+      }
+      return forest;
+    });
+    this.forestsSubject.next(forests);
+    this.saveToLocalStorage(forests);
+  }
+
+  // Learning CRUD (Learnings belong to BambooForest)
+  addLearning(learning: Learning): void {
+    const forests = this.forestsSubject.value.map(forest => {
+      if (forest.id === learning.forestId) {
+        return {
+          ...forest,
+          learnings: [...(forest.learnings || []), learning]
+        };
+      }
+      return forest;
+    });
+    this.forestsSubject.next(forests);
+    this.saveToLocalStorage(forests);
+  }
+
+  updateLearning(learning: Learning): void {
+    const forests = this.forestsSubject.value.map(forest => {
+      if (forest.id === learning.forestId) {
+        return {
+          ...forest,
+          learnings: (forest.learnings || []).map(l => 
+            l.id === learning.id ? learning : l
+          )
+        };
+      }
+      return forest;
+    });
+    this.forestsSubject.next(forests);
+    this.saveToLocalStorage(forests);
+  }
+
+  deleteLearning(forestId: string, learningId: string): void {
+    const forests = this.forestsSubject.value.map(forest => {
+      if (forest.id === forestId) {
+        return {
+          ...forest,
+          learnings: (forest.learnings || []).filter(l => l.id !== learningId)
+        };
+      }
+      return forest;
     });
     this.forestsSubject.next(forests);
     this.saveToLocalStorage(forests);
@@ -258,6 +391,41 @@ export class DataService {
     const bamboo4Id = this.generateId();
     const bamboo5Id = this.generateId();
     const bamboo6Id = this.generateId();
+    
+    // 生成目标
+    const goal1Id = this.generateId();
+    const goal2Id = this.generateId();
+    const goal3Id = this.generateId();
+    
+    const goal1: Goal = {
+      id: goal1Id,
+      forestId: forest1Id,
+      name: '完成产品核心功能开发',
+      description: '开发并交付产品的核心功能模块',
+      completed: false,
+      createdAt: new Date(now.getTime() - 10 * 24 * 60 * 60 * 1000),
+      updatedAt: new Date(now.getTime() - 10 * 24 * 60 * 60 * 1000)
+    };
+    
+    const goal2: Goal = {
+      id: goal2Id,
+      forestId: forest1Id,
+      name: '确保产品质量和稳定性',
+      description: '通过测试和优化确保产品质量',
+      completed: false,
+      createdAt: new Date(now.getTime() - 10 * 24 * 60 * 60 * 1000),
+      updatedAt: new Date(now.getTime() - 10 * 24 * 60 * 60 * 1000)
+    };
+    
+    const goal3: Goal = {
+      id: goal3Id,
+      forestId: forest2Id,
+      name: '制定产品战略规划',
+      description: '完成产品长期战略规划和市场分析',
+      completed: false,
+      createdAt: new Date(now.getTime() - 15 * 24 * 60 * 60 * 1000),
+      updatedAt: new Date(now.getTime() - 15 * 24 * 60 * 60 * 1000)
+    };
     
     // 生成竹节（任务）
     const generateTasks = (bambooId: string, count: number): BambooSection[] => {
@@ -296,6 +464,7 @@ export class DataService {
     const bamboo1: Bamboo = {
       id: bamboo1Id,
       fieldId: field1Id,
+      goalId: goal1Id,
       name: '需求分析与设计',
       startDate: new Date(now.getTime() - 10 * 24 * 60 * 60 * 1000),
       endDate: new Date(now.getTime() - 5 * 24 * 60 * 60 * 1000),
@@ -308,6 +477,7 @@ export class DataService {
     const bamboo2: Bamboo = {
       id: bamboo2Id,
       fieldId: field1Id,
+      goalId: goal1Id,
       name: '核心功能开发',
       startDate: new Date(now.getTime() - 4 * 24 * 60 * 60 * 1000),
       endDate: new Date(now.getTime() + 1 * 24 * 60 * 60 * 1000),
@@ -320,6 +490,7 @@ export class DataService {
     const bamboo3: Bamboo = {
       id: bamboo3Id,
       fieldId: field2Id,
+      goalId: goal2Id,
       name: '测试与优化',
       startDate: new Date(now.getTime() + 2 * 24 * 60 * 60 * 1000),
       endDate: new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000),
@@ -332,6 +503,7 @@ export class DataService {
     const bamboo4: Bamboo = {
       id: bamboo4Id,
       fieldId: field2Id,
+      goalId: goal2Id,
       name: '部署与上线',
       startDate: new Date(now.getTime() + 8 * 24 * 60 * 60 * 1000),
       endDate: new Date(now.getTime() + 12 * 24 * 60 * 60 * 1000),
@@ -344,6 +516,7 @@ export class DataService {
     const bamboo5: Bamboo = {
       id: bamboo5Id,
       fieldId: field3Id,
+      goalId: goal3Id,
       name: '市场调研',
       startDate: new Date(now.getTime() - 15 * 24 * 60 * 60 * 1000),
       endDate: new Date(now.getTime() - 8 * 24 * 60 * 60 * 1000),
@@ -356,6 +529,7 @@ export class DataService {
     const bamboo6: Bamboo = {
       id: bamboo6Id,
       fieldId: field3Id,
+      goalId: goal3Id,
       name: '产品规划',
       startDate: new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000),
       endDate: new Date(now.getTime() - 1 * 24 * 60 * 60 * 1000),
@@ -374,7 +548,6 @@ export class DataService {
       endDate: new Date(now.getTime() + 1 * 24 * 60 * 60 * 1000),
       description: '项目开发的第一阶段',
       bamboos: [bamboo1, bamboo2],
-      goals: [],
       createdAt: new Date(now.getTime() - 10 * 24 * 60 * 60 * 1000),
       updatedAt: new Date(now.getTime() + 1 * 24 * 60 * 60 * 1000)
     };
@@ -387,7 +560,6 @@ export class DataService {
       endDate: new Date(now.getTime() + 12 * 24 * 60 * 60 * 1000),
       description: '测试和部署阶段',
       bamboos: [bamboo3, bamboo4],
-      goals: [],
       createdAt: new Date(now.getTime() + 2 * 24 * 60 * 60 * 1000),
       updatedAt: new Date(now.getTime() + 12 * 24 * 60 * 60 * 1000)
     };
@@ -400,7 +572,6 @@ export class DataService {
       endDate: new Date(now.getTime() - 1 * 24 * 60 * 60 * 1000),
       description: '产品规划和市场调研',
       bamboos: [bamboo5, bamboo6],
-      goals: [],
       createdAt: new Date(now.getTime() - 15 * 24 * 60 * 60 * 1000),
       updatedAt: new Date(now.getTime() - 1 * 24 * 60 * 60 * 1000)
     };
@@ -413,7 +584,6 @@ export class DataService {
       endDate: new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000),
       description: '产品运营和持续优化',
       bamboos: [],
-      goals: [],
       createdAt: new Date(now.getTime()),
       updatedAt: new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000)
     };
@@ -427,6 +597,9 @@ export class DataService {
       description: '2024年度的主要产品开发项目',
       enabled: true,
       bambooFields: [field1, field2],
+      goals: [goal1, goal2],
+      keyOutputs: [],
+      learnings: [],
       createdAt: new Date(now.getTime() - 10 * 24 * 60 * 60 * 1000),
       updatedAt: new Date(now.getTime() + 12 * 24 * 60 * 60 * 1000)
     };
@@ -439,6 +612,9 @@ export class DataService {
       description: '产品长期战略规划和运营',
       enabled: false, // 设置为禁用状态，用于测试
       bambooFields: [field3, field4],
+      goals: [goal3],
+      keyOutputs: [],
+      learnings: [],
       createdAt: new Date(now.getTime() - 15 * 24 * 60 * 60 * 1000),
       updatedAt: new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000)
     };
@@ -486,12 +662,24 @@ export class DataService {
             updatedAt: new Date(task.updatedAt),
             dueDate: task.dueDate ? new Date(task.dueDate) : undefined
           }))
+          }))
         })),
-        goals: (field.goals || []).map((goal: any) => ({
+      goals: (forest.goals || []).map((goal: any) => ({
           ...goal,
           createdAt: new Date(goal.createdAt),
-          updatedAt: new Date(goal.updatedAt)
-        }))
+        updatedAt: new Date(goal.updatedAt),
+        completedAt: goal.completedAt ? new Date(goal.completedAt) : undefined
+      })),
+      keyOutputs: (forest.keyOutputs || []).map((ko: any) => ({
+        ...ko,
+        createdAt: new Date(ko.createdAt),
+        updatedAt: new Date(ko.updatedAt),
+        completedAt: ko.completedAt ? new Date(ko.completedAt) : undefined
+      })),
+      learnings: (forest.learnings || []).map((learning: any) => ({
+        ...learning,
+        createdAt: new Date(learning.createdAt),
+        updatedAt: new Date(learning.updatedAt)
       }))
     }));
   }

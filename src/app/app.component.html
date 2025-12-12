@@ -19,22 +19,133 @@
             <span class="nav-icon" appSvgIcon="assets/icons/navigation/tactical.svg"></span>
             <span>战术管理</span>
           </a>
+          <a routerLink="/statistics" routerLinkActive="active">
+            <span class="nav-icon" appSvgIcon="assets/icons/navigation/statistics.svg"></span>
+            <span>详细统计</span>
+          </a>
         </nav>
       </div>
       <div class="header-right">
-        <div class="user-section">
-          <div class="user-info" *ngIf="isLoggedIn">
-            <span class="user-avatar">{{ userName.charAt(0) }}</span>
-            <span class="user-name">{{ userName }}</span>
-            <button class="btn-logout" (click)="logout()" title="退出登录">退出</button>
-          </div>
-          <button class="btn-login" *ngIf="!isLoggedIn" (click)="login()">登录</button>
-        </div>
+        <button class="btn-settings" (click)="openSettings()" title="设置">
+          <span class="settings-icon" appSvgIcon="assets/icons/common/settings.svg"></span>
+          <span>设置</span>
+        </button>
       </div>
     </div>
   </header>
   <main class="app-main">
     <router-outlet></router-outlet>
   </main>
+</div>
+
+<!-- 设置对话框 -->
+<div class="settings-dialog-overlay" *ngIf="showSettingsDialog" (click)="onDialogOverlayClick($event)">
+  <div class="settings-dialog" (click)="$event.stopPropagation()">
+    <div class="settings-dialog-header">
+      <h2>设置</h2>
+      <button class="btn-close" (click)="closeSettings()" title="关闭">
+        <span>×</span>
+      </button>
+    </div>
+    
+    <div class="settings-dialog-content">
+      <!-- 自动完成设置 -->
+      <div class="settings-section">
+        <h3 class="settings-section-title">自动完成设置</h3>
+        <div class="settings-item">
+          <div class="settings-item-info">
+            <label class="settings-item-label">竹子自动完成</label>
+            <p class="settings-item-description">当竹子的所有竹节（任务）都完成后，自动将竹子标记为已完成</p>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" 
+                   [checked]="settings.autoCompleteBamboo"
+                   (change)="onCheckboxChange('autoCompleteBamboo', $event)">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <!-- 提醒设置 -->
+      <div class="settings-section">
+        <h3 class="settings-section-title">提醒设置</h3>
+        <div class="settings-item">
+          <div class="settings-item-info">
+            <label class="settings-item-label">每日回顾提醒</label>
+            <p class="settings-item-description">每天提醒您进行工作回顾</p>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" 
+                   [checked]="settings.remindDailyReview"
+                   (change)="onCheckboxChange('remindDailyReview', $event)">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="settings-item">
+          <div class="settings-item-info">
+            <label class="settings-item-label">目标完成提醒</label>
+            <p class="settings-item-description">当目标完成时提醒您</p>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" 
+                   [checked]="settings.remindGoalCompletion"
+                   (change)="onCheckboxChange('remindGoalCompletion', $event)">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="settings-item">
+          <div class="settings-item-info">
+            <label class="settings-item-label">任务提醒</label>
+            <p class="settings-item-description">启用任务提醒功能</p>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" 
+                   [checked]="settings.taskReminderEnabled"
+                   (change)="onCheckboxChange('taskReminderEnabled', $event)">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <!-- 显示设置 -->
+      <div class="settings-section">
+        <h3 class="settings-section-title">显示设置</h3>
+        <div class="settings-item">
+          <div class="settings-item-info">
+            <label class="settings-item-label">显示已完成任务</label>
+            <p class="settings-item-description">在任务列表中显示已完成的任务</p>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" 
+                   [checked]="settings.showCompletedTasks"
+                   (change)="onCheckboxChange('showCompletedTasks', $event)">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <!-- 默认设置 -->
+      <div class="settings-section">
+        <h3 class="settings-section-title">默认设置</h3>
+        <div class="settings-item">
+          <div class="settings-item-info">
+            <label class="settings-item-label">默认竹子周期（天）</label>
+            <p class="settings-item-description">创建新竹子时的默认周期天数</p>
+          </div>
+          <input type="number" 
+                 class="settings-input"
+                 min="1" 
+                 max="30"
+                 [value]="settings.defaultBambooDuration"
+                 (change)="onNumberChange('defaultBambooDuration', $event)">
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-dialog-footer">
+      <button class="btn-reset" (click)="resetSettings()">重置设置</button>
+      <button class="btn-close-dialog" (click)="closeSettings()">关闭</button>
+    </div>
+  </div>
 </div>
 

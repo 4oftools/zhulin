@@ -1,0 +1,283 @@
+<div class="statistics-container">
+  <div class="statistics-header">
+    <h1>详细统计</h1>
+    <div class="header-controls">
+      <select [(ngModel)]="selectedTimeRange" class="filter-select">
+        <option value="all">全部时间</option>
+        <option value="week">最近一周</option>
+        <option value="month">最近一月</option>
+        <option value="quarter">最近一季</option>
+        <option value="year">最近一年</option>
+      </select>
+      <select [(ngModel)]="selectedForestId" class="filter-select">
+        <option [value]="null">全部竹林</option>
+        <option *ngFor="let forest of forests" [value]="forest.id">{{ forest.name }}</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- 总体统计 -->
+  <section class="stats-section">
+    <h2 class="section-title">总体统计</h2>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">🌲</div>
+        <div class="stat-content">
+          <div class="stat-value">{{ overallStats.totalForests }}</div>
+          <div class="stat-label">竹林总数</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🌾</div>
+        <div class="stat-content">
+          <div class="stat-value">{{ overallStats.totalFields }}</div>
+          <div class="stat-label">竹田总数</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🎋</div>
+        <div class="stat-content">
+          <div class="stat-value">{{ overallStats.totalBamboos }}</div>
+          <div class="stat-label">竹子总数</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">📋</div>
+        <div class="stat-content">
+          <div class="stat-value">{{ overallStats.totalTasks }}</div>
+          <div class="stat-label">任务总数</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">✅</div>
+        <div class="stat-content">
+          <div class="stat-value">{{ overallStats.completedTasks }}</div>
+          <div class="stat-label">已完成任务</div>
+        </div>
+      </div>
+      <div class="stat-card highlight">
+        <div class="stat-icon">📊</div>
+        <div class="stat-content">
+          <div class="stat-value">{{ overallStats.completionRate }}%</div>
+          <div class="stat-label">任务完成率</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 任务状态分布 -->
+  <section class="stats-section">
+    <h2 class="section-title">任务状态分布</h2>
+    <div class="task-status-grid">
+      <div class="status-card completed">
+        <div class="status-header">
+          <span class="status-icon">✓</span>
+          <span class="status-label">已完成</span>
+        </div>
+        <div class="status-value">{{ overallStats.completedTasks }}</div>
+        <div class="status-percentage">
+          {{ overallStats.totalTasks > 0 ? Math.round((overallStats.completedTasks / overallStats.totalTasks) * 100) : 0 }}%
+        </div>
+        <div class="status-bar">
+          <div class="status-bar-fill" 
+               [style.width.%]="overallStats.totalTasks > 0 ? (overallStats.completedTasks / overallStats.totalTasks) * 100 : 0"
+               style="background-color: #4CAF50;"></div>
+        </div>
+      </div>
+      <div class="status-card in-progress">
+        <div class="status-header">
+          <span class="status-icon">⟳</span>
+          <span class="status-label">进行中</span>
+        </div>
+        <div class="status-value">{{ overallStats.inProgressTasks }}</div>
+        <div class="status-percentage">
+          {{ overallStats.totalTasks > 0 ? Math.round((overallStats.inProgressTasks / overallStats.totalTasks) * 100) : 0 }}%
+        </div>
+        <div class="status-bar">
+          <div class="status-bar-fill" 
+               [style.width.%]="overallStats.totalTasks > 0 ? (overallStats.inProgressTasks / overallStats.totalTasks) * 100 : 0"
+               style="background-color: #2196F3;"></div>
+        </div>
+      </div>
+      <div class="status-card pending">
+        <div class="status-header">
+          <span class="status-icon">○</span>
+          <span class="status-label">待办</span>
+        </div>
+        <div class="status-value">{{ overallStats.pendingTasks }}</div>
+        <div class="status-percentage">
+          {{ overallStats.totalTasks > 0 ? Math.round((overallStats.pendingTasks / overallStats.totalTasks) * 100) : 0 }}%
+        </div>
+        <div class="status-bar">
+          <div class="status-bar-fill" 
+               [style.width.%]="overallStats.totalTasks > 0 ? (overallStats.pendingTasks / overallStats.totalTasks) * 100 : 0"
+               style="background-color: #FF9800;"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 目标与产出统计 -->
+  <section class="stats-section">
+    <h2 class="section-title">目标与产出统计</h2>
+    <div class="goals-outputs-grid">
+      <div class="goals-card">
+        <h3>目标统计</h3>
+        <div class="goals-stats">
+          <div class="goal-stat-item">
+            <span class="goal-stat-label">总目标数：</span>
+            <span class="goal-stat-value">{{ overallStats.totalGoals }}</span>
+          </div>
+          <div class="goal-stat-item">
+            <span class="goal-stat-label">已完成：</span>
+            <span class="goal-stat-value completed">{{ overallStats.completedGoals }}</span>
+          </div>
+          <div class="goal-stat-item">
+            <span class="goal-stat-label">完成率：</span>
+            <span class="goal-stat-value">
+              {{ overallStats.totalGoals > 0 ? Math.round((overallStats.completedGoals / overallStats.totalGoals) * 100) : 0 }}%
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="outputs-card">
+        <h3>关键产出统计</h3>
+        <div class="outputs-stats">
+          <div class="output-stat-item">
+            <span class="output-stat-label">总产出数：</span>
+            <span class="output-stat-value">{{ overallStats.totalKeyOutputs }}</span>
+          </div>
+          <div class="output-stat-item">
+            <span class="output-stat-label">已完成：</span>
+            <span class="output-stat-value completed">{{ overallStats.completedKeyOutputs }}</span>
+          </div>
+          <div class="output-stat-item">
+            <span class="output-stat-label">完成率：</span>
+            <span class="output-stat-value">
+              {{ overallStats.totalKeyOutputs > 0 ? Math.round((overallStats.completedKeyOutputs / overallStats.totalKeyOutputs) * 100) : 0 }}%
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="learnings-card">
+        <h3>习得统计</h3>
+        <div class="learnings-stats">
+          <div class="learning-stat-item">
+            <span class="learning-stat-label">总习得数：</span>
+            <span class="learning-stat-value">{{ overallStats.totalLearnings }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 竹林详细统计 -->
+  <section class="stats-section">
+    <h2 class="section-title">竹林详细统计</h2>
+    <div class="forest-stats-list">
+      <div *ngFor="let forestStat of getFilteredForestStats()" class="forest-stat-card">
+        <div class="forest-stat-header">
+          <h3>{{ forestStat.forest.name }}</h3>
+          <div class="forest-stat-meta">
+            <span class="forest-date">{{ formatDate(forestStat.forest.startDate) }} - {{ formatDate(forestStat.forest.endDate) }}</span>
+            <span class="forest-status" [class.enabled]="forestStat.forest.enabled" [class.disabled]="!forestStat.forest.enabled">
+              {{ forestStat.forest.enabled ? '启用' : '禁用' }}
+            </span>
+          </div>
+        </div>
+        <div class="forest-stat-content">
+          <div class="forest-stat-grid">
+            <div class="forest-stat-item">
+              <span class="forest-stat-label">竹田数：</span>
+              <span class="forest-stat-value">{{ forestStat.totalFields }}</span>
+            </div>
+            <div class="forest-stat-item">
+              <span class="forest-stat-label">竹子数：</span>
+              <span class="forest-stat-value">{{ forestStat.totalBamboos }}</span>
+            </div>
+            <div class="forest-stat-item">
+              <span class="forest-stat-label">任务数：</span>
+              <span class="forest-stat-value">{{ forestStat.totalTasks }}</span>
+            </div>
+            <div class="forest-stat-item highlight">
+              <span class="forest-stat-label">完成率：</span>
+              <span class="forest-stat-value">{{ forestStat.completionRate }}%</span>
+            </div>
+          </div>
+          <div class="forest-task-breakdown">
+            <div class="task-breakdown-item completed">
+              <span class="breakdown-label">已完成：</span>
+              <span class="breakdown-value">{{ forestStat.completedTasks }}</span>
+            </div>
+            <div class="task-breakdown-item in-progress">
+              <span class="breakdown-label">进行中：</span>
+              <span class="breakdown-value">{{ forestStat.inProgressTasks }}</span>
+            </div>
+            <div class="task-breakdown-item pending">
+              <span class="breakdown-label">待办：</span>
+              <span class="breakdown-value">{{ forestStat.pendingTasks }}</span>
+            </div>
+          </div>
+          <div class="forest-goals-outputs">
+            <div class="goals-info">
+              <span class="info-label">目标：</span>
+              <span class="info-value">{{ forestStat.completedGoals }}/{{ forestStat.totalGoals }}</span>
+            </div>
+            <div class="outputs-info">
+              <span class="info-label">关键产出：</span>
+              <span class="info-value">{{ forestStat.completedKeyOutputs }}/{{ forestStat.totalKeyOutputs }}</span>
+            </div>
+            <div class="learnings-info">
+              <span class="info-label">习得：</span>
+              <span class="info-value">{{ forestStat.totalLearnings }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 目标详细统计 -->
+  <section class="stats-section" *ngIf="getFilteredGoalStats().length > 0">
+    <h2 class="section-title">目标详细统计</h2>
+    <div class="goal-stats-list">
+      <div *ngFor="let goalStat of getFilteredGoalStats()" class="goal-stat-card">
+        <div class="goal-stat-header">
+          <h4>{{ goalStat.goal.name }}</h4>
+          <span class="goal-forest-name">{{ goalStat.forest.name }}</span>
+        </div>
+        <div class="goal-stat-content">
+          <div class="goal-stat-grid">
+            <div class="goal-stat-item">
+              <span class="goal-stat-label">竹子数：</span>
+              <span class="goal-stat-value">{{ goalStat.totalBamboos }}</span>
+            </div>
+            <div class="goal-stat-item">
+              <span class="goal-stat-label">任务数：</span>
+              <span class="goal-stat-value">{{ goalStat.totalTasks }}</span>
+            </div>
+            <div class="goal-stat-item highlight">
+              <span class="goal-stat-label">完成率：</span>
+              <span class="goal-stat-value">{{ goalStat.completionRate }}%</span>
+            </div>
+          </div>
+          <div class="goal-task-breakdown">
+            <div class="task-breakdown-item completed">
+              <span class="breakdown-label">已完成：</span>
+              <span class="breakdown-value">{{ goalStat.completedTasks }}</span>
+            </div>
+            <div class="task-breakdown-item in-progress">
+              <span class="breakdown-label">进行中：</span>
+              <span class="breakdown-value">{{ goalStat.inProgressTasks }}</span>
+            </div>
+            <div class="task-breakdown-item pending">
+              <span class="breakdown-label">待办：</span>
+              <span class="breakdown-value">{{ goalStat.pendingTasks }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+

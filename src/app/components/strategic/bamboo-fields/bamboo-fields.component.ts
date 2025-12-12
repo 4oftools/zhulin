@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DataService } from '../../../services/data.service';
-import { BambooForest, BambooField, Bamboo } from '../../../models/bamboo-forest.model';
+import { BambooForest, BambooField, Bamboo, Goal, KeyOutput, Learning } from '../../../models/bamboo-forest.model';
 import { BambooSection } from '../../../models/bamboo-forest.model';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
@@ -19,8 +19,13 @@ export class BambooFieldsComponent implements OnInit {
   // 对话框状态
   showFieldDialog = false;
   showBambooDialog = false;
+  showForestDialog = false;
+  showGoalDialog = false;
+  showKeyOutputDialog = false;
+  showLearningDialog = false;
   isEditingField = false;
   isEditingBamboo = false;
+  isEditingForest = false;
 
   // 下拉菜单状态
   openMenuId: string | null = null;
@@ -38,18 +43,32 @@ export class BambooFieldsComponent implements OnInit {
     description: ''
   };
 
+  newForest: {
+    name: string;
+    startDate: string;
+    endDate: string;
+    description: string;
+  } = {
+    name: '',
+    startDate: new Date().toISOString().split('T')[0],
+    endDate: new Date().toISOString().split('T')[0],
+    description: ''
+  };
+
   newBamboo: {
     name: string;
     startDate: string;
     endDate: string;
     description: string;
     completed: boolean;
+    goalId: string;
   } = {
     name: '',
     startDate: new Date().toISOString().split('T')[0],
     endDate: new Date().toISOString().split('T')[0],
     description: '',
-    completed: false
+    completed: false,
+    goalId: ''
   };
 
   editingBambooId: string | null = null;
@@ -67,6 +86,51 @@ export class BambooFieldsComponent implements OnInit {
     name: '',
     description: '',
     completed: false
+  };
+
+  // 目标管理
+  goals: Goal[] = [];
+  showGoalEditDialog = false;
+  isEditingGoal = false;
+  editingGoalId: string | null = null;
+  newGoal: {
+    name: string;
+    description: string;
+    completed: boolean;
+  } = {
+    name: '',
+    description: '',
+    completed: false
+  };
+
+  // 关键产出管理
+  keyOutputs: KeyOutput[] = [];
+  showKeyOutputEditDialog = false;
+  isEditingKeyOutput = false;
+  editingKeyOutputId: string | null = null;
+  newKeyOutput: {
+    name: string;
+    description: string;
+    completed: boolean;
+  } = {
+    name: '',
+    description: '',
+    completed: false
+  };
+
+  // 习得管理
+  learnings: Learning[] = [];
+  showLearningEditDialog = false;
+  isEditingLearning = false;
+  editingLearningId: string | null = null;
+  newLearning: {
+    title: string;
+    content: string;
+    tags: string;
+  } = {
+    title: '',
+    content: '',
+    tags: ''
   };
 
   constructor(
@@ -377,7 +441,6 @@ export class BambooFieldsComponent implements OnInit {
         endDate: new Date(this.newField.endDate!),
         description: this.newField.description || '',
         bamboos: [],
-        goals: [],
         createdAt: new Date(),
         updatedAt: new Date()
       };
@@ -404,7 +467,13 @@ export class BambooFieldsComponent implements OnInit {
       alert('请先选择竹田');
       return;
     }
+    if (!this.forest) {
+      alert('请先选择竹林');
+      return;
+    }
     this.selectField(field);
+    // 加载目标列表
+    this.goals = this.forest.goals || [];
     if (bamboo) {
       this.isEditingBamboo = true;
       this.editingBambooId = bamboo.id;
@@ -413,7 +482,8 @@ export class BambooFieldsComponent implements OnInit {
         startDate: new Date(bamboo.startDate).toISOString().split('T')[0],
         endDate: new Date(bamboo.endDate).toISOString().split('T')[0],
         description: bamboo.description || '',
-        completed: bamboo.completed || false
+        completed: bamboo.completed || false,
+        goalId: bamboo.goalId || ''
       };
       // 复制竹节列表到对话框
       this.dialogSections = (bamboo.tasks || []).map(section => ({ ...section }));
@@ -425,7 +495,8 @@ export class BambooFieldsComponent implements OnInit {
         startDate: new Date().toISOString().split('T')[0],
         endDate: new Date().toISOString().split('T')[0],
         description: '',
-        completed: false
+        completed: false,
+        goalId: ''
       };
       // 新建时，竹节列表为空
       this.dialogSections = [];
@@ -452,6 +523,11 @@ export class BambooFieldsComponent implements OnInit {
       return;
     }
 
+    if (!this.newBamboo.goalId) {
+      alert('请选择一个目标');
+      return;
+    }
+
     if (this.isEditingBamboo && this.editingBambooId) {
       const currentBamboo = this.selectedField.bamboos.find(b => b.id === this.editingBambooId);
       if (currentBamboo) {
@@ -463,6 +539,7 @@ export class BambooFieldsComponent implements OnInit {
           description: this.newBamboo.description || '',
           completed: this.newBamboo.completed,
           completedAt: this.newBamboo.completed ? new Date() : undefined,
+          goalId: this.newBamboo.goalId,
           tasks: this.dialogSections.map(section => ({
             ...section,
             bambooId: currentBamboo.id
@@ -476,6 +553,7 @@ export class BambooFieldsComponent implements OnInit {
       const bamboo: Bamboo = {
         id: bambooId,
         fieldId: this.selectedField.id,
+        goalId: this.newBamboo.goalId,
         name: this.newBamboo.name!,
         startDate: new Date(this.newBamboo.startDate!),
         endDate: new Date(this.newBamboo.endDate!),
@@ -504,7 +582,8 @@ export class BambooFieldsComponent implements OnInit {
       startDate: new Date().toISOString().split('T')[0],
       endDate: new Date().toISOString().split('T')[0],
       description: '',
-      completed: false
+      completed: false,
+      goalId: ''
     };
   }
 
@@ -565,19 +644,359 @@ export class BambooFieldsComponent implements OnInit {
     this.closeMenu();
   }
 
+  // 目标管理方法
   openGoalDialog(): void {
-    // TODO: 实现目标管理
-    alert('目标管理功能待实现');
+    if (!this.forest) {
+      alert('请先选择竹林');
+      return;
+    }
+    this.goals = this.forest.goals || [];
+    this.showGoalDialog = true;
+    this.closeMenu();
   }
 
+  closeGoalDialog(): void {
+    this.showGoalDialog = false;
+    this.goals = [];
+    this.resetGoalForm();
+  }
+
+  openGoalEditDialog(goal?: Goal): void {
+    if (goal) {
+      this.isEditingGoal = true;
+      this.editingGoalId = goal.id;
+      this.newGoal = {
+        name: goal.name,
+        description: goal.description || '',
+        completed: goal.completed || false
+      };
+    } else {
+      this.isEditingGoal = false;
+      this.editingGoalId = null;
+      this.resetGoalForm();
+    }
+    this.showGoalEditDialog = true;
+  }
+
+  closeGoalEditDialog(): void {
+    this.showGoalEditDialog = false;
+    this.isEditingGoal = false;
+    this.editingGoalId = null;
+    this.resetGoalForm();
+  }
+
+  addGoal(): void {
+    if (!this.newGoal.name) {
+      alert('请输入目标名称');
+      return;
+    }
+    if (!this.forest) {
+      alert('请先选择竹林');
+      return;
+    }
+
+    const forestId = this.forest.id;
+
+    if (this.isEditingGoal && this.editingGoalId) {
+      const goal = this.goals.find(g => g.id === this.editingGoalId);
+      if (goal) {
+        const updatedGoal: Goal = {
+          ...goal,
+          name: this.newGoal.name,
+          description: this.newGoal.description,
+          completed: this.newGoal.completed,
+          completedAt: this.newGoal.completed ? new Date() : undefined,
+          updatedAt: new Date()
+        };
+        this.dataService.updateGoal(updatedGoal);
+      }
+    } else {
+      const goal: Goal = {
+        id: this.generateId(),
+        forestId: forestId,
+        name: this.newGoal.name,
+        description: this.newGoal.description,
+        completed: this.newGoal.completed,
+        completedAt: this.newGoal.completed ? new Date() : undefined,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      };
+      this.dataService.addGoal(goal);
+    }
+    
+    // 重新加载数据并更新列表
+    this.dataService.getForests().subscribe(forests => {
+      const updatedForest = forests.find(f => f.id === forestId);
+      if (updatedForest) {
+        this.forest = updatedForest;
+        this.goals = updatedForest.goals || [];
+        this.fields = updatedForest.bambooFields.filter(f => !f.archived);
+        this.addMockTasksToBamboos();
+      }
+    });
+    this.closeGoalEditDialog();
+  }
+
+  deleteGoal(goal: Goal, event: Event): void {
+    event.stopPropagation();
+    if (confirm('确定要删除这个目标吗？此操作不可恢复！')) {
+      if (!this.forest) return;
+      const forestId = this.forest.id;
+      this.dataService.deleteGoal(forestId, goal.id);
+      this.dataService.getForests().subscribe(forests => {
+        const updatedForest = forests.find(f => f.id === forestId);
+        if (updatedForest) {
+          this.forest = updatedForest;
+          this.goals = updatedForest.goals || [];
+          this.fields = updatedForest.bambooFields.filter(f => !f.archived);
+          this.addMockTasksToBamboos();
+        }
+      });
+    }
+  }
+
+  resetGoalForm(): void {
+    this.newGoal = {
+      name: '',
+      description: '',
+      completed: false
+    };
+  }
+
+  // 关键产出管理方法
   openKeyOutputDialog(): void {
-    // TODO: 实现关键产出管理
-    alert('关键产出管理功能待实现');
+    if (!this.forest) {
+      alert('请先选择竹林');
+      return;
+    }
+    this.keyOutputs = this.forest.keyOutputs || [];
+    this.showKeyOutputDialog = true;
+    this.closeMenu();
   }
 
+  closeKeyOutputDialog(): void {
+    this.showKeyOutputDialog = false;
+    this.keyOutputs = [];
+    this.resetKeyOutputForm();
+  }
+
+  openKeyOutputEditDialog(keyOutput?: KeyOutput): void {
+    if (keyOutput) {
+      this.isEditingKeyOutput = true;
+      this.editingKeyOutputId = keyOutput.id;
+      this.newKeyOutput = {
+        name: keyOutput.name,
+        description: keyOutput.description || '',
+        completed: keyOutput.completed || false
+      };
+    } else {
+      this.isEditingKeyOutput = false;
+      this.editingKeyOutputId = null;
+      this.resetKeyOutputForm();
+    }
+    this.showKeyOutputEditDialog = true;
+  }
+
+  closeKeyOutputEditDialog(): void {
+    this.showKeyOutputEditDialog = false;
+    this.isEditingKeyOutput = false;
+    this.editingKeyOutputId = null;
+    this.resetKeyOutputForm();
+  }
+
+  addKeyOutput(): void {
+    if (!this.newKeyOutput.name) {
+      alert('请输入关键产出名称');
+      return;
+    }
+    if (!this.forest) {
+      alert('请先选择竹林');
+      return;
+    }
+
+    const forestId = this.forest.id;
+
+    if (this.isEditingKeyOutput && this.editingKeyOutputId) {
+      const keyOutput = this.keyOutputs.find(ko => ko.id === this.editingKeyOutputId);
+      if (keyOutput) {
+        const updatedKeyOutput: KeyOutput = {
+          ...keyOutput,
+          name: this.newKeyOutput.name,
+          description: this.newKeyOutput.description,
+          completed: this.newKeyOutput.completed,
+          completedAt: this.newKeyOutput.completed ? new Date() : undefined,
+          updatedAt: new Date()
+        };
+        this.dataService.updateKeyOutput(updatedKeyOutput);
+      }
+    } else {
+      const keyOutput: KeyOutput = {
+        id: this.generateId(),
+        forestId: forestId,
+        name: this.newKeyOutput.name,
+        description: this.newKeyOutput.description,
+        completed: this.newKeyOutput.completed,
+        completedAt: this.newKeyOutput.completed ? new Date() : undefined,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      };
+      this.dataService.addKeyOutput(keyOutput);
+    }
+    
+    // 重新加载数据并更新列表
+    this.dataService.getForests().subscribe(forests => {
+      const updatedForest = forests.find(f => f.id === forestId);
+      if (updatedForest) {
+        this.forest = updatedForest;
+        this.keyOutputs = updatedForest.keyOutputs || [];
+        this.fields = updatedForest.bambooFields.filter(f => !f.archived);
+        this.addMockTasksToBamboos();
+      }
+    });
+    this.closeKeyOutputEditDialog();
+  }
+
+  deleteKeyOutput(keyOutput: KeyOutput, event: Event): void {
+    event.stopPropagation();
+    if (confirm('确定要删除这个关键产出吗？此操作不可恢复！')) {
+      if (!this.forest) return;
+      const forestId = this.forest.id;
+      this.dataService.deleteKeyOutput(forestId, keyOutput.id);
+      this.dataService.getForests().subscribe(forests => {
+        const updatedForest = forests.find(f => f.id === forestId);
+        if (updatedForest) {
+          this.forest = updatedForest;
+          this.keyOutputs = updatedForest.keyOutputs || [];
+          this.fields = updatedForest.bambooFields.filter(f => !f.archived);
+          this.addMockTasksToBamboos();
+        }
+      });
+    }
+  }
+
+  resetKeyOutputForm(): void {
+    this.newKeyOutput = {
+      name: '',
+      description: '',
+      completed: false
+    };
+  }
+
+  // 习得管理方法
   openLearningDialog(): void {
-    // TODO: 实现习得管理
-    alert('习得管理功能待实现');
+    if (!this.forest) {
+      alert('请先选择竹林');
+      return;
+    }
+    this.learnings = this.forest.learnings || [];
+    this.showLearningDialog = true;
+    this.closeMenu();
+  }
+
+  closeLearningDialog(): void {
+    this.showLearningDialog = false;
+    this.learnings = [];
+    this.resetLearningForm();
+  }
+
+  openLearningEditDialog(learning?: Learning): void {
+    if (learning) {
+      this.isEditingLearning = true;
+      this.editingLearningId = learning.id;
+      this.newLearning = {
+        title: learning.title,
+        content: learning.content,
+        tags: learning.tags.join(', ')
+      };
+    } else {
+      this.isEditingLearning = false;
+      this.editingLearningId = null;
+      this.resetLearningForm();
+    }
+    this.showLearningEditDialog = true;
+  }
+
+  closeLearningEditDialog(): void {
+    this.showLearningEditDialog = false;
+    this.isEditingLearning = false;
+    this.editingLearningId = null;
+    this.resetLearningForm();
+  }
+
+  addLearning(): void {
+    if (!this.newLearning.title) {
+      alert('请输入习得标题');
+      return;
+    }
+    if (!this.forest) {
+      alert('请先选择竹林');
+      return;
+    }
+
+    const forestId = this.forest.id;
+
+    if (this.isEditingLearning && this.editingLearningId) {
+      const learning = this.learnings.find(l => l.id === this.editingLearningId);
+      if (learning) {
+        const updatedLearning: Learning = {
+          ...learning,
+          title: this.newLearning.title,
+          content: this.newLearning.content,
+          tags: this.newLearning.tags.split(',').map(t => t.trim()).filter(t => t),
+          updatedAt: new Date()
+        };
+        this.dataService.updateLearning(updatedLearning);
+      }
+    } else {
+      const learning: Learning = {
+        id: this.generateId(),
+        forestId: forestId,
+        title: this.newLearning.title,
+        content: this.newLearning.content,
+        tags: this.newLearning.tags.split(',').map(t => t.trim()).filter(t => t),
+        createdAt: new Date(),
+        updatedAt: new Date()
+      };
+      this.dataService.addLearning(learning);
+    }
+    
+    // 重新加载数据并更新列表
+    this.dataService.getForests().subscribe(forests => {
+      const updatedForest = forests.find(f => f.id === forestId);
+      if (updatedForest) {
+        this.forest = updatedForest;
+        this.learnings = updatedForest.learnings || [];
+        this.fields = updatedForest.bambooFields.filter(f => !f.archived);
+        this.addMockTasksToBamboos();
+      }
+    });
+    this.closeLearningEditDialog();
+  }
+
+  deleteLearning(learning: Learning, event: Event): void {
+    event.stopPropagation();
+    if (confirm('确定要删除这个习得吗？此操作不可恢复！')) {
+      if (!this.forest) return;
+      const forestId = this.forest.id;
+      this.dataService.deleteLearning(forestId, learning.id);
+      this.dataService.getForests().subscribe(forests => {
+        const updatedForest = forests.find(f => f.id === forestId);
+        if (updatedForest) {
+          this.forest = updatedForest;
+          this.learnings = updatedForest.learnings || [];
+          this.fields = updatedForest.bambooFields.filter(f => !f.archived);
+          this.addMockTasksToBamboos();
+        }
+      });
+    }
+  }
+
+  resetLearningForm(): void {
+    this.newLearning = {
+      title: '',
+      content: '',
+      tags: ''
+    };
   }
 
   toggleBambooCompleted(bamboo: Bamboo, event: Event): void {
@@ -725,6 +1144,62 @@ export class BambooFieldsComponent implements OnInit {
 
   generateId(): string {
     return Date.now().toString(36) + Math.random().toString(36).substr(2);
+  }
+
+  // 竹林管理方法
+  openForestDialog(): void {
+    if (!this.forest) {
+      alert('请先选择竹林');
+      return;
+    }
+    this.isEditingForest = true;
+    this.newForest = {
+      name: this.forest.name,
+      startDate: new Date(this.forest.startDate).toISOString().split('T')[0],
+      endDate: new Date(this.forest.endDate).toISOString().split('T')[0],
+      description: this.forest.description || ''
+    };
+    this.showForestDialog = true;
+    this.closeMenu();
+  }
+
+  closeForestDialog(): void {
+    this.showForestDialog = false;
+    this.isEditingForest = false;
+    this.resetForestForm();
+  }
+
+  updateForest(): void {
+    if (!this.forest) {
+      alert('请先选择竹林');
+      return;
+    }
+
+    if (!this.newForest.name || !this.newForest.startDate || !this.newForest.endDate) {
+      alert('请填写所有必填项');
+      return;
+    }
+
+    const updatedForest: BambooForest = {
+      ...this.forest,
+      name: this.newForest.name,
+      startDate: new Date(this.newForest.startDate),
+      endDate: new Date(this.newForest.endDate),
+      description: this.newForest.description || '',
+      updatedAt: new Date()
+    };
+    this.dataService.updateForest(updatedForest);
+    this.loadForest(this.forest.id);
+    this.closeForestDialog();
+  }
+
+  resetForestForm(): void {
+    this.newForest = {
+      name: '',
+      startDate: new Date().toISOString().split('T')[0],
+      endDate: new Date().toISOString().split('T')[0],
+      description: ''
+    };
   }
 }
 

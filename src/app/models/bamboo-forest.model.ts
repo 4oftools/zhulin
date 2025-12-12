@@ -33,8 +33,44 @@ export interface BambooForest {
   description?: string;
   enabled?: boolean;
   bambooFields: BambooField[];
+  goals: Goal[];
+  keyOutputs: KeyOutput[];
+  learnings: Learning[];
   archived?: boolean;
   archivedAt?: Date;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface Goal {
+  id: string;
+  forestId: string;
+  name: string;
+  description?: string;
+  completed?: boolean;
+  completedAt?: Date;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface KeyOutput {
+  id: string;
+  forestId: string;
+  name: string;
+  description?: string;
+  completed?: boolean;
+  completedAt?: Date;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface Learning {
+  id: string;
+  forestId: string;
+  title: string;
+  content: string;
+  category?: string;
+  tags: string[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -47,7 +83,6 @@ export interface BambooField {
   endDate: Date;
   description?: string;
   bamboos: Bamboo[];
-  goals: any[]; // Goal 模型已删除，暂时使用 any[]
   archived?: boolean;
   archivedAt?: Date;
   createdAt: Date;
@@ -57,6 +92,7 @@ export interface BambooField {
 export interface Bamboo {
   id: string;
   fieldId: string;
+  goalId: string; // 必须指定一个目标
   name: string;
   startDate: Date;
   endDate: Date;
