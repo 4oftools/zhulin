@@ -1,113 +1,67 @@
-# 竹林工作法
+# Zhulin (竹林) Project
 
-竹林工作法是一个个人工作管理系统，包含战略管理（任务管理）和战术管理（时间管理）两部分。
+## 简介 (Overview)
+Zhulin 是一个基于 "竹林工作法" 的全栈应用，旨在通过结构化的目标管理和执行追踪来提升工作效率。项目包含 Spring Boot 后端和 Angular 前端。
 
-## 功能特性
+## 项目结构 (Project Structure)
+- `backend/`: 后端服务，基于 Spring Boot 3.2 + Java 21。
+- `frontend/`: 前端应用，基于 Angular 19 + Node.js 20。
+- `docker-deploy/`: Docker 部署配置，包含 `docker-compose.yml`。
 
-### 战略管理
-- **竹林管理**：长期时间单位（半年或年），是保证长期利益达成的基础单位
-- **竹田管理**：阶段性里程碑（月为单位），将一个竹林划分为多个竹田
-- **竹子管理**：阶段性成果物（天为单位，1-5天），一个竹田由多个竹子构成
-- **目标管理**：3-5个目标，最多不超过7个，保证在一个竹田内能完成
-- **任务管理**：
-  - 常规任务：必须能在一个竹子内完成
-  - 周期任务：需要经常性重复完成的任务
-  - 任务标签：超出一个竹子时间的任务，需要拆解成多个常规任务
-- **计划与回顾**：在每个竹林、竹田、竹子开始和结束时的计划和回顾
+## 快速开始 (Quick Start) - Docker 部署
 
-### 战术管理
-- **活动列表**：由常规任务组成的待完成任务列表
-- **竹内待办**：需要在一个竹子内完成的所有任务
-- **竹节管理**：持续专注的时间片段，包含：
-  - 制定计划（10分钟）
-  - 冲刺（30分钟）
-  - 休息（5分钟）
-  - 打断处理
-  - 今日回顾（10分钟）
+使用 Docker Compose 可以快速启动整个应用栈（前端、后端、数据库）。
 
-## 项目结构
+### 前置要求
+- Docker Desktop 或 Docker Engine
+- Docker Compose
 
-```
-src/app/
-├── components/
-│   ├── strategic/          # 战略管理组件
-│   │   ├── bamboo-forest/  # 竹林管理
-│   │   ├── bamboo-field/   # 竹田管理
-│   │   ├── bamboo/         # 竹子管理
-│   │   ├── goal/          # 目标管理
-│   │   ├── task/          # 任务管理
-│   │   └── plan-review/   # 计划与回顾
-│   └── tactical/          # 战术管理组件
-│       ├── activity-list/  # 活动列表
-│       ├── bamboo-todo/    # 竹内待办
-│       ├── bamboo-section/ # 竹节管理
-│       ├── planning/       # 制定计划
-│       ├── sprint/         # 冲刺
-│       ├── rest/           # 休息
-│       ├── interruption/  # 打断
-│       └── daily-review/   # 今日回顾
-├── models/                 # 数据模型
-├── services/               # 服务
-│   ├── data.service.ts           # 数据服务
-│   ├── task.service.ts          # 任务服务
-│   └── time-management.service.ts # 时间管理服务
-└── app.module.ts          # 主模块
-```
+### 启动步骤
+1. 进入部署目录：
+   ```bash
+   cd docker-deploy
+   ```
 
-## 开发
+2. 构建并启动服务：
+   ```bash
+   docker-compose up -d --build
+   ```
 
-### 安装依赖
+3. 访问应用：
+   - **前端页面**: http://localhost
+   - **后端 API**: http://localhost:8080
+   - **数据库**: localhost:3306 (用户: `root`, 密码: `root`, 数据库: `zhulin`)
 
-```bash
-npm install
-```
+## 本地开发 (Local Development)
 
-### 启动开发服务器
+### 后端 (Backend)
+1. 确保安装 JDK 21。
+2. 进入 `backend` 目录。
+3. 启动应用：
+   ```bash
+   # Windows
+   mvnw spring-boot:run
+   
+   # Linux/Mac
+   ./mvnw spring-boot:run
+   ```
+   后端服务默认运行在端口 `8080`。
 
-```bash
-npm start
-```
-
-应用将在 `http://localhost:4200` 启动
-
-### 构建生产版本
-
-```bash
-npm run build
-```
-
-构建产物将输出到 `dist/zhulin-work-method` 目录
-
-## 技术栈
-
-- **Angular 19** - 前端框架
-- **TypeScript** - 编程语言
-- **RxJS** - 响应式编程
-- **LocalStorage** - 数据持久化（所有数据存储在浏览器本地）
-
-## 使用说明
-
-1. **创建竹林**：从战略管理页面创建你的第一个竹林（长期计划）
-2. **创建竹田**：在竹林中创建竹田（阶段性里程碑）
-3. **创建竹子**：在竹田中创建竹子（短期任务周期，1-5天）
-4. **设定目标**：为每个竹田设定3-5个目标
-5. **创建任务**：在竹子中创建常规任务、周期任务或任务标签
-6. **时间管理**：使用战术管理功能进行时间管理，包括制定计划、冲刺、休息和回顾
-
-## 数据存储
-
-所有数据存储在浏览器的 LocalStorage 中，包括：
-- `zhulin-data`: 竹林、竹田、竹子、目标、任务数据
-- `zhulin-sections`: 竹节记录
-- `zhulin-reviews`: 回顾记录
-- `zhulin-plans`: 计划记录
-- `zhulin-interruptions`: 打断记录
-- `zhulin-daily-reviews`: 每日回顾记录
+### 前端 (Frontend)
+1. 确保安装 Node.js 20+ 和 npm。
+2. 进入 `frontend` 目录。
+3. 安装依赖：
+   ```bash
+   npm install
+   ```
+4. 启动开发服务器：
+   ```bash
+   npm start
+   # 或者
+   ng serve
+   ```
+   前端开发服务默认运行在 `http://localhost:4200`。
 
 ## 注意事项
-
-- 目标数量建议控制在3-5个，最多不超过7个
-- 竹子的周期应在1-5天之间
-- 常规任务必须能在一个竹子内完成
-- 超出一个竹子时间的任务应使用任务标签，并拆解成多个常规任务
-
+- 默认数据库配置为 MySQL。
+- 首次启动时，后端会自动更新数据库 Schema (`ddl-auto: update`)。

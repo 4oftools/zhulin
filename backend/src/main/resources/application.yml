@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: zhulin-backend
+  profiles:
+    active: mysql # Change to 'postgresql' to use PostgreSQL
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+server:
+  port: 8080
