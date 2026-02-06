@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { DataService } from './services/data.service';
+import { PingService } from './services/ping.service';
+import { ForestService } from './services/forest.service';
+import { SprintService } from './services/sprint.service';
+import { ReviewService } from './services/review.service';
 import { SettingsService, AppSettings } from './services/settings.service';
 import { BambooSection } from './models/bamboo-forest.model';
 
@@ -11,6 +14,9 @@ import { BambooSection } from './models/bamboo-forest.model';
 })
 export class AppComponent implements OnInit {
   title = '竹林工作法';
+  checkingBackend = true;
+  backendConnected = false;
+  
   taskProgress = {
     total: 0,
     completed: 0,
@@ -23,21 +29,47 @@ export class AppComponent implements OnInit {
   settings: AppSettings;
 
   constructor(
-    private dataService: DataService,
+    private pingService: PingService,
+    private forestService: ForestService,
+    private sprintService: SprintService,
+    private reviewService: ReviewService,
     private settingsService: SettingsService
   ) {
     this.settings = this.settingsService.getSettings();
   }
 
   ngOnInit(): void {
-    this.loadTaskProgress();
+    this.checkBackend();
+    
     this.settingsService.getSettingsObservable().subscribe(settings => {
       this.settings = settings;
     });
   }
 
+  checkBackend(): void {
+    this.checkingBackend = true;
+    this.pingService.checkBackendStatus().subscribe(status => {
+      this.backendConnected = status;
+      this.checkingBackend = false;
+      if (status) {
+        this.reloadData();
+        this.loadTaskProgress();
+      }
+    });
+  }
+
+  reloadData(): void {
+    this.forestService.loadInitialData();
+    this.sprintService.loadSprints();
+    this.reviewService.loadReviews();
+  }
+
+  retryConnection(): void {
+    this.checkBackend();
+  }
+
   loadTaskProgress(): void {
-    this.dataService.getForests().subscribe(forests => {
+    this.forestService.getForests().subscribe(forests => {
       let allTasks: BambooSection[] = [];
       forests.forEach(forest => {
         forest.bambooFields.forEach(field => {

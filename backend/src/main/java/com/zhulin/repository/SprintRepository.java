@@ -7,3 +7,4 @@ import java.util.List;
 public interface SprintRepository extends JpaRepository<Sprint, String> {
     List<Sprint> findAllByOrderByStartTimeDesc();
 }
+ 

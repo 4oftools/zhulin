@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { DataService } from '../../../services/data.service';
+import { ForestService } from '../../../services/forest.service';
 import { BambooForest } from '../../../models/bamboo-forest.model';
 
 @Component({
@@ -35,7 +35,7 @@ export class StrategicNavigationComponent implements OnInit {
 
 
   constructor(
-    private dataService: DataService,
+    private forestService: ForestService,
     public router: Router,
     private route: ActivatedRoute
   ) {}
@@ -45,7 +45,7 @@ export class StrategicNavigationComponent implements OnInit {
   }
 
   loadData(): void {
-    this.dataService.getForests().subscribe(forests => {
+    this.forestService.getForests().subscribe(forests => {
       this.forests = forests;
     });
   }
@@ -110,7 +110,7 @@ export class StrategicNavigationComponent implements OnInit {
         description: this.newForest.description || '',
         updatedAt: new Date()
       };
-      this.dataService.updateForest(updatedForest);
+      this.forestService.updateForest(updatedForest);
     } else {
     const forest: BambooForest = {
       id: this.generateId(),
@@ -125,7 +125,7 @@ export class StrategicNavigationComponent implements OnInit {
       createdAt: new Date(),
       updatedAt: new Date()
     };
-    this.dataService.addForest(forest);
+    this.forestService.addForest(forest);
     }
     this.loadData();
     this.closeForestDialog();
@@ -143,7 +143,7 @@ export class StrategicNavigationComponent implements OnInit {
   deleteForest(forest: BambooForest, event: Event): void {
     event.stopPropagation();
     if (confirm(`确定要删除竹林"${forest.name}"吗？此操作不可恢复！`)) {
-      this.dataService.deleteForest(forest.id);
+      this.forestService.deleteForest(forest.id);
       this.loadData();
     }
   }
@@ -153,7 +153,7 @@ export class StrategicNavigationComponent implements OnInit {
     event.stopPropagation();
     const action = forest.archived ? '取消归档' : '归档';
     if (confirm(`确定要${action}竹林"${forest.name}"吗？`)) {
-      this.dataService.archiveForest(forest.id, !forest.archived);
+      this.forestService.archiveForest(forest.id, !forest.archived);
       this.loadData();
     }
   }

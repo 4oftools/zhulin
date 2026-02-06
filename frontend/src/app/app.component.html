@@ -1,4 +1,4 @@
-<div class="app-container">
+<div class="app-container" *ngIf="backendConnected && !checkingBackend">
   <header class="app-header">
     <div class="header-content">
       <div class="header-left">
@@ -36,6 +36,73 @@
   <main class="app-main">
     <router-outlet></router-outlet>
   </main>
+</div>
+
+<!-- Loading State -->
+<div class="loading-overlay" *ngIf="checkingBackend">
+  <div class="loading-spinner"></div>
+  <p>正在连接服务器...</p>
+</div>
+
+<!-- Error State -->
+<div class="error-overlay" *ngIf="!checkingBackend && !backendConnected">
+  <div class="bamboo-forest-bg">
+    <div class="sky-gradient"></div>
+    <div class="sun-rays"></div>
+    <div class="mist-layer mist-back"></div>
+    <div class="bamboo-layer layer-back">
+      <div class="stalk b1"></div>
+      <div class="stalk b2"></div>
+      <div class="stalk b3"></div>
+      <div class="stalk b4"></div>
+    </div>
+    <div class="mist-layer mist-mid"></div>
+    <div class="bamboo-layer layer-mid">
+      <div class="stalk m1">
+        <div class="branch pos-1"></div>
+        <div class="branch pos-2"></div>
+      </div>
+      <div class="stalk m2">
+        <div class="branch pos-2"></div>
+        <div class="branch pos-3"></div>
+      </div>
+      <div class="stalk m3">
+        <div class="branch pos-1"></div>
+        <div class="branch pos-3"></div>
+      </div>
+    </div>
+    <div class="mist-layer mist-front"></div>
+    <div class="bamboo-layer layer-front">
+      <div class="stalk f1">
+        <div class="branch pos-1"></div>
+        <div class="branch pos-2"></div>
+        <div class="branch pos-3"></div>
+      </div>
+      <div class="stalk f2">
+        <div class="branch pos-2"></div>
+        <div class="branch pos-3"></div>
+      </div>
+    </div>
+    <div class="fireflies">
+      <div class="firefly"></div>
+      <div class="firefly"></div>
+      <div class="firefly"></div>
+      <div class="firefly"></div>
+      <div class="firefly"></div>
+    </div>
+  </div>
+  <div class="error-content">
+    <div class="error-icon-wrapper">
+      <span class="error-icon" appSvgIcon="assets/icons/common/warning.svg"></span>
+      <div class="pulse-ring"></div>
+    </div>
+    <h2>与竹林失去联系</h2>
+    <p>迷雾遮挡了视线，正在寻找归途...</p>
+    <button class="btn-retry" (click)="retryConnection()">
+      <span class="btn-text">重新连接</span>
+      <span class="btn-shine"></span>
+    </button>
+  </div>
 </div>
 
 <!-- 设置对话框 -->

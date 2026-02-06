@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { DataService } from '../../services/data.service';
+import { ForestService } from '../../services/forest.service';
 import { BambooForest, Goal } from '../../models/bamboo-forest.model';
 import { BambooSection } from '../../models/bamboo-forest.model';
 
@@ -30,7 +30,7 @@ export class DashboardComponent implements OnInit {
   readonly CIRCLE_CIRCUMFERENCE = 2 * Math.PI * 54;
 
   constructor(
-    private dataService: DataService
+    private forestService: ForestService
   ) {}
 
   getProgressDashArray(): string {
@@ -128,7 +128,7 @@ export class DashboardComponent implements OnInit {
   }
 
   loadStats(): void {
-    this.dataService.getForests().subscribe(forests => {
+    this.forestService.getForests().subscribe(forests => {
       this.forests = forests;
       this.stats.totalForests = forests.length;
       this.stats.totalFields = forests.reduce((sum, f) => sum + f.bambooFields.length, 0);

@@ -1,10 +1,14 @@
 import { Component, OnInit, OnDestroy, ElementRef, ViewChild, ChangeDetectorRef } from '@angular/core';
-import { DataService } from '../../../services/data.service';
 import { BambooSection, Sprint, DailyReview } from '../../../models/bamboo-forest.model';
 import { Bamboo, BambooForest, BambooField } from '../../../models/bamboo-forest.model';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { take } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
+import { ForestService } from '../../../services/forest.service';
+import { SprintService } from '../../../services/sprint.service';
+import { ReviewService } from '../../../services/review.service';
+import { TaskService } from '../../../services/task.service';
+import { BambooService } from '../../../services/bamboo.service';
 
 export interface Activity {
   bamboo: Bamboo;
@@ -113,7 +117,14 @@ export class TacticalManagementComponent implements OnInit, OnDestroy {
   reviewDate: Date = new Date();
   hoveredScore: number | null = null;
 
-  constructor(private dataService: DataService, private cdr: ChangeDetectorRef) {}
+  constructor(
+    private forestService: ForestService,
+    private sprintService: SprintService,
+    private reviewService: ReviewService,
+    private taskService: TaskService,
+    private bambooService: BambooService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.loadActivities();
@@ -180,7 +191,7 @@ export class TacticalManagementComponent implements OnInit, OnDestroy {
   loadActivities(): void {
     // 加载所有待办竹节，按竹子分组
     this.subscriptions.add(
-      this.dataService.getForests().subscribe(forests => {
+      this.forestService.getForests().subscribe(forests => {
         const activityMap = new Map<string, Activity>();
         
         forests.forEach(forest => {
@@ -373,7 +384,7 @@ export class TacticalManagementComponent implements OnInit, OnDestroy {
     }
     
     // 找到竹子所属的竹田
-    this.dataService.getForests().subscribe(forests => {
+    this.forestService.getForests().subscribe(forests => {
       for (const forest of forests) {
         for (const field of forest.bambooFields) {
           const bamboo = field.bamboos.find(b => b.id === activity.bamboo.id);
@@ -420,7 +431,7 @@ export class TacticalManagementComponent implements OnInit, OnDestroy {
 
     if (this.isEditingBamboo && this.editingBambooId) {
       // 更新竹子
-      this.dataService.getForests().subscribe(forests => {
+      this.forestService.getForests().subscribe(forests => {
         for (const forest of forests) {
           for (const field of forest.bambooFields) {
             if (field.id === this.editingBambooField!.id) {
@@ -437,7 +448,7 @@ export class TacticalManagementComponent implements OnInit, OnDestroy {
                   id: section.id || this.generateId()
                 }));
                 bamboo.updatedAt = new Date();
-                this.dataService.updateBamboo(bamboo);
+                this.bambooService.updateBamboo(bamboo);
                 this.loadActivities();
                 this.closeBambooDialog();
                 return;
@@ -455,7 +466,7 @@ export class TacticalManagementComponent implements OnInit, OnDestroy {
     }
     
     // 找到竹子所属的竹田
-    this.dataService.getForests().subscribe(forests => {
+    this.forestService.getForests().subscribe(forests => {
       for (const forest of forests) {
         for (const field of forest.bambooFields) {
           const bamboo = field.bamboos.find(b => b.id === activity.bamboo.id);
@@ -521,7 +532,7 @@ export class TacticalManagementComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.dataService.getForests().subscribe(forests => {
+    this.forestService.getForests().subscribe(forests => {
       for (const forest of forests) {
         for (const field of forest.bambooFields) {
           const bamboo = field.bamboos.find(b => b.id === this.editingBambooId);
@@ -562,7 +573,7 @@ export class TacticalManagementComponent implements OnInit, OnDestroy {
               ...section,
               bambooId: bamboo.id
             }));
-            this.dataService.updateBamboo(bamboo);
+            this.bambooService.updateBamboo(bamboo);
             
             this.loadActivities();
             this.closeSectionDialog();
@@ -578,7 +589,7 @@ export class TacticalManagementComponent implements OnInit, OnDestroy {
     
     // 更新竹子
     if (this.editingBambooId) {
-      this.dataService.getForests().subscribe(forests => {
+      this.forestService.getForests().subscribe(forests => {
         for (const forest of forests) {
           for (const field of forest.bambooFields) {
             const bamboo = field.bamboos.find(b => b.id === this.editingBambooId);
@@ -587,7 +598,7 @@ export class TacticalManagementComponent implements OnInit, OnDestroy {
                 ...s,
                 bambooId: bamboo.id
               }));
-              this.dataService.updateBamboo(bamboo);
+              this.bambooService.updateBamboo(bamboo);
               this.loadActivities();
               return;
             }
@@ -610,7 +621,7 @@ export class TacticalManagementComponent implements OnInit, OnDestroy {
       return;
     }
     
-    this.dataService.getForests().subscribe(forests => {
+    this.forestService.getForests().subscribe(forests => {
       for (const forest of forests) {
         for (const field of forest.bambooFields) {
           const bamboo = field.bamboos.find(b => b.id === activity.bamboo.id);
@@ -618,7 +629,7 @@ export class TacticalManagementComponent implements OnInit, OnDestroy {
             bamboo.completed = true;
             bamboo.completedAt = new Date();
             bamboo.updatedAt = new Date();
-            this.dataService.updateBamboo(bamboo);
+            this.bambooService.updateBamboo(bamboo);
             this.loadActivities();
             this.closeActivityMenu();
             return;
@@ -641,7 +652,7 @@ export class TacticalManagementComponent implements OnInit, OnDestroy {
     const bamboo = activity.bamboo;
     bamboo.inActivityList = false;
     bamboo.updatedAt = new Date();
-    this.dataService.updateBamboo(bamboo);
+    this.bambooService.updateBamboo(bamboo);
     
     this.loadActivities();
     this.closeActivityMenu();
@@ -661,7 +672,7 @@ export class TacticalManagementComponent implements OnInit, OnDestroy {
   }
 
   loadEnabledForests(): void {
-    this.dataService.getForests().subscribe(forests => {
+    this.forestService.getForests().subscribe(forests => {
       // 只显示已启用且未归档的竹林
       this.enabledForests = forests.filter(f => 
         f.enabled !== false && !f.archived
@@ -712,7 +723,7 @@ export class TacticalManagementComponent implements OnInit, OnDestroy {
     // 更新竹子状态
     bamboo.inActivityList = true;
     bamboo.updatedAt = new Date();
-    this.dataService.updateBamboo(bamboo);
+    this.bambooService.updateBamboo(bamboo);
     
     this.loadActivities();
     // 不关闭对话框，允许继续添加
@@ -758,7 +769,7 @@ export class TacticalManagementComponent implements OnInit, OnDestroy {
       inTodoList: false,
       updatedAt: new Date()
     };
-    this.dataService.updateBambooSection(updatedSection);
+    this.taskService.updateBambooSection(updatedSection);
 
     // 如果移除的是当前选中的任务，清空选中状态
     if (this.selectedTask?.id === todo.id) {
@@ -790,7 +801,7 @@ export class TacticalManagementComponent implements OnInit, OnDestroy {
     }
     
     // 找到这个竹节所属的竹子
-    this.dataService.getForests().subscribe(forests => {
+    this.forestService.getForests().subscribe(forests => {
       for (const forest of forests) {
         for (const field of forest.bambooFields) {
           for (const bamboo of field.bamboos) {
@@ -846,7 +857,7 @@ export class TacticalManagementComponent implements OnInit, OnDestroy {
         this.timerStatus = 'sprint';
         this.elapsedSeconds = this.currentSprint.duration;
         this.startTimer();
-        this.dataService.updateSprint(this.currentSprint).subscribe();
+        this.sprintService.updateSprint(this.currentSprint).subscribe();
         return;
       }
     }
@@ -866,7 +877,7 @@ export class TacticalManagementComponent implements OnInit, OnDestroy {
     this.elapsedSeconds = 0;
     this.startTimer();
 
-    this.dataService.addSprint(sprint).subscribe(savedSprint => {
+    this.sprintService.addSprint(sprint).subscribe(savedSprint => {
       if (this.currentSprint && this.currentSprint.startTime.getTime() === sprint.startTime.getTime()) {
         this.currentSprint = savedSprint;
       }
@@ -894,7 +905,7 @@ export class TacticalManagementComponent implements OnInit, OnDestroy {
     this.elapsedSeconds = 0;
     this.startTimer();
 
-    this.dataService.addSprint(rest).subscribe(savedSprint => {
+    this.sprintService.addSprint(rest).subscribe(savedSprint => {
       if (this.currentSprint && this.currentSprint.startTime.getTime() === rest.startTime.getTime()) {
         this.currentSprint = savedSprint;
       }
@@ -922,7 +933,7 @@ export class TacticalManagementComponent implements OnInit, OnDestroy {
     this.elapsedSeconds = 0;
     this.startTimer();
 
-    this.dataService.addSprint(breakSprint).subscribe(savedSprint => {
+    this.sprintService.addSprint(breakSprint).subscribe(savedSprint => {
       if (this.currentSprint && this.currentSprint.startTime.getTime() === breakSprint.startTime.getTime()) {
         this.currentSprint = savedSprint;
       }
@@ -936,7 +947,7 @@ export class TacticalManagementComponent implements OnInit, OnDestroy {
       if (this.timerStatus === 'sprint') {
         this.timerStatus = 'paused';
       }
-      this.dataService.updateSprint(this.currentSprint).subscribe();
+      this.sprintService.updateSprint(this.currentSprint).subscribe();
     }
     this.stopTimer();
   }
@@ -946,7 +957,7 @@ export class TacticalManagementComponent implements OnInit, OnDestroy {
       this.currentSprint.status = 'running';
       this.timerStatus = 'sprint';
       this.startTimer();
-      this.dataService.updateSprint(this.currentSprint).subscribe();
+      this.sprintService.updateSprint(this.currentSprint).subscribe();
     }
   }
 
@@ -956,7 +967,7 @@ export class TacticalManagementComponent implements OnInit, OnDestroy {
       this.currentSprint.endTime = new Date();
       this.currentSprint.duration = this.elapsedSeconds;
       // sprintHistory updated via subscription
-      this.dataService.updateSprint(this.currentSprint).subscribe();
+      this.sprintService.updateSprint(this.currentSprint).subscribe();
       this.currentSprint = null;
     }
     this.timerStatus = 'idle';
@@ -975,7 +986,7 @@ export class TacticalManagementComponent implements OnInit, OnDestroy {
       }
 
       // sprintHistory updated via subscription
-      this.dataService.updateSprint(this.currentSprint).subscribe();
+      this.sprintService.updateSprint(this.currentSprint).subscribe();
       this.currentSprint = null;
     }
     this.timerStatus = 'idle';
@@ -984,7 +995,7 @@ export class TacticalManagementComponent implements OnInit, OnDestroy {
   }
 
   private completeLinkedTask(taskId: string): void {
-    this.dataService.getForests().pipe(take(1)).subscribe(forests => {
+    this.forestService.getForests().pipe(take(1)).subscribe(forests => {
       for (const forest of forests) {
         for (const field of forest.bambooFields) {
           for (const bamboo of field.bamboos) {
@@ -1000,7 +1011,7 @@ export class TacticalManagementComponent implements OnInit, OnDestroy {
                     inTodoList: false, // 移出待办列表
                     updatedAt: new Date()
                   };
-                  this.dataService.updateBambooSection(updatedSection);
+                  this.taskService.updateBambooSection(updatedSection);
                   return;
                 }
               }
@@ -1017,7 +1028,7 @@ export class TacticalManagementComponent implements OnInit, OnDestroy {
       this.currentSprint.endTime = new Date();
       this.currentSprint.duration = this.elapsedSeconds;
       // sprintHistory updated via subscription
-      this.dataService.updateSprint(this.currentSprint).subscribe();
+      this.sprintService.updateSprint(this.currentSprint).subscribe();
       this.currentSprint = null;
     }
     this.timerStatus = 'idle';
@@ -1069,9 +1080,9 @@ export class TacticalManagementComponent implements OnInit, OnDestroy {
   }
 
   loadSprintHistory(): void {
-    // Subscribe to sprints from DataService
+    // Subscribe to sprints from SprintService
     this.subscriptions.add(
-      this.dataService.getSprints().subscribe(sprints => {
+      this.sprintService.getSprints().subscribe(sprints => {
         this.sprintHistory = sprints;
         this.filterSprintHistory();
       })
@@ -1088,7 +1099,7 @@ export class TacticalManagementComponent implements OnInit, OnDestroy {
       updatedAt: new Date()
     };
     
-    this.dataService.updateBambooSection(updatedSection);
+    this.taskService.updateBambooSection(updatedSection);
   }
 
   toggleSectionCompleted(section: BambooSection, event: Event): void {
@@ -1098,7 +1109,7 @@ export class TacticalManagementComponent implements OnInit, OnDestroy {
     section.updatedAt = new Date();
     
     // 更新数据服务
-    this.dataService.getForests().subscribe(forests => {
+    this.forestService.getForests().subscribe(forests => {
       for (const forest of forests) {
         for (const field of forest.bambooFields) {
           for (const bamboo of field.bamboos) {
@@ -1106,7 +1117,7 @@ export class TacticalManagementComponent implements OnInit, OnDestroy {
             if (taskIndex !== undefined && taskIndex !== -1) {
               if (bamboo.tasks) {
                 bamboo.tasks[taskIndex] = section;
-                this.dataService.updateBamboo(bamboo);
+                this.bambooService.updateBamboo(bamboo);
                 // 刷新活动列表
                 this.loadActivities();
                 return;
@@ -1128,14 +1139,14 @@ export class TacticalManagementComponent implements OnInit, OnDestroy {
     }
     
     // 从数据服务中删除
-    this.dataService.getForests().subscribe(forests => {
+    this.forestService.getForests().subscribe(forests => {
       for (const forest of forests) {
         for (const field of forest.bambooFields) {
           for (const bamboo of field.bamboos) {
             if (bamboo.tasks?.some(s => s.id === section.id)) {
               if (bamboo.tasks) {
                 bamboo.tasks = bamboo.tasks.filter(s => s.id !== section.id);
-                this.dataService.updateBamboo(bamboo);
+                this.bambooService.updateBamboo(bamboo);
                 // 刷新活动列表
                 this.loadActivities();
                 // 从待办列表中移除
@@ -1182,7 +1193,7 @@ export class TacticalManagementComponent implements OnInit, OnDestroy {
         completedAt: undefined,
         updatedAt: new Date()
       };
-      this.dataService.updateBambooSection(updatedSection);
+      this.taskService.updateBambooSection(updatedSection);
     }
   }
 
@@ -1197,7 +1208,7 @@ export class TacticalManagementComponent implements OnInit, OnDestroy {
         if (indexB === -1) return -1;
         return indexA - indexB;
       });
-      this.dataService.updateBamboo(bamboo);
+      this.bambooService.updateBamboo(bamboo);
     }
   }
 
@@ -1537,7 +1548,7 @@ export class TacticalManagementComponent implements OnInit, OnDestroy {
     
     // 找到对应的竹节，继续冲刺
     if (sprint.taskId) {
-      this.dataService.getForests().pipe(take(1)).subscribe(forests => {
+      this.forestService.getForests().pipe(take(1)).subscribe(forests => {
         for (const forest of forests) {
           for (const field of forest.bambooFields) {
             for (const bamboo of field.bamboos) {
@@ -1565,7 +1576,7 @@ export class TacticalManagementComponent implements OnInit, OnDestroy {
     
     // 找到对应的竹节，重新开始冲刺
     if (sprint.taskId) {
-      this.dataService.getForests().subscribe(forests => {
+      this.forestService.getForests().subscribe(forests => {
         for (const forest of forests) {
           for (const field of forest.bambooFields) {
             for (const bamboo of field.bamboos) {
@@ -1592,7 +1603,7 @@ export class TacticalManagementComponent implements OnInit, OnDestroy {
     
     // 找到对应的竹节，添加到待办列表
     if (sprint.taskId) {
-      this.dataService.getForests().pipe(take(1)).subscribe(forests => {
+      this.forestService.getForests().pipe(take(1)).subscribe(forests => {
         for (const forest of forests) {
           for (const field of forest.bambooFields) {
             for (const bamboo of field.bamboos) {
@@ -1606,7 +1617,7 @@ export class TacticalManagementComponent implements OnInit, OnDestroy {
                     completedAt: undefined,
                     updatedAt: new Date()
                   };
-                  this.dataService.updateBambooSection(updatedSection);
+                  this.taskService.updateBambooSection(updatedSection);
                   this.closeSprintMenu();
                   return;
                 }
@@ -1624,7 +1635,7 @@ export class TacticalManagementComponent implements OnInit, OnDestroy {
       event.stopPropagation();
     }
     
-    this.dataService.deleteSprint(sprint.id);
+    this.sprintService.deleteSprint(sprint.id);
     this.closeSprintMenu();
   }
 
@@ -1687,14 +1698,14 @@ export class TacticalManagementComponent implements OnInit, OnDestroy {
       review.createdAt = new Date();
     }
     
-    this.dataService.saveReview(review).subscribe(() => {
+    this.reviewService.saveReview(review).subscribe(() => {
       this.closeReviewDialog();
     });
   }
 
   loadReviews(): void {
     this.subscriptions.add(
-      this.dataService.getReviews().subscribe(reviews => {
+      this.reviewService.getReviews().subscribe(reviews => {
         this.reviews = reviews;
       })
     );
@@ -1721,7 +1732,7 @@ export class TacticalManagementComponent implements OnInit, OnDestroy {
 
   loadBambooTodos(): void {
     this.subscriptions.add(
-      this.dataService.getForests().subscribe(forests => {
+      this.forestService.getForests().subscribe(forests => {
         const todos: BambooSection[] = [];
         forests.forEach(forest => {
           forest.bambooFields.forEach(field => {

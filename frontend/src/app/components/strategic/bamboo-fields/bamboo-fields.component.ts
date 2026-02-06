@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DataService } from '../../../services/data.service';
+import { ForestService } from '../../../services/forest.service';
+import { BambooService } from '../../../services/bamboo.service';
+import { GoalService } from '../../../services/goal.service';
+import { KeyOutputService } from '../../../services/key-output.service';
+import { LearningService } from '../../../services/learning.service';
 import { BambooForest, BambooField, Bamboo, Goal, KeyOutput, Learning } from '../../../models/bamboo-forest.model';
 import { BambooSection } from '../../../models/bamboo-forest.model';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
@@ -136,7 +140,11 @@ export class BambooFieldsComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private dataService: DataService
+    private forestService: ForestService,
+    private bambooService: BambooService,
+    private goalService: GoalService,
+    private keyOutputService: KeyOutputService,
+    private learningService: LearningService
   ) {}
 
   ngOnInit(): void {
@@ -149,7 +157,7 @@ export class BambooFieldsComponent implements OnInit {
   }
 
   loadForest(forestId: string): void {
-    this.dataService.getForests().subscribe(forests => {
+    this.forestService.getForests().subscribe(forests => {
       this.forest = forests.find(f => f.id === forestId) || null;
       if (this.forest) {
         this.fields = this.forest.bambooFields.filter(f => !f.archived);
@@ -177,7 +185,7 @@ export class BambooFieldsComponent implements OnInit {
     this.fields.splice(previousIndex, 1);
     this.fields.splice(currentIndex, 0, field);
     
-    this.dataService.updateFieldOrder(this.forest.id, this.fields);
+    this.forestService.updateFieldOrder(this.forest.id, this.fields);
   }
 
   dropBamboo(event: CdkDragDrop<Bamboo[]>): void {
@@ -212,7 +220,7 @@ export class BambooFieldsComponent implements OnInit {
         ...targetField,
         bamboos: bamboos
       };
-      this.dataService.updateField(updatedField);
+      this.forestService.updateField(updatedField);
     } else {
       // 跨竹田拖拽
       const previousBamboos = [...previousField.bamboos];
@@ -243,8 +251,8 @@ export class BambooFieldsComponent implements OnInit {
         bamboos: targetBamboos
       };
       
-      this.dataService.updateField(updatedPreviousField);
-      this.dataService.updateField(updatedTargetField);
+      this.forestService.updateField(updatedPreviousField);
+      this.forestService.updateField(updatedTargetField);
     }
     
     // 重新加载数据
@@ -303,7 +311,7 @@ export class BambooFieldsComponent implements OnInit {
         description: this.newField.description || '',
         updatedAt: new Date()
       };
-      this.dataService.updateField(updatedField);
+      this.forestService.updateField(updatedField);
     } else {
       const field: BambooField = {
         id: this.generateId(),
@@ -316,7 +324,7 @@ export class BambooFieldsComponent implements OnInit {
         createdAt: new Date(),
         updatedAt: new Date()
       };
-      this.dataService.addField(field);
+      this.forestService.addField(field);
     }
     this.loadForest(this.forest.id);
     this.closeFieldDialog();
@@ -418,7 +426,7 @@ export class BambooFieldsComponent implements OnInit {
           })),
           updatedAt: new Date()
         };
-        this.dataService.updateBamboo(updatedBamboo);
+        this.bambooService.updateBamboo(updatedBamboo);
       }
     } else {
       const bambooId = this.generateId();
@@ -440,7 +448,7 @@ export class BambooFieldsComponent implements OnInit {
         createdAt: new Date(),
         updatedAt: new Date()
       };
-      this.dataService.addBamboo(bamboo);
+      this.bambooService.addBamboo(bamboo);
     }
     if (this.forest) {
       this.loadForest(this.forest.id);
@@ -476,7 +484,7 @@ export class BambooFieldsComponent implements OnInit {
     event.stopPropagation();
     if (!this.forest) return;
     if (confirm(`确定要${field.archived ? '取消归档' : '归档'}这个竹田吗？`)) {
-      this.dataService.archiveField(this.forest.id, field.id, !field.archived);
+      this.forestService.archiveField(this.forest.id, field.id, !field.archived);
       this.loadForest(this.forest.id);
     }
     this.closeMenu();
@@ -486,7 +494,7 @@ export class BambooFieldsComponent implements OnInit {
     event.stopPropagation();
     if (!this.forest) return;
     if (confirm('确定要删除这个竹田吗？此操作不可恢复！')) {
-      this.dataService.deleteField(this.forest.id, field.id);
+      this.forestService.deleteField(this.forest.id, field.id);
       this.loadForest(this.forest.id);
     }
     this.closeMenu();
@@ -496,7 +504,7 @@ export class BambooFieldsComponent implements OnInit {
     event.stopPropagation();
     if (!this.selectedField) return;
     if (confirm(`确定要归档这个竹子吗？`)) {
-      this.dataService.archiveBamboo(this.selectedField.id, bamboo.id, true);
+      this.bambooService.archiveBamboo(this.selectedField.id, bamboo.id, true);
       if (this.forest) {
         this.loadForest(this.forest.id);
       }
@@ -508,7 +516,7 @@ export class BambooFieldsComponent implements OnInit {
     event.stopPropagation();
     if (!this.selectedField) return;
     if (confirm('确定要删除这个竹子吗？此操作不可恢复！')) {
-      this.dataService.deleteBamboo(this.selectedField.id, bamboo.id);
+      this.bambooService.deleteBamboo(this.selectedField.id, bamboo.id);
       if (this.forest) {
         this.loadForest(this.forest.id);
       }
@@ -580,7 +588,7 @@ export class BambooFieldsComponent implements OnInit {
           completedAt: this.newGoal.completed ? new Date() : undefined,
           updatedAt: new Date()
         };
-        this.dataService.updateGoal(updatedGoal);
+        this.goalService.updateGoal(updatedGoal);
       }
     } else {
       const goal: Goal = {
@@ -593,11 +601,11 @@ export class BambooFieldsComponent implements OnInit {
         createdAt: new Date(),
         updatedAt: new Date()
       };
-      this.dataService.addGoal(goal);
+      this.goalService.addGoal(goal);
     }
     
     // 重新加载数据并更新列表
-    this.dataService.getForests().subscribe(forests => {
+    this.forestService.getForests().subscribe(forests => {
       const updatedForest = forests.find(f => f.id === forestId);
       if (updatedForest) {
         this.forest = updatedForest;
@@ -613,8 +621,8 @@ export class BambooFieldsComponent implements OnInit {
     if (confirm('确定要删除这个目标吗？此操作不可恢复！')) {
       if (!this.forest) return;
       const forestId = this.forest.id;
-      this.dataService.deleteGoal(forestId, goal.id);
-      this.dataService.getForests().subscribe(forests => {
+      this.goalService.deleteGoal(forestId, goal.id);
+      this.forestService.getForests().subscribe(forests => {
         const updatedForest = forests.find(f => f.id === forestId);
         if (updatedForest) {
           this.forest = updatedForest;
@@ -697,7 +705,7 @@ export class BambooFieldsComponent implements OnInit {
           completedAt: this.newKeyOutput.completed ? new Date() : undefined,
           updatedAt: new Date()
         };
-        this.dataService.updateKeyOutput(updatedKeyOutput);
+        this.keyOutputService.updateKeyOutput(updatedKeyOutput);
       }
     } else {
       const keyOutput: KeyOutput = {
@@ -710,11 +718,11 @@ export class BambooFieldsComponent implements OnInit {
         createdAt: new Date(),
         updatedAt: new Date()
       };
-      this.dataService.addKeyOutput(keyOutput);
+      this.keyOutputService.addKeyOutput(keyOutput);
     }
     
     // 重新加载数据并更新列表
-    this.dataService.getForests().subscribe(forests => {
+    this.forestService.getForests().subscribe(forests => {
       const updatedForest = forests.find(f => f.id === forestId);
       if (updatedForest) {
         this.forest = updatedForest;
@@ -730,8 +738,8 @@ export class BambooFieldsComponent implements OnInit {
     if (confirm('确定要删除这个关键产出吗？此操作不可恢复！')) {
       if (!this.forest) return;
       const forestId = this.forest.id;
-      this.dataService.deleteKeyOutput(forestId, keyOutput.id);
-      this.dataService.getForests().subscribe(forests => {
+      this.keyOutputService.deleteKeyOutput(forestId, keyOutput.id);
+      this.forestService.getForests().subscribe(forests => {
         const updatedForest = forests.find(f => f.id === forestId);
         if (updatedForest) {
           this.forest = updatedForest;
@@ -813,7 +821,7 @@ export class BambooFieldsComponent implements OnInit {
           tags: this.newLearning.tags.split(',').map(t => t.trim()).filter(t => t),
           updatedAt: new Date()
         };
-        this.dataService.updateLearning(updatedLearning);
+        this.learningService.updateLearning(updatedLearning);
       }
     } else {
       const learning: Learning = {
@@ -825,11 +833,11 @@ export class BambooFieldsComponent implements OnInit {
         createdAt: new Date(),
         updatedAt: new Date()
       };
-      this.dataService.addLearning(learning);
+      this.learningService.addLearning(learning);
     }
     
     // 重新加载数据并更新列表
-    this.dataService.getForests().subscribe(forests => {
+    this.forestService.getForests().subscribe(forests => {
       const updatedForest = forests.find(f => f.id === forestId);
       if (updatedForest) {
         this.forest = updatedForest;
@@ -845,8 +853,8 @@ export class BambooFieldsComponent implements OnInit {
     if (confirm('确定要删除这个习得吗？此操作不可恢复！')) {
       if (!this.forest) return;
       const forestId = this.forest.id;
-      this.dataService.deleteLearning(forestId, learning.id);
-      this.dataService.getForests().subscribe(forests => {
+      this.learningService.deleteLearning(forestId, learning.id);
+      this.forestService.getForests().subscribe(forests => {
         const updatedForest = forests.find(f => f.id === forestId);
         if (updatedForest) {
           this.forest = updatedForest;
@@ -877,7 +885,7 @@ export class BambooFieldsComponent implements OnInit {
     }
     bamboo.updatedAt = new Date();
     
-    this.dataService.updateBamboo(bamboo);
+    this.bambooService.updateBamboo(bamboo);
     if (this.forest) {
       this.loadForest(this.forest.id);
     }
@@ -899,7 +907,7 @@ export class BambooFieldsComponent implements OnInit {
     const sectionIndex = bamboo.tasks.findIndex(s => s.id === section.id);
     if (sectionIndex !== -1) {
       bamboo.tasks[sectionIndex] = section;
-      this.dataService.updateBamboo(bamboo);
+      this.bambooService.updateBamboo(bamboo);
       if (this.forest) {
         this.loadForest(this.forest.id);
       }
@@ -916,12 +924,60 @@ export class BambooFieldsComponent implements OnInit {
       if (sectionIndex !== -1) {
         bamboo.tasks.splice(sectionIndex, 1);
         bamboo.updatedAt = new Date();
-        this.dataService.updateBamboo(bamboo);
+        this.bambooService.updateBamboo(bamboo);
         if (this.forest) {
           this.loadForest(this.forest.id);
         }
       }
     }
+  }
+
+  // 竹林管理方法
+  openForestDialog(): void {
+    if (!this.forest) return;
+    this.newForest = {
+      name: this.forest.name,
+      startDate: new Date(this.forest.startDate).toISOString().split('T')[0],
+      endDate: new Date(this.forest.endDate).toISOString().split('T')[0],
+      description: this.forest.description || ''
+    };
+    this.showForestDialog = true;
+    this.closeMenu();
+  }
+
+  closeForestDialog(): void {
+    this.showForestDialog = false;
+    this.newForest = {
+      name: '',
+      startDate: new Date().toISOString().split('T')[0],
+      endDate: new Date().toISOString().split('T')[0],
+      description: ''
+    };
+  }
+
+  updateForest(): void {
+    if (!this.forest) return;
+    
+    if (!this.newForest.name || !this.newForest.startDate || !this.newForest.endDate) {
+      alert('请填写所有必填项');
+      return;
+    }
+
+    const updatedForest: BambooForest = {
+      ...this.forest,
+      name: this.newForest.name,
+      startDate: new Date(this.newForest.startDate),
+      endDate: new Date(this.newForest.endDate),
+      description: this.newForest.description || '',
+      updatedAt: new Date()
+    };
+
+    this.forestService.updateForest(updatedForest);
+    this.closeForestDialog();
+  }
+
+  dropSection(event: CdkDragDrop<BambooSection[]>): void {
+    moveItemInArray(this.dialogSections, event.previousIndex, event.currentIndex);
   }
 
   // 竹节管理方法
@@ -1004,68 +1060,7 @@ export class BambooFieldsComponent implements OnInit {
     }
   }
 
-  dropSection(event: CdkDragDrop<BambooSection[]>): void {
-    moveItemInArray(this.dialogSections, event.previousIndex, event.currentIndex);
-  }
-
-  generateId(): string {
+  private generateId(): string {
     return Date.now().toString(36) + Math.random().toString(36).substr(2);
   }
-
-  // 竹林管理方法
-  openForestDialog(): void {
-    if (!this.forest) {
-      alert('请先选择竹林');
-      return;
-    }
-    this.isEditingForest = true;
-    this.newForest = {
-      name: this.forest.name,
-      startDate: new Date(this.forest.startDate).toISOString().split('T')[0],
-      endDate: new Date(this.forest.endDate).toISOString().split('T')[0],
-      description: this.forest.description || ''
-    };
-    this.showForestDialog = true;
-    this.closeMenu();
-  }
-
-  closeForestDialog(): void {
-    this.showForestDialog = false;
-    this.isEditingForest = false;
-    this.resetForestForm();
-  }
-
-  updateForest(): void {
-    if (!this.forest) {
-      alert('请先选择竹林');
-      return;
-    }
-
-    if (!this.newForest.name || !this.newForest.startDate || !this.newForest.endDate) {
-      alert('请填写所有必填项');
-      return;
-    }
-
-    const updatedForest: BambooForest = {
-      ...this.forest,
-      name: this.newForest.name,
-      startDate: new Date(this.newForest.startDate),
-      endDate: new Date(this.newForest.endDate),
-      description: this.newForest.description || '',
-      updatedAt: new Date()
-    };
-    this.dataService.updateForest(updatedForest);
-    this.loadForest(this.forest.id);
-    this.closeForestDialog();
-  }
-
-  resetForestForm(): void {
-    this.newForest = {
-      name: '',
-      startDate: new Date().toISOString().split('T')[0],
-      endDate: new Date().toISOString().split('T')[0],
-      description: ''
-    };
-  }
 }
-

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { DataService } from '../../services/data.service';
+import { ForestService } from '../../services/forest.service';
 import { BambooForest, BambooField, Bamboo, Goal, KeyOutput, Learning } from '../../models/bamboo-forest.model';
 import { BambooSection } from '../../models/bamboo-forest.model';
 
@@ -63,7 +63,7 @@ export class StatisticsComponent implements OnInit {
   Math = Math;
 
   constructor(
-    private dataService: DataService
+    private forestService: ForestService
   ) {}
 
   ngOnInit(): void {
@@ -71,7 +71,7 @@ export class StatisticsComponent implements OnInit {
   }
 
   loadStatistics(): void {
-    this.dataService.getForests().subscribe(forests => {
+    this.forestService.getForests().subscribe(forests => {
       this.forests = forests;
       this.calculateOverallStats(forests);
       this.calculateForestStats(forests);
