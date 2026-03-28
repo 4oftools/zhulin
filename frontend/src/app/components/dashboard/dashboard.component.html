@@ -7,7 +7,7 @@
   <div class="stats-grid">
     <div class="stat-card">
       <div class="stat-icon forests">
-        <img src="assets/icons/dashboard/forests.svg" alt="竹林总数" />
+        <i-tabler name="trees"></i-tabler>
       </div>
       <div class="stat-content">
         <h3>{{ stats.totalForests }}</h3>
@@ -17,7 +17,7 @@
 
     <div class="stat-card">
       <div class="stat-icon fields">
-        <img src="assets/icons/dashboard/fields.svg" alt="竹田总数" />
+        <i-tabler name="layout-grid"></i-tabler>
       </div>
       <div class="stat-content">
         <h3>{{ stats.totalFields }}</h3>
@@ -27,7 +27,7 @@
 
     <div class="stat-card">
       <div class="stat-icon bamboos">
-        <img src="assets/icons/dashboard/bamboos.svg" alt="竹子总数" />
+        <i-tabler name="plant"></i-tabler>
       </div>
       <div class="stat-content">
         <h3>{{ stats.totalBamboos }}</h3>
@@ -37,7 +37,7 @@
 
     <div class="stat-card">
       <div class="stat-icon tasks">
-        <img src="assets/icons/dashboard/tasks.svg" alt="任务总数" />
+        <i-tabler name="checklist"></i-tabler>
       </div>
       <div class="stat-content">
         <h3>{{ stats.totalTasks }}</h3>
@@ -123,7 +123,7 @@
           <div class="forest-goals-header" (click)="toggleForestGoals(forest.id)">
             <span class="goals-title">目标列表 ({{ forest.goals.length }})</span>
             <button class="goals-toggle-btn" [class.expanded]="isForestGoalsExpanded(forest.id)">
-              <span appSvgIcon="assets/icons/common/chevron-down.svg"></span>
+              <i-tabler name="chevron-down"></i-tabler>
             </button>
           </div>
           <div class="forest-goals-list" *ngIf="isForestGoalsExpanded(forest.id)">

@@ -21,42 +21,54 @@
     <h2 class="section-title">总体统计</h2>
     <div class="stats-grid">
       <div class="stat-card">
-        <div class="stat-icon">🌲</div>
+        <div class="stat-icon">
+          <i-tabler name="trees"></i-tabler>
+        </div>
         <div class="stat-content">
           <div class="stat-value">{{ overallStats.totalForests }}</div>
           <div class="stat-label">竹林总数</div>
         </div>
       </div>
       <div class="stat-card">
-        <div class="stat-icon">🌾</div>
+        <div class="stat-icon">
+          <i-tabler name="layout-grid"></i-tabler>
+        </div>
         <div class="stat-content">
           <div class="stat-value">{{ overallStats.totalFields }}</div>
           <div class="stat-label">竹田总数</div>
         </div>
       </div>
       <div class="stat-card">
-        <div class="stat-icon">🎋</div>
+        <div class="stat-icon">
+          <i-tabler name="plant"></i-tabler>
+        </div>
         <div class="stat-content">
           <div class="stat-value">{{ overallStats.totalBamboos }}</div>
           <div class="stat-label">竹子总数</div>
         </div>
       </div>
       <div class="stat-card">
-        <div class="stat-icon">📋</div>
+        <div class="stat-icon">
+          <i-tabler name="checklist"></i-tabler>
+        </div>
         <div class="stat-content">
           <div class="stat-value">{{ overallStats.totalTasks }}</div>
           <div class="stat-label">任务总数</div>
         </div>
       </div>
       <div class="stat-card">
-        <div class="stat-icon">✅</div>
+        <div class="stat-icon">
+          <i-tabler name="circle-check-filled"></i-tabler>
+        </div>
         <div class="stat-content">
           <div class="stat-value">{{ overallStats.completedTasks }}</div>
           <div class="stat-label">已完成任务</div>
         </div>
       </div>
       <div class="stat-card highlight">
-        <div class="stat-icon">📊</div>
+        <div class="stat-icon">
+          <i-tabler name="chart-pie-filled"></i-tabler>
+        </div>
         <div class="stat-content">
           <div class="stat-value">{{ overallStats.completionRate }}%</div>
           <div class="stat-label">任务完成率</div>
@@ -71,7 +83,7 @@
     <div class="task-status-grid">
       <div class="status-card completed">
         <div class="status-header">
-          <span class="status-icon">✓</span>
+          <span class="status-icon"><i-tabler name="check"></i-tabler></span>
           <span class="status-label">已完成</span>
         </div>
         <div class="status-value">{{ overallStats.completedTasks }}</div>
@@ -86,7 +98,7 @@
       </div>
       <div class="status-card in-progress">
         <div class="status-header">
-          <span class="status-icon">⟳</span>
+          <span class="status-icon"><i-tabler name="rotate-2"></i-tabler></span>
           <span class="status-label">进行中</span>
         </div>
         <div class="status-value">{{ overallStats.inProgressTasks }}</div>
@@ -101,7 +113,7 @@
       </div>
       <div class="status-card pending">
         <div class="status-header">
-          <span class="status-icon">○</span>
+          <span class="status-icon"><i-tabler name="clock"></i-tabler></span>
           <span class="status-label">待办</span>
         </div>
         <div class="status-value">{{ overallStats.pendingTasks }}</div>

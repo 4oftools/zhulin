@@ -15,11 +15,17 @@ export interface Activity {
   sections: BambooSection[];
 }
 
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { TablerIconsModule } from 'angular-tabler-icons';
+
 @Component({
   selector: 'app-tactical-management',
   templateUrl: './tactical-management.component.html',
   styleUrls: ['./tactical-management.component.css'],
-  standalone: false
+  standalone: true,
+  imports: [CommonModule, FormsModule, DragDropModule, TablerIconsModule]
 })
 export class TacticalManagementComponent implements OnInit, OnDestroy {
   // Subscription management

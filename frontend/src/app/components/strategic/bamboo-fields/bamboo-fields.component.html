@@ -2,7 +2,7 @@
   <div class="fields-header" *ngIf="forest">
     <div class="fields-header-left">
       <h3 class="fields-header-title">
-        <span class="header-icon" appSvgIcon="assets/icons/strategic/forest-white.svg"></span>
+        <i-tabler name="trees" class="header-icon"></i-tabler>
         <span>{{ forest.name }}</span>
       </h3>
       <div class="fields-header-meta">
@@ -13,24 +13,24 @@
     </div>
     <div class="fields-header-actions">
       <button class="header-action-btn" (click)="openFieldDialog()" title="新建竹田">
-        <span class="btn-icon" appSvgIcon="assets/icons/common/add.svg"></span>
+        <i-tabler name="plus" class="btn-icon"></i-tabler>
         <span class="btn-text">新建竹田</span>
       </button>
       <div class="header-actions-divider"></div>
       <button class="header-action-btn" (click)="openGoalDialog()" title="目标管理">
-        <span class="btn-icon" appSvgIcon="assets/icons/strategic/goal.svg"></span>
+        <i-tabler name="target" class="btn-icon"></i-tabler>
         <span class="btn-text">目标管理</span>
       </button>
       <button class="header-action-btn" (click)="openKeyOutputDialog()" title="关键产出管理">
-        <span class="btn-icon" appSvgIcon="assets/icons/strategic/key-output.svg"></span>
+        <i-tabler name="diamond" class="btn-icon"></i-tabler>
         <span class="btn-text">关键产出</span>
       </button>
       <button class="header-action-btn" (click)="openLearningDialog()" title="习得管理">
-        <span class="btn-icon" appSvgIcon="assets/icons/strategic/learning.svg"></span>
+        <i-tabler name="school" class="btn-icon"></i-tabler>
         <span class="btn-text">习得管理</span>
       </button>
       <button class="header-action-btn" (click)="openForestDialog()" title="修改竹林">
-        <span class="btn-icon" appSvgIcon="assets/icons/common/edit.svg"></span>
+        <i-tabler name="edit" class="btn-icon"></i-tabler>
         <span class="btn-text">修改</span>
       </button>
     </div>
@@ -55,7 +55,7 @@
           </h3>
           <div class="panel-header-actions">
             <button class="btn-add" (click)="openBambooDialog(field, undefined, $event)" [disabled]="field.archived" title="新建竹子">
-              <span appSvgIcon="assets/icons/common/add.svg"></span>
+              <i-tabler name="plus"></i-tabler>
             </button>
             <div class="menu-container">
               <button class="btn-menu" (click)="toggleMenu('field-' + field.id, $event)" title="更多操作">
@@ -65,15 +65,15 @@
               </button>
               <div class="dropdown-menu" *ngIf="openMenuId === 'field-' + field.id">
                 <button class="menu-item" (click)="openFieldDialog(field)">
-                  <span class="menu-icon" appSvgIcon="assets/icons/common/edit.svg"></span>
+                  <i-tabler name="edit" class="menu-icon"></i-tabler>
                   <span>修改</span>
                 </button>
                 <button class="menu-item" (click)="archiveField(field, $event)">
-                  <span class="menu-icon" [appSvgIcon]="field.archived ? 'assets/icons/common/unarchive.svg' : 'assets/icons/common/archive.svg'"></span>
+                  <i-tabler [name]="field.archived ? 'archive-off' : 'archive'" class="menu-icon"></i-tabler>
                   <span>{{ field.archived ? '取消归档' : '归档' }}</span>
                 </button>
                 <button class="menu-item danger" (click)="deleteField(field, $event)">
-                  <span class="menu-icon" appSvgIcon="assets/icons/common/delete.svg"></span>
+                  <i-tabler name="trash" class="menu-icon"></i-tabler>
                   <span>删除</span>
                 </button>
               </div>
@@ -94,7 +94,7 @@
           (click)="$event.stopPropagation()">
           <div class="bamboo-header">
             <div class="item-content" cdkDragHandle>
-              <span class="item-icon" appSvgIcon="assets/icons/strategic/bamboo.svg"></span>
+              <i-tabler name="plant" class="item-icon"></i-tabler>
               <input type="checkbox" 
                      class="bamboo-checkbox" 
                      [checked]="bamboo.completed"
@@ -122,15 +122,15 @@
                 </button>
                 <div class="dropdown-menu" *ngIf="openMenuId === 'bamboo-' + bamboo.id">
                   <button class="menu-item" (click)="openBambooDialog(field, bamboo, $event)">
-                    <span class="menu-icon" appSvgIcon="assets/icons/common/edit.svg"></span>
+                    <i-tabler name="edit" class="menu-icon"></i-tabler>
                     <span>修改</span>
                   </button>
                   <button class="menu-item" (click)="archiveBamboo(bamboo, $event)">
-                    <span class="menu-icon" appSvgIcon="assets/icons/common/archive.svg"></span>
-                    <span>归档</span>
+                    <i-tabler [name]="bamboo.archived ? 'archive-off' : 'archive'" class="menu-icon"></i-tabler>
+                    <span>{{ bamboo.archived ? '取消归档' : '归档' }}</span>
                   </button>
                   <button class="menu-item danger" (click)="deleteBamboo(bamboo, $event)">
-                    <span class="menu-icon" appSvgIcon="assets/icons/common/delete.svg"></span>
+                    <i-tabler name="trash" class="menu-icon"></i-tabler>
                     <span>删除</span>
                   </button>
                 </div>
@@ -153,7 +153,7 @@
                       (click)="deleteSection(bamboo, task, $event)"
                       (mousedown)="$event.stopPropagation()"
                       title="删除竹节">
-                <span appSvgIcon="assets/icons/common/delete.svg"></span>
+                <i-tabler name="trash" class="task-delete-icon"></i-tabler>
               </button>
             </div>
           </div>

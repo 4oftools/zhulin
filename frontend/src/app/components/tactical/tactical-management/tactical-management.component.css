@@ -203,8 +203,8 @@
   height: 18px;
 }
 
-.btn-calendar svg,
-.btn-review svg {
+.btn-calendar i-tabler svg,
+.btn-review i-tabler svg {
   width: 18px;
   height: 18px;
   fill: currentColor;
@@ -239,13 +239,13 @@
   transform: scale(1.1);
 }
 
-.btn-add-activity span {
+.btn-add-activity i-tabler {
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.btn-add-activity span svg {
+.btn-add-activity i-tabler svg {
   width: 16px;
   height: 16px;
 }
@@ -670,7 +670,7 @@
   background: rgba(244, 67, 54, 0.2);
 }
 
-.task-delete-btn svg {
+.task-delete-btn i-tabler svg {
   width: 14px;
   height: 14px;
 }

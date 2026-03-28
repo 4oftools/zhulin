@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { RouterModule, Router, ActivatedRoute } from '@angular/router';
+import { TablerIconsModule } from 'angular-tabler-icons';
 import { ForestService } from '../../../services/forest.service';
 import { BambooForest } from '../../../models/bamboo-forest.model';
 
@@ -7,7 +10,8 @@ import { BambooForest } from '../../../models/bamboo-forest.model';
   selector: 'app-strategic-navigation',
   templateUrl: './strategic-navigation.component.html',
   styleUrls: ['./strategic-navigation.component.css'],
-  standalone: false
+  standalone: true,
+  imports: [CommonModule, FormsModule, RouterModule, TablerIconsModule]
 })
 export class StrategicNavigationComponent implements OnInit {
   forests: BambooForest[] = [];

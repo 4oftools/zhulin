@@ -6,7 +6,7 @@
       <div class="header-actions">
         <span class="badge">{{ activities.length }}</span>
         <button class="btn-add-activity" (click)="openAddActivityDialog()" title="添加新活动">
-          <span appSvgIcon="assets/icons/common/add.svg"></span>
+          <i-tabler name="plus"></i-tabler>
         </button>
       </div>
     </div>
@@ -40,19 +40,19 @@
                        (click)="$event.stopPropagation()"
                        (mousedown)="$event.stopPropagation()">
                     <button class="menu-item" (click)="openBambooDialog(activity, $event)">
-                      <span class="menu-icon" appSvgIcon="assets/icons/common/edit.svg"></span>
+                      <i-tabler name="edit" class="menu-icon"></i-tabler>
                       <span>修改</span>
                     </button>
                     <button class="menu-item" (click)="openSectionDialogForActivity(activity, $event)">
-                      <span class="menu-icon" appSvgIcon="assets/icons/common/add.svg"></span>
+                      <i-tabler name="plus" class="menu-icon"></i-tabler>
                       <span>添加竹节</span>
                     </button>
                     <button class="menu-item" (click)="completeBamboo(activity, $event)">
-                      <span class="menu-icon" appSvgIcon="assets/icons/common/edit.svg"></span>
+                      <i-tabler name="check" class="menu-icon"></i-tabler>
                       <span>完成任务</span>
                     </button>
                     <button class="menu-item danger" (click)="removeFromActivities(activity, $event)">
-                      <span class="menu-icon" appSvgIcon="assets/icons/common/delete.svg"></span>
+                      <i-tabler name="trash" class="menu-icon"></i-tabler>
                       <span>移除活动列表</span>
                     </button>
                   </div>
@@ -93,7 +93,7 @@
                     (click)="deleteSection(section, $event)"
                     (mousedown)="$event.stopPropagation()"
                     title="删除竹节">
-              <span appSvgIcon="assets/icons/common/delete.svg"></span>
+              <i-tabler name="trash"></i-tabler>
             </button>
           </div>
         </div>
@@ -150,11 +150,11 @@
                  (click)="$event.stopPropagation()"
                  (mousedown)="$event.stopPropagation()">
               <button class="menu-item" (click)="editTodoSection(todo, $event)">
-                <span class="menu-icon" appSvgIcon="assets/icons/common/edit.svg"></span>
+                <i-tabler name="edit" class="menu-icon"></i-tabler>
                 <span>编辑</span>
               </button>
               <button class="menu-item danger" (click)="removeFromTodos(todo, $event)">
-                <span class="menu-icon" appSvgIcon="assets/icons/common/delete.svg"></span>
+                <i-tabler name="trash" class="menu-icon"></i-tabler>
                 <span>移除</span>
               </button>
             </div>
@@ -173,10 +173,10 @@
       <h3>冲刺管理器</h3>
       <div class="header-actions">
         <button class="btn-review" (click)="openReviewDialog()" title="回顾">
-          <span appSvgIcon="assets/icons/common/review.svg"></span>
+          <i-tabler name="rotate-2"></i-tabler>
         </button>
         <button class="btn-calendar" (click)="toggleCalendar($event)" (mousedown)="$event.stopPropagation()" title="选择日期">
-          <span appSvgIcon="assets/icons/common/calendar.svg"></span>
+          <i-tabler name="calendar"></i-tabler>
         </button>
       </div>
     </div>
@@ -370,23 +370,23 @@
                    (click)="$event.stopPropagation()"
                    (mousedown)="$event.stopPropagation()">
                 <button class="menu-item" (click)="continueSprint(sprint, $event)">
-                  <span class="menu-icon" appSvgIcon="assets/icons/common/play.svg"></span>
+                  <i-tabler name="player-play" class="menu-icon"></i-tabler>
                   <span>继续</span>
                 </button>
                 <button class="menu-item" 
                         *ngIf="sprint.type === 'sprint'"
                         (click)="restartSprint(sprint, $event)">
-                  <span class="menu-icon" appSvgIcon="assets/icons/common/refresh.svg"></span>
+                  <i-tabler name="refresh" class="menu-icon"></i-tabler>
                   <span>重新开始</span>
                 </button>
                 <button class="menu-item" 
                         *ngIf="sprint.type === 'sprint'"
                         (click)="moveSprintToTodos(sprint, $event)">
-                  <span class="menu-icon" appSvgIcon="assets/icons/common/move.svg"></span>
+                  <i-tabler name="arrow-back-up" class="menu-icon"></i-tabler>
                   <span>挪回待办</span>
                 </button>
                 <button class="menu-item danger" (click)="deleteSprint(sprint, $event)">
-                  <span class="menu-icon" appSvgIcon="assets/icons/common/delete.svg"></span>
+                  <i-tabler name="trash" class="menu-icon"></i-tabler>
                   <span>删除</span>
                 </button>
               </div>

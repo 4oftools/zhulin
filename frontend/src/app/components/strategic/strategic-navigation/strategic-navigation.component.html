@@ -4,7 +4,7 @@
     <div class="panel-header">
       <h3>竹林</h3>
       <button class="btn-add" (click)="openForestDialog()" title="新建竹林">
-        <span appSvgIcon="assets/icons/common/add.svg"></span>
+        <i-tabler name="plus"></i-tabler>
       </button>
     </div>
     <div class="list-container">
@@ -14,7 +14,7 @@
         [class.archived]="forest.archived"
         *ngFor="let forest of forests">
         <div class="item-content" (click)="selectForest(forest)">
-          <span class="item-icon" appSvgIcon="assets/icons/strategic/forest.svg"></span>
+          <i-tabler name="trees" class="item-icon"></i-tabler>
           <div class="item-info">
             <div class="item-name">
               {{ forest.name }}
@@ -39,15 +39,15 @@
             </button>
             <div class="dropdown-menu" *ngIf="openMenuId === 'forest-' + forest.id">
               <button class="menu-item" (click)="openForestDialog(forest)">
-                <span class="menu-icon" appSvgIcon="assets/icons/common/edit.svg"></span>
+                <i-tabler name="edit" class="menu-icon"></i-tabler>
                 <span>修改</span>
               </button>
               <button class="menu-item" (click)="archiveForest(forest, $event)">
-                <span class="menu-icon" [appSvgIcon]="forest.archived ? 'assets/icons/common/unarchive.svg' : 'assets/icons/common/archive.svg'"></span>
+                <i-tabler [name]="forest.archived ? 'archive-off' : 'archive'" class="menu-icon"></i-tabler>
                 <span>{{ forest.archived ? '取消归档' : '归档' }}</span>
               </button>
               <button class="menu-item danger" (click)="deleteForest(forest, $event)">
-                <span class="menu-icon" appSvgIcon="assets/icons/common/delete.svg"></span>
+                <i-tabler name="trash" class="menu-icon"></i-tabler>
                 <span>删除</span>
               </button>
             </div>

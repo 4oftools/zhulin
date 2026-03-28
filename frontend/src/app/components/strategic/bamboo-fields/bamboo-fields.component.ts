@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { TablerIconsModule } from 'angular-tabler-icons';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ForestService } from '../../../services/forest.service';
 import { BambooService } from '../../../services/bamboo.service';
@@ -13,7 +17,8 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
   selector: 'app-bamboo-fields',
   templateUrl: './bamboo-fields.component.html',
   styleUrls: ['./bamboo-fields.component.css'],
-  standalone: false
+  standalone: true,
+  imports: [CommonModule, FormsModule, DragDropModule, TablerIconsModule]
 })
 export class BambooFieldsComponent implements OnInit {
   forest: BambooForest | null = null;
