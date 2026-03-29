@@ -884,7 +884,7 @@ export class TacticalManagementComponent implements OnInit, OnDestroy {
     this.startTimer();
 
     this.sprintService.addSprint(sprint).subscribe(savedSprint => {
-      if (this.currentSprint && this.currentSprint.startTime.getTime() === sprint.startTime.getTime()) {
+      if (this.currentSprint && this.currentSprint.id === sprint.id) {
         this.currentSprint = savedSprint;
       }
     });
@@ -912,7 +912,7 @@ export class TacticalManagementComponent implements OnInit, OnDestroy {
     this.startTimer();
 
     this.sprintService.addSprint(rest).subscribe(savedSprint => {
-      if (this.currentSprint && this.currentSprint.startTime.getTime() === rest.startTime.getTime()) {
+      if (this.currentSprint && this.currentSprint.id === rest.id) {
         this.currentSprint = savedSprint;
       }
     });
@@ -940,7 +940,7 @@ export class TacticalManagementComponent implements OnInit, OnDestroy {
     this.startTimer();
 
     this.sprintService.addSprint(breakSprint).subscribe(savedSprint => {
-      if (this.currentSprint && this.currentSprint.startTime.getTime() === breakSprint.startTime.getTime()) {
+      if (this.currentSprint && this.currentSprint.id === breakSprint.id) {
         this.currentSprint = savedSprint;
       }
     });
@@ -1013,9 +1013,7 @@ export class TacticalManagementComponent implements OnInit, OnDestroy {
                   const updatedSection: BambooSection = {
                     ...section,
                     completed: true,
-                    completedAt: section.completed ? section.completedAt : new Date(),
-                    inTodoList: false, // 移出待办列表
-                    updatedAt: new Date()
+                    inTodoList: false
                   };
                   this.taskService.updateBambooSection(updatedSection);
                   return;
@@ -1441,6 +1439,25 @@ export class TacticalManagementComponent implements OnInit, OnDestroy {
            date1.getDate() === date2.getDate();
   }
 
+  /** 展示用：当前选中待办所属竹子对应的活动卡片高亮 */
+  isActivitySelected(activity: Activity): boolean {
+    return !!(this.selectedTask && this.selectedTask.bambooId === activity.bamboo.id);
+  }
+
+  /** 日历格点：当日是否有冲刺记录（全量历史） */
+  hasSprintOnCalendarDay(date: Date): boolean {
+    if (!this.sprintHistory?.length) {
+      return false;
+    }
+    return this.sprintHistory.some((s) => {
+      if (s?.startTime == null) {
+        return false;
+      }
+      const d = s.startTime instanceof Date ? s.startTime : new Date(s.startTime);
+      return this.isSameDay(d, date);
+    });
+  }
+
   selectDate(date: Date, event?: Event): void {
     console.log("selectDate", date);
     if (event) {
@@ -1691,17 +1708,12 @@ export class TacticalManagementComponent implements OnInit, OnDestroy {
       date: dateStr,
       score: this.reviewData.score,
       goodThings: this.reviewData.goodThings.trim(),
-      badThings: this.reviewData.badThings.trim(),
-      updatedAt: new Date()
+      badThings: this.reviewData.badThings.trim()
     };
-    
-    // Check if we have an ID from existing review
+
     const existing = this.reviews.find(r => r.date === dateStr);
-    if (existing) {
+    if (existing?.id) {
       review.id = existing.id;
-      review.createdAt = existing.createdAt;
-    } else {
-      review.createdAt = new Date();
     }
     
     this.reviewService.saveReview(review).subscribe(() => {

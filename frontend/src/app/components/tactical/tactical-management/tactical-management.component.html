@@ -1,8 +1,8 @@
-<div class="tactical-management-container">
+<div class="tactical-management-container tactical-layout">
   <!-- 左侧：活动列表 -->
   <div class="activities-panel">
     <div class="panel-header">
-      <h3>活动列表</h3>
+      <h3 class="panel-title"><i-tabler name="clipboard-list"></i-tabler> 活动列表</h3>
       <div class="header-actions">
         <span class="badge">{{ activities.length }}</span>
         <button class="btn-add-activity" (click)="openAddActivityDialog()" title="添加新活动">
@@ -10,10 +10,11 @@
         </button>
       </div>
     </div>
-    <div class="activities-list">
+    <div class="activities-list panel-content">
       <div 
         class="activity-item" 
-        *ngFor="let activity of activities">
+        *ngFor="let activity of activities"
+        [class.selected]="isActivitySelected(activity)">
         <div class="activity-header">
           <div class="activity-info">
             <div class="activity-name-row">
@@ -107,10 +108,10 @@
   <!-- 中间：竹内待办 -->
   <div class="todos-panel">
     <div class="panel-header">
-      <h3>竹内待办</h3>
+      <h3 class="panel-title"><i-tabler name="list-check"></i-tabler> 竹内待办</h3>
       <span class="badge">{{ bambooTodos.length }}</span>
     </div>
-    <div class="todos-list"
+    <div class="todos-list panel-content"
          cdkDropList
          id="todos-drop-list"
          [cdkDropListData]="bambooTodos"
@@ -170,7 +171,7 @@
   <!-- 中间偏右：定时器冲刺管理器 -->
   <div class="timer-panel">
     <div class="panel-header">
-      <h3>冲刺管理器</h3>
+      <h3 class="panel-title"><i-tabler name="clock"></i-tabler> 冲刺管理器</h3>
       <div class="header-actions">
         <button class="btn-review" (click)="openReviewDialog()" title="回顾">
           <i-tabler name="rotate-2"></i-tabler>
@@ -180,8 +181,10 @@
         </button>
       </div>
     </div>
-    <!-- 日历滚动条 -->
-    <div class="calendar-scroll" *ngIf="showCalendar">
+    <div class="panel-content timer-panel-body">
+    <!-- 日历：展开后贴近标题栏下方，便于年月选择与选日 -->
+    <div class="calendar-embed" *ngIf="showCalendar">
+    <div class="calendar-scroll">
       <div class="calendar-header">
         <button class="btn-year-nav" (click)="previousYear($event)" title="上一年">
           <span>«</span>
@@ -237,10 +240,12 @@
           [class.selected]="isDateSelected(day)"
           [class.today]="isToday(day)"
           [class.other-month]="!isCurrentMonth(day)"
+          [class.has-sprint]="hasSprintOnCalendarDay(day)"
           (click)="selectDate(day, $event)">
           <div class="day-number">{{ getDayNumber(day) }}</div>
         </div>
       </div>
+    </div>
     </div>
     <div class="timer-content">
       <!-- 当前状态显示 -->
@@ -260,8 +265,8 @@
 
       <!-- 当前任务显示 -->
       <div class="current-task" *ngIf="selectedTask">
-        <div class="task-label">当前任务</div>
-        <div class="task-name">{{ selectedTask.name }}</div>
+        <div class="current-task-label">当前任务</div>
+        <div class="current-task-name">{{ selectedTask.name }}</div>
       </div>
 
       <!-- 控制按钮 -->
@@ -341,15 +346,17 @@
         </button>
       </div>
     </div>
+    </div>
+
   </div>
 
   <!-- 右侧：冲刺列表 -->
   <div class="sprints-panel">
     <div class="panel-header">
-      <h3>冲刺列表</h3>
+      <h3 class="panel-title"><i-tabler name="history"></i-tabler> 冲刺列表</h3>
       <span class="badge">{{ filteredSprintHistory.length }}</span>
     </div>
-    <div class="sprints-list">
+    <div class="sprints-list panel-content">
       <div class="sprint-item" *ngFor="let sprint of filteredSprintHistory" (click)="closeSprintMenu()">
         <div class="sprint-info">
           <div class="sprint-name-row">

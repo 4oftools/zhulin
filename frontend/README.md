@@ -25,35 +25,6 @@
   - 打断处理
   - 今日回顾（10分钟）
 
-## 项目结构
-
-```
-src/app/
-├── components/
-│   ├── strategic/          # 战略管理组件
-│   │   ├── bamboo-forest/  # 竹林管理
-│   │   ├── bamboo-field/   # 竹田管理
-│   │   ├── bamboo/         # 竹子管理
-│   │   ├── goal/          # 目标管理
-│   │   ├── task/          # 任务管理
-│   │   └── plan-review/   # 计划与回顾
-│   └── tactical/          # 战术管理组件
-│       ├── activity-list/  # 活动列表
-│       ├── bamboo-todo/    # 竹内待办
-│       ├── bamboo-section/ # 竹节管理
-│       ├── planning/       # 制定计划
-│       ├── sprint/         # 冲刺
-│       ├── rest/           # 休息
-│       ├── interruption/  # 打断
-│       └── daily-review/   # 今日回顾
-├── models/                 # 数据模型
-├── services/               # 服务
-│   ├── data.service.ts           # 数据服务
-│   ├── task.service.ts          # 任务服务
-│   └── time-management.service.ts # 时间管理服务
-└── app.module.ts          # 主模块
-```
-
 ## 开发
 
 ### 安装依赖
@@ -77,37 +48,3 @@ npm run build
 ```
 
 构建产物将输出到 `dist/zhulin-work-method` 目录
-
-## 技术栈
-
-- **Angular 19** - 前端框架
-- **TypeScript** - 编程语言
-- **RxJS** - 响应式编程
-- **LocalStorage** - 数据持久化（所有数据存储在浏览器本地）
-
-## 使用说明
-
-1. **创建竹林**：从战略管理页面创建你的第一个竹林（长期计划）
-2. **创建竹田**：在竹林中创建竹田（阶段性里程碑）
-3. **创建竹子**：在竹田中创建竹子（短期任务周期，1-5天）
-4. **设定目标**：为每个竹田设定3-5个目标
-5. **创建任务**：在竹子中创建常规任务、周期任务或任务标签
-6. **时间管理**：使用战术管理功能进行时间管理，包括制定计划、冲刺、休息和回顾
-
-## 数据存储
-
-所有数据存储在浏览器的 LocalStorage 中，包括：
-- `zhulin-data`: 竹林、竹田、竹子、目标、任务数据
-- `zhulin-sections`: 竹节记录
-- `zhulin-reviews`: 回顾记录
-- `zhulin-plans`: 计划记录
-- `zhulin-interruptions`: 打断记录
-- `zhulin-daily-reviews`: 每日回顾记录
-
-## 注意事项
-
-- 目标数量建议控制在3-5个，最多不超过7个
-- 竹子的周期应在1-5天之间
-- 常规任务必须能在一个竹子内完成
-- 超出一个竹子时间的任务应使用任务标签，并拆解成多个常规任务
-

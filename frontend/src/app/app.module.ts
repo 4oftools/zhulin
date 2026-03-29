@@ -38,7 +38,10 @@ import {
   IconChevronDown,
   IconCircleCheckFilled,
   IconChartPieFilled,
-  IconClock
+  IconClock,
+  IconClipboardList,
+  IconHistory,
+  IconX
 } from 'angular-tabler-icons/icons';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -100,6 +103,9 @@ import { StatisticsComponent } from './components/statistics/statistics.componen
       IconCircleCheckFilled,
       IconChartPieFilled,
       IconClock,
+      IconClipboardList,
+      IconHistory,
+      IconX,
       IconPlayerPlay,
       IconRefresh,
       IconArrowBackUp,

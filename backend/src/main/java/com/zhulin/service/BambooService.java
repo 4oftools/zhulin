@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -77,14 +78,24 @@ public class BambooService {
                 logger.debug("Updating existing bamboo: {}", existing.getId());
                 
                 // Update scalar fields
+                boolean wasCompleted = Boolean.TRUE.equals(existing.getCompleted());
+                boolean wasArchived = Boolean.TRUE.equals(existing.getArchived());
                 existing.setName(bamboo.getName());
                 existing.setStartDate(bamboo.getStartDate());
                 existing.setEndDate(bamboo.getEndDate());
                 existing.setDescription(bamboo.getDescription());
                 existing.setCompleted(bamboo.getCompleted());
-                existing.setCompletedAt(bamboo.getCompletedAt());
+                if (Boolean.TRUE.equals(bamboo.getCompleted()) && !wasCompleted) {
+                    existing.setCompletedAt(LocalDateTime.now());
+                } else if (!Boolean.TRUE.equals(bamboo.getCompleted())) {
+                    existing.setCompletedAt(null);
+                }
                 existing.setArchived(bamboo.getArchived());
-                existing.setArchivedAt(bamboo.getArchivedAt());
+                if (Boolean.TRUE.equals(bamboo.getArchived()) && !wasArchived) {
+                    existing.setArchivedAt(LocalDateTime.now());
+                } else if (!Boolean.TRUE.equals(bamboo.getArchived())) {
+                    existing.setArchivedAt(null);
+                }
                 existing.setFieldId(bamboo.getFieldId());
                 existing.setGoalId(bamboo.getGoalId());
                 existing.setInActivityList(bamboo.getInActivityList());
@@ -112,9 +123,20 @@ public class BambooService {
                     task.setId(UUID.randomUUID().toString());
                     logger.debug("Generated new ID for task: {}", task.getId());
                 }
+                applyNewSectionCompletedAt(task);
             });
         }
-        
+        if (Boolean.TRUE.equals(bamboo.getCompleted())) {
+            bamboo.setCompletedAt(LocalDateTime.now());
+        } else {
+            bamboo.setCompletedAt(null);
+        }
+        if (Boolean.TRUE.equals(bamboo.getArchived())) {
+            bamboo.setArchivedAt(LocalDateTime.now());
+        } else {
+            bamboo.setArchivedAt(null);
+        }
+
         Bamboo saved = bambooRepository.save(bamboo);
         initializeBamboo(saved);
         logger.info("Bamboo saved successfully with id: {}", saved.getId());
@@ -148,6 +170,7 @@ public class BambooService {
                     newSection.setId(UUID.randomUUID().toString());
                 }
                 newSection.setBambooId(existingBamboo.getId());
+                applyNewSectionCompletedAt(newSection);
                 updatedList.add(newSection);
             }
         }
@@ -166,8 +189,14 @@ public class BambooService {
         existing.setEstimatedDuration(newer.getEstimatedDuration());
         existing.setActualDuration(newer.getActualDuration());
         existing.setTags(newer.getTags());
+        boolean wasCompleted = Boolean.TRUE.equals(existing.getCompleted());
         existing.setCompleted(newer.getCompleted());
-        existing.setCompletedAt(newer.getCompletedAt());
+        boolean nowCompleted = Boolean.TRUE.equals(existing.getCompleted());
+        if (nowCompleted && !wasCompleted) {
+            existing.setCompletedAt(LocalDateTime.now());
+        } else if (!nowCompleted) {
+            existing.setCompletedAt(null);
+        }
         existing.setDueDate(newer.getDueDate());
         existing.setPeriod(newer.getPeriod());
         existing.setGoalId(newer.getGoalId());
@@ -192,5 +221,13 @@ public class BambooService {
     private void initializeBamboo(Bamboo bamboo) {
         Hibernate.initialize(bamboo.getTasks());
         bamboo.getTasks().forEach(task -> Hibernate.initialize(task.getTags()));
+    }
+
+    private void applyNewSectionCompletedAt(BambooSection section) {
+        if (Boolean.TRUE.equals(section.getCompleted())) {
+            section.setCompletedAt(LocalDateTime.now());
+        } else {
+            section.setCompletedAt(null);
+        }
     }
 }

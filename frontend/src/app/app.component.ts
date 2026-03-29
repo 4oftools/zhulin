@@ -110,13 +110,6 @@ export class AppComponent implements OnInit {
     }
   }
 
-  onNumberChange(key: keyof AppSettings, event: Event): void {
-    const target = event.target as HTMLInputElement;
-    if (target) {
-      this.onSettingsChange(key, +target.value);
-    }
-  }
-
   resetSettings(): void {
     if (confirm('确定要重置所有设置吗？')) {
       this.settingsService.resetSettings();

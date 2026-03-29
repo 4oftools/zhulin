@@ -14,13 +14,13 @@
 
 .dashboard-header h2 {
   margin: 0 0 8px 0;
-  font-size: 32px;
-  color: #333;
-  font-weight: 600;
+  font-size: 28px;
+  color: var(--text-primary);
+  font-weight: 700;
 }
 
 .subtitle {
-  color: #666;
+  color: var(--text-secondary);
   font-size: 16px;
   margin: 0;
 }
@@ -51,10 +51,11 @@
 }
 
 .stat-card {
-  background: white;
+  background: var(--bg-main);
   border-radius: 12px;
   padding: 24px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 1px 3px var(--shadow);
+  border: 1px solid var(--border-soft);
   display: flex;
   align-items: center;
   gap: 20px;
@@ -63,56 +64,58 @@
 
 .stat-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 12px var(--shadow);
 }
 
 .stat-icon {
-  width: 80px;
-  height: 80px;
+  width: 48px;
+  height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 12px;
-  background: linear-gradient(135deg, #66BB6A 0%, #4CAF50 100%);
   flex-shrink: 0;
 }
 
 .stat-icon i-tabler {
   width: 100%;
   height: 100%;
-  padding: 16px;
-  color: white;
+  padding: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .stat-icon.forests {
-  background: linear-gradient(135deg, #2e7d32 0%, #4CAF50 100%);
+  background: var(--stat-forest-bg);
+  color: var(--stat-forest-fg);
 }
 
 .stat-icon.fields {
-  background: linear-gradient(135deg, #4CAF50 0%, #66BB6A 100%);
+  background: var(--stat-fields-bg);
+  color: var(--stat-fields-fg);
 }
 
 .stat-icon.bamboos {
-  background: linear-gradient(135deg, #66BB6A 0%, #81C784 100%);
+  background: var(--stat-bamboos-bg);
+  color: var(--stat-bamboos-fg);
 }
 
 .stat-icon.tasks {
-  background: linear-gradient(135deg, #8BC34A 0%, #4CAF50 100%);
+  background: var(--stat-tasks-bg);
+  color: var(--stat-tasks-fg);
 }
 
 .stat-content h3 {
   margin: 0 0 4px 0;
-  font-size: 32px;
+  font-size: 28px;
   font-weight: 700;
-  color: #333;
+  color: var(--text-primary);
 }
 
 .stat-content p {
   margin: 0;
-  color: #666;
+  color: var(--text-secondary);
   font-size: 14px;
 }
 
@@ -125,17 +128,18 @@
 
 .progress-card,
 .task-status-card {
-  background: white;
+  background: var(--bg-main);
   border-radius: 12px;
   padding: 24px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 1px 3px var(--shadow);
+  border: 1px solid var(--border-soft);
 }
 
 .progress-card h3,
 .task-status-card h3 {
   margin: 0 0 20px 0;
-  font-size: 20px;
-  color: #333;
+  font-size: 18px;
+  color: var(--text-primary);
   font-weight: 600;
 }
 
@@ -153,7 +157,7 @@
   transform: translate(-50%, -50%);
   font-size: 28px;
   font-weight: 700;
-  color: #4CAF50;
+  color: var(--primary);
 }
 
 .progress-ring {
@@ -162,13 +166,13 @@
 
 .progress-ring-circle-bg {
   fill: none;
-  stroke: #e0e0e0;
+  stroke: var(--border);
   stroke-width: 8;
 }
 
 .progress-ring-circle {
   fill: none;
-  stroke: #4CAF50;
+  stroke: var(--primary-light);
   stroke-width: 8;
   stroke-linecap: round;
   transition: stroke-dashoffset 0.5s ease;
@@ -183,13 +187,13 @@
 .status-item {
   position: relative;
   padding: 12px;
-  background: #f5f5f5;
+  background: var(--bg-secondary);
   border-radius: 8px;
   overflow: hidden;
 }
 
 .status-item.in-progress {
-  background: #e3f2fd;
+  background: var(--state-progress-bg);
 }
 
 .status-bar {
@@ -202,22 +206,22 @@
 }
 
 .status-item.completed .status-bar {
-  background: #4CAF50;
+  background: var(--primary-light);
 }
 
 .status-item.in-progress .status-bar {
-  background: #2196F3;
+  background: var(--state-progress-fg);
 }
 
 .status-item.pending .status-bar {
-  background: #ff9800;
+  background: var(--state-pending-fg);
 }
 
 .status-label {
   position: relative;
   z-index: 1;
   font-weight: 500;
-  color: #333;
+  color: var(--text-primary);
 }
 
 .status-count {
@@ -225,7 +229,7 @@
   z-index: 1;
   float: right;
   font-weight: 600;
-  color: #666;
+  color: var(--text-secondary);
 }
 
 .forests-stats-section {
@@ -235,8 +239,8 @@
 
 .section-title {
   margin: 0 0 20px 0;
-  font-size: 24px;
-  color: #333;
+  font-size: 20px;
+  color: var(--text-primary);
   font-weight: 600;
 }
 
@@ -248,16 +252,17 @@
 }
 
 .forest-card {
-  background: white;
+  background: var(--bg-main);
   border-radius: 12px;
   padding: 24px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 1px 3px var(--shadow);
+  border: 1px solid var(--border-soft);
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .forest-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 12px var(--shadow);
 }
 
 .forest-header {
@@ -266,7 +271,7 @@
   align-items: flex-start;
   margin-bottom: 20px;
   padding-bottom: 16px;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid var(--border);
 }
 
 .forest-info {
@@ -277,7 +282,7 @@
   margin: 0 0 8px 0;
   font-size: 20px;
   font-weight: 600;
-  color: #333;
+  color: var(--text-primary);
 }
 
 .forest-meta {
@@ -285,25 +290,25 @@
   align-items: center;
   gap: 12px;
   font-size: 14px;
-  color: #666;
+  color: var(--text-secondary);
 }
 
 .forest-date {
-  color: #666;
+  color: var(--text-secondary);
 }
 
 .forest-status {
   padding: 4px 12px;
   border-radius: 12px;
-  background: #e8f5e9;
-  color: #2e7d32;
+  background: var(--state-active-bg);
+  color: var(--state-active-fg);
   font-size: 12px;
   font-weight: 500;
 }
 
 .forest-status.archived {
   background: #f5f5f5;
-  color: #757575;
+  color: var(--text-secondary);
 }
 
 .forest-completion {
@@ -314,13 +319,13 @@
 .completion-rate {
   font-size: 28px;
   font-weight: 700;
-  color: #4CAF50;
+  color: var(--primary);
   line-height: 1;
 }
 
 .completion-label {
   font-size: 12px;
-  color: #666;
+  color: var(--text-secondary);
   margin-top: 4px;
 }
 
@@ -334,21 +339,21 @@
 .forest-stat-item {
   text-align: center;
   padding: 12px;
-  background: #f5f5f5;
+  background: var(--bg-secondary);
   border-radius: 8px;
 }
 
 .forest-stat-value {
   font-size: 24px;
   font-weight: 700;
-  color: #333;
+  color: var(--primary);
   line-height: 1;
   margin-bottom: 4px;
 }
 
 .forest-stat-label {
   font-size: 12px;
-  color: #666;
+  color: var(--text-secondary);
 }
 
 .forest-goals-section {
@@ -360,7 +365,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 10px 12px;
-  background: #f5f5f5;
+  background: var(--bg-secondary);
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.2s;
@@ -368,12 +373,12 @@
 }
 
 .forest-goals-header:hover {
-  background: #eeeeee;
+  background: var(--border);
 }
 
 .goals-title {
   font-weight: 600;
-  color: #333;
+  color: var(--text-primary);
   font-size: 14px;
 }
 
@@ -385,13 +390,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #666;
+  color: var(--text-secondary);
   transition: transform 0.3s ease, color 0.2s;
   flex-shrink: 0;
 }
 
 .goals-toggle-btn:hover {
-  color: #333;
+  color: var(--text-primary);
 }
 
 .goals-toggle-btn.expanded {
@@ -424,19 +429,19 @@
 
 .goal-item {
   padding: 12px;
-  background: #f9f9f9;
+  background: var(--bg-secondary);
   border-radius: 8px;
-  border-left: 3px solid #4CAF50;
+  border-left: 3px solid var(--primary-light);
 }
 
 .goal-item.empty {
-  border-left-color: #e0e0e0;
-  color: #999;
+  border-left-color: var(--border);
+  color: var(--text-muted);
 }
 
 .goal-name {
   font-weight: 600;
-  color: #333;
+  color: var(--text-primary);
   font-size: 14px;
   margin-bottom: 8px;
 }
@@ -458,18 +463,18 @@
 }
 
 .goal-task-badge.completed {
-  background: #e8f5e9;
-  color: #2e7d32;
+  background: var(--state-active-bg);
+  color: var(--state-active-fg);
 }
 
 .goal-task-badge.in-progress {
-  background: #e3f2fd;
-  color: #1976d2;
+  background: var(--state-progress-bg);
+  color: var(--state-progress-fg);
 }
 
 .goal-task-badge.pending {
-  background: #fff3e0;
-  color: #f57c00;
+  background: var(--state-pending-bg);
+  color: var(--state-pending-fg);
 }
 
 .goal-task-label {
@@ -485,7 +490,7 @@
   grid-column: 1 / -1;
   text-align: center;
   padding: 40px;
-  color: #999;
+  color: var(--text-muted);
   font-size: 16px;
 }
 

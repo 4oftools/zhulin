@@ -4,61 +4,70 @@
   box-sizing: border-box;
 }
 
+/* 竹子绿色系设计令牌：竹节深影 → 竿青 → 新叶 → 雾林背景 */
+:root {
+  --bamboo-900: #0f1f18;
+  --bamboo-800: #1a3328;
+  --bamboo-700: #234d3c;
+  --primary-dark: #1b4d3a;
+  --primary: #2d6a4f;
+  --primary-light: #52a882;
+  --primary-soft: #7bc49a;
+  --bamboo-sprout: #a8d5ba;
+  --bamboo-shoot: #d2e8d4;
+  --bamboo-mist: #d8e8e0;
+  --bamboo-fog: #e4eee8;
+  --bamboo-dew: #eef5f0;
+
+  --bg-main: #fbfdfc;
+  --bg-secondary: var(--bamboo-fog);
+  --bg-tertiary: var(--bamboo-mist);
+  --text-primary: #14261c;
+  --text-secondary: #4a6354;
+  --text-muted: #6e8578;
+  --border: #c2d8c9;
+  --border-soft: #dce9e0;
+  --shadow: rgba(15, 48, 32, 0.08);
+  --shadow-deep: rgba(15, 48, 32, 0.12);
+  --focus-ring: rgba(45, 106, 79, 0.22);
+
+  /* 大屏四象：同色系明暗区分 */
+  --stat-forest-bg: #cfe8d9;
+  --stat-forest-fg: #1a4d38;
+  --stat-fields-bg: #d9ede2;
+  --stat-fields-fg: #235c45;
+  --stat-bamboos-bg: #e5f2eb;
+  --stat-bamboos-fg: #2d6a4f;
+  --stat-tasks-bg: #eef6f0;
+  --stat-tasks-fg: #3d8564;
+
+  /* 任务/流程状态（仍在绿色相内：深青竹 vs 黄绿笋） */
+  --state-active-bg: #d0e8dd;
+  --state-active-fg: #1f6b4d;
+  --state-progress-bg: #c5e0d4;
+  --state-progress-fg: #256b50;
+  --state-pending-bg: #e2edd5;
+  --state-pending-fg: #5a7038;
+
+  --danger: #c45c4a;
+  --danger-dark: #a8483a;
+
+  /* 战略管理：顶栏 / 侧栏 / 列头共用背景 */
+  --strategic-header-bg: linear-gradient(180deg, var(--bamboo-dew) 0%, var(--bamboo-mist) 100%);
+  --strategic-column-header-bg: linear-gradient(90deg, var(--bamboo-mist) 0%, var(--bg-main) 72%);
+}
+
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  background: 
-    linear-gradient(135deg, #f5faf6 0%, #f0f7f2 25%, #eef6f0 50%, #f2f9f4 75%, #f0f7f2 100%);
-  background-size: 300% 300%;
-  animation: bambooGradient 30s ease-in-out infinite;
-  color: #2d5016;
+  background: linear-gradient(165deg, var(--bamboo-dew) 0%, var(--bamboo-fog) 42%, var(--bamboo-mist) 100%);
+  background-attachment: fixed;
+  color: var(--text-primary);
   line-height: 1.6;
   min-height: 100vh;
-  position: relative;
 }
 
 body::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: 
-    radial-gradient(ellipse 1000px 800px at 20% 30%, rgba(129, 199, 132, 0.06) 0%, transparent 60%),
-    radial-gradient(ellipse 800px 1000px at 80% 70%, rgba(76, 175, 80, 0.05) 0%, transparent 60%);
-  pointer-events: none;
-  z-index: -1;
-  animation: bambooShadows 35s ease-in-out infinite;
-}
-
-@keyframes bambooGradient {
-  0%, 100% {
-    background-position: 0% 50%;
-  }
-  25% {
-    background-position: 50% 0%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  75% {
-    background-position: 50% 100%;
-  }
-}
-
-@keyframes bambooShadows {
-  0%, 100% {
-    opacity: 1;
-    transform: translate(0, 0) scale(1);
-  }
-  33% {
-    opacity: 0.9;
-    transform: translate(15px, -10px) scale(1.02);
-  }
-  66% {
-    opacity: 0.95;
-    transform: translate(-10px, 15px) scale(0.98);
-  }
+  display: none;
 }
 
 .container {
@@ -70,39 +79,40 @@ body::before {
 .btn {
   padding: 8px 16px;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   cursor: pointer;
   font-size: 14px;
-  transition: all 0.3s;
+  font-weight: 500;
+  transition: all 0.2s;
   text-decoration: none;
   display: inline-block;
 }
 
 .btn-primary {
-  background-color: #4CAF50;
-  color: white;
+  background-color: var(--primary);
+  color: #fff;
 }
 
 .btn-primary:hover {
-  background-color: #45a049;
+  background-color: var(--primary-dark);
 }
 
 .btn-secondary {
-  background-color: #66BB6A;
-  color: white;
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
 }
 
 .btn-secondary:hover {
-  background-color: #4CAF50;
+  background-color: var(--border-soft);
 }
 
 .btn-danger {
-  background-color: #f44336;
-  color: white;
+  background-color: var(--danger);
+  color: #fff;
 }
 
 .btn-danger:hover {
-  background-color: #da190b;
+  background-color: var(--danger-dark);
 }
 
 .btn-small {
@@ -111,11 +121,12 @@ body::before {
 }
 
 .card {
-  background: white;
-  border-radius: 8px;
+  background: var(--bg-main);
+  border-radius: 12px;
   padding: 20px;
   margin-bottom: 20px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 1px 3px var(--shadow);
+  border: 1px solid var(--border-soft);
 }
 
 .form-group {
@@ -126,18 +137,19 @@ body::before {
   display: block;
   margin-bottom: 5px;
   font-weight: 500;
-  color: #333;
+  color: var(--text-primary);
 }
 
 .form-group input,
 .form-group textarea,
 .form-group select {
   width: 100%;
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
   font-size: 14px;
   font-family: inherit;
+  background: var(--bg-main);
 }
 
 .form-group textarea {
@@ -149,14 +161,14 @@ body::before {
 .form-group textarea:focus,
 .form-group select:focus {
   outline: none;
-  border-color: #4CAF50;
-  box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+  border-color: var(--primary-light);
+  box-shadow: 0 0 0 3px var(--focus-ring);
 }
 
 .empty-state {
   text-align: center;
   padding: 40px;
-  color: #999;
+  color: var(--text-muted);
 }
 
 .badge {
@@ -168,22 +180,21 @@ body::before {
 }
 
 .badge-success {
-  background-color: #4CAF50;
-  color: white;
+  background-color: var(--state-active-bg);
+  color: var(--state-active-fg);
 }
 
 .badge-warning {
-  background-color: #8BC34A;
-  color: white;
+  background-color: var(--state-pending-bg);
+  color: var(--state-pending-fg);
 }
 
 .badge-info {
-  background-color: #66BB6A;
-  color: white;
+  background-color: var(--state-progress-bg);
+  color: var(--state-progress-fg);
 }
 
 .badge-danger {
-  background-color: #f44336;
-  color: white;
+  background-color: #fbeae8;
+  color: var(--danger);
 }
-

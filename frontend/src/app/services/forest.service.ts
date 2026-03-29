@@ -62,7 +62,7 @@ export class ForestService {
   archiveForest(id: string, archived: boolean): void {
     const forest = this.getForest(id);
     if (forest) {
-      const updated = { ...forest, archived, archivedAt: archived ? new Date() : undefined };
+      const updated = { ...forest, archived };
       this.updateForest(updated);
     }
   }
@@ -143,7 +143,7 @@ export class ForestService {
     const forest = this.getForest(forestId);
     const field = forest?.bambooFields.find(f => f.id === fieldId);
     if (field) {
-        const updated = { ...field, archived, archivedAt: archived ? new Date() : undefined };
+        const updated = { ...field, archived };
         this.updateField(updated);
     }
   }

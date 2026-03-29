@@ -2,25 +2,16 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 export interface AppSettings {
-  // 竹子自动完成
-  autoCompleteBamboo: boolean;
-  
-  // 提醒设置
   remindDailyReview: boolean;
   remindGoalCompletion: boolean;
-  
-  // 其他设置
   showCompletedTasks: boolean;
-  defaultBambooDuration: number; // 默认竹子周期（天数）
   taskReminderEnabled: boolean;
 }
 
 const DEFAULT_SETTINGS: AppSettings = {
-  autoCompleteBamboo: true,
   remindDailyReview: true,
   remindGoalCompletion: true,
   showCompletedTasks: true,
-  defaultBambooDuration: 3,
   taskReminderEnabled: true
 };
 
@@ -58,9 +49,14 @@ export class SettingsService {
     const stored = localStorage.getItem('zhulin-settings');
     if (stored) {
       try {
-        const parsed = JSON.parse(stored);
-        // 合并默认设置，确保所有字段都存在
-        return { ...DEFAULT_SETTINGS, ...parsed };
+        const parsed = JSON.parse(stored) as Record<string, unknown>;
+        const merged = { ...DEFAULT_SETTINGS, ...parsed };
+        return {
+          remindDailyReview: !!merged.remindDailyReview,
+          remindGoalCompletion: !!merged.remindGoalCompletion,
+          showCompletedTasks: !!merged.showCompletedTasks,
+          taskReminderEnabled: !!merged.taskReminderEnabled
+        };
       } catch (e) {
         console.error('Failed to parse settings:', e);
         return DEFAULT_SETTINGS;

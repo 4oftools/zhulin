@@ -2,8 +2,8 @@
   padding: 24px;
   max-width: 1400px;
   margin: 0 auto;
-  background-color: #f5f5f5;
-  min-height: calc(100vh - 80px);
+  background-color: var(--bg-secondary);
+  min-height: calc(100vh - 64px);
 }
 
 .statistics-header {
@@ -12,14 +12,14 @@
   align-items: center;
   margin-bottom: 32px;
   padding-bottom: 16px;
-  border-bottom: 2px solid #e0e0e0;
+  border-bottom: 1px solid var(--border);
 }
 
 .statistics-header h1 {
   margin: 0;
   font-size: 28px;
-  font-weight: 600;
-  color: #333;
+  font-weight: 700;
+  color: var(--text-primary);
 }
 
 .header-controls {
@@ -29,40 +29,40 @@
 
 .filter-select {
   padding: 8px 16px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
   font-size: 14px;
-  background-color: white;
-  color: #333;
+  background-color: var(--bg-main);
+  color: var(--text-primary);
   cursor: pointer;
   transition: all 0.2s;
 }
 
 .filter-select:hover {
-  border-color: #4CAF50;
+  border-color: var(--primary);
 }
 
 .filter-select:focus {
   outline: none;
-  border-color: #4CAF50;
-  box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.1);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--focus-ring);
 }
 
 .stats-section {
   margin-bottom: 32px;
-  background-color: white;
+  background-color: var(--bg-main);
   border-radius: 12px;
   padding: 24px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 1px 3px var(--shadow);
 }
 
 .section-title {
   margin: 0 0 20px 0;
   font-size: 20px;
   font-weight: 600;
-  color: #333;
+  color: var(--text-primary);
   padding-bottom: 12px;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid var(--border);
 }
 
 /* 总体统计卡片 */
@@ -77,22 +77,23 @@
   align-items: center;
   gap: 16px;
   padding: 20px;
-  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
-  border-radius: 10px;
-  border: 1px solid #e0e0e0;
+  background: var(--bg-main);
+  border-radius: 12px;
+  border: 1px solid var(--border);
   transition: all 0.3s;
+  box-shadow: 0 1px 3px var(--shadow);
 }
 
 .stat-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  border-color: #4CAF50;
+  box-shadow: 0 4px 12px var(--shadow);
+  border-color: var(--primary);
 }
 
 .stat-card.highlight {
-  background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+  background: var(--primary);
   color: white;
-  border-color: #4CAF50;
+  border-color: var(--primary);
 }
 
 .stat-card.highlight .stat-value,
@@ -104,7 +105,7 @@
   width: 32px;
   height: 32px;
   flex-shrink: 0;
-  color: #4CAF50;
+  color: var(--primary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -128,14 +129,14 @@
 .stat-value {
   font-size: 28px;
   font-weight: 700;
-  color: #333;
+  color: var(--primary);
   line-height: 1.2;
   margin-bottom: 4px;
 }
 
 .stat-label {
   font-size: 14px;
-  color: #666;
+  color: var(--text-secondary);
   font-weight: 500;
 }
 
@@ -149,8 +150,8 @@
 .status-card {
   padding: 20px;
   border-radius: 10px;
-  border: 2px solid #e0e0e0;
-  background-color: #fafafa;
+  border: 2px solid var(--border);
+  background-color: var(--bg-secondary);
   transition: all 0.3s;
 }
 
@@ -160,18 +161,18 @@
 }
 
 .status-card.completed {
-  border-color: #4CAF50;
-  background: linear-gradient(135deg, #e8f5e9 0%, #ffffff 100%);
+  border-color: var(--primary-light);
+  background: linear-gradient(135deg, var(--state-active-bg) 0%, var(--bg-main) 100%);
 }
 
 .status-card.in-progress {
-  border-color: #2196F3;
-  background: linear-gradient(135deg, #e3f2fd 0%, #ffffff 100%);
+  border-color: var(--state-progress-fg);
+  background: linear-gradient(135deg, var(--state-progress-bg) 0%, var(--bg-main) 100%);
 }
 
 .status-card.pending {
-  border-color: #FF9800;
-  background: linear-gradient(135deg, #fff3e0 0%, #ffffff 100%);
+  border-color: var(--state-pending-fg);
+  background: linear-gradient(135deg, var(--state-pending-bg) 0%, var(--bg-main) 100%);
 }
 
 .status-header {
@@ -201,39 +202,39 @@
 }
 
 .status-card.completed .status-icon {
-  color: #4CAF50;
+  color: var(--primary-light);
 }
 
 .status-card.in-progress .status-icon {
-  color: #2196F3;
+  color: var(--state-progress-fg);
 }
 
 .status-card.pending .status-icon {
-  color: #FF9800;
+  color: var(--state-pending-fg);
 }
 
 .status-label {
   font-size: 16px;
   font-weight: 600;
-  color: #333;
+  color: var(--text-primary);
 }
 
 .status-value {
   font-size: 36px;
   font-weight: 700;
-  color: #333;
+  color: var(--text-primary);
   margin-bottom: 4px;
 }
 
 .status-percentage {
   font-size: 14px;
-  color: #666;
+  color: var(--text-secondary);
   margin-bottom: 12px;
 }
 
 .status-bar {
   height: 8px;
-  background-color: #e0e0e0;
+  background-color: var(--border);
   border-radius: 4px;
   overflow: hidden;
 }
@@ -256,8 +257,8 @@
 .learnings-card {
   padding: 20px;
   border-radius: 10px;
-  border: 1px solid #e0e0e0;
-  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  border: 1px solid var(--border);
+  background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-main) 100%);
 }
 
 .goals-card h3,
@@ -266,7 +267,7 @@
   margin: 0 0 16px 0;
   font-size: 18px;
   font-weight: 600;
-  color: #333;
+  color: var(--text-primary);
 }
 
 .goals-stats,
@@ -286,14 +287,14 @@
   padding: 12px;
   background-color: white;
   border-radius: 6px;
-  border: 1px solid #e0e0e0;
+  border: 1px solid var(--border);
 }
 
 .goal-stat-label,
 .output-stat-label,
 .learning-stat-label {
   font-size: 14px;
-  color: #666;
+  color: var(--text-secondary);
 }
 
 .goal-stat-value,
@@ -301,12 +302,12 @@
 .learning-stat-value {
   font-size: 16px;
   font-weight: 600;
-  color: #333;
+  color: var(--text-primary);
 }
 
 .goal-stat-value.completed,
 .output-stat-value.completed {
-  color: #4CAF50;
+  color: var(--primary-light);
 }
 
 /* 竹林详细统计 */
@@ -319,15 +320,15 @@
 .forest-stat-card {
   padding: 24px;
   border-radius: 10px;
-  border: 1px solid #e0e0e0;
-  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  border: 1px solid var(--border);
+  background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-main) 100%);
   transition: all 0.3s;
 }
 
 .forest-stat-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  border-color: #4CAF50;
+  border-color: var(--primary-light);
 }
 
 .forest-stat-header {
@@ -336,14 +337,14 @@
   align-items: center;
   margin-bottom: 20px;
   padding-bottom: 16px;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid var(--border);
 }
 
 .forest-stat-header h3 {
   margin: 0;
   font-size: 20px;
   font-weight: 600;
-  color: #333;
+  color: var(--text-primary);
 }
 
 .forest-stat-meta {
@@ -354,7 +355,7 @@
 
 .forest-date {
   font-size: 14px;
-  color: #666;
+  color: var(--text-secondary);
 }
 
 .forest-status {
@@ -365,13 +366,13 @@
 }
 
 .forest-status.enabled {
-  background-color: #e8f5e9;
-  color: #4CAF50;
+  background-color: var(--state-active-bg);
+  color: var(--primary-light);
 }
 
 .forest-status.disabled {
-  background-color: #fce4ec;
-  color: #e91e63;
+  background-color: var(--bg-tertiary);
+  color: var(--text-muted);
 }
 
 .forest-stat-content {
@@ -394,17 +395,17 @@
 
 .forest-stat-label {
   font-size: 14px;
-  color: #666;
+  color: var(--text-secondary);
 }
 
 .forest-stat-value {
   font-size: 24px;
   font-weight: 700;
-  color: #333;
+  color: var(--text-primary);
 }
 
 .forest-stat-item.highlight .forest-stat-value {
-  color: #4CAF50;
+  color: var(--primary-light);
 }
 
 .forest-task-breakdown {
@@ -419,30 +420,30 @@
   gap: 8px;
   padding: 8px 16px;
   border-radius: 6px;
-  background-color: #f5f5f5;
+  background-color: var(--bg-secondary);
 }
 
 .task-breakdown-item.completed {
-  background-color: #e8f5e9;
+  background-color: var(--state-active-bg);
 }
 
 .task-breakdown-item.in-progress {
-  background-color: #e3f2fd;
+  background-color: var(--state-progress-bg);
 }
 
 .task-breakdown-item.pending {
-  background-color: #fff3e0;
+  background-color: var(--state-pending-bg);
 }
 
 .breakdown-label {
   font-size: 14px;
-  color: #666;
+  color: var(--text-secondary);
 }
 
 .breakdown-value {
   font-size: 16px;
   font-weight: 600;
-  color: #333;
+  color: var(--text-primary);
 }
 
 .forest-goals-outputs {
@@ -450,7 +451,7 @@
   gap: 24px;
   flex-wrap: wrap;
   padding-top: 16px;
-  border-top: 1px solid #e0e0e0;
+  border-top: 1px solid var(--border);
 }
 
 .goals-info,
@@ -463,13 +464,13 @@
 
 .info-label {
   font-size: 14px;
-  color: #666;
+  color: var(--text-secondary);
 }
 
 .info-value {
   font-size: 16px;
   font-weight: 600;
-  color: #333;
+  color: var(--text-primary);
 }
 
 /* 目标详细统计 */
@@ -482,15 +483,15 @@
 .goal-stat-card {
   padding: 20px;
   border-radius: 10px;
-  border: 1px solid #e0e0e0;
-  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  border: 1px solid var(--border);
+  background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-main) 100%);
   transition: all 0.3s;
 }
 
 .goal-stat-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  border-color: #4CAF50;
+  border-color: var(--primary-light);
 }
 
 .goal-stat-header {
@@ -499,22 +500,22 @@
   align-items: center;
   margin-bottom: 16px;
   padding-bottom: 12px;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid var(--border);
 }
 
 .goal-stat-header h4 {
   margin: 0;
   font-size: 18px;
   font-weight: 600;
-  color: #333;
+  color: var(--text-primary);
   flex: 1;
 }
 
 .goal-forest-name {
   font-size: 12px;
-  color: #999;
+  color: var(--text-muted);
   padding: 4px 8px;
-  background-color: #f5f5f5;
+  background-color: var(--bg-secondary);
   border-radius: 4px;
 }
 
@@ -538,17 +539,17 @@
 
 .goal-stat-label {
   font-size: 12px;
-  color: #666;
+  color: var(--text-secondary);
 }
 
 .goal-stat-value {
   font-size: 20px;
   font-weight: 700;
-  color: #333;
+  color: var(--text-primary);
 }
 
 .goal-stat-item.highlight .goal-stat-value {
-  color: #4CAF50;
+  color: var(--primary-light);
 }
 
 .goal-task-breakdown {

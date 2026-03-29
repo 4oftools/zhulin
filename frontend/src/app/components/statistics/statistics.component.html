@@ -93,7 +93,7 @@
         <div class="status-bar">
           <div class="status-bar-fill" 
                [style.width.%]="overallStats.totalTasks > 0 ? (overallStats.completedTasks / overallStats.totalTasks) * 100 : 0"
-               style="background-color: #4CAF50;"></div>
+               style="background-color: var(--primary-light);"></div>
         </div>
       </div>
       <div class="status-card in-progress">
@@ -108,7 +108,7 @@
         <div class="status-bar">
           <div class="status-bar-fill" 
                [style.width.%]="overallStats.totalTasks > 0 ? (overallStats.inProgressTasks / overallStats.totalTasks) * 100 : 0"
-               style="background-color: #2196F3;"></div>
+               style="background-color: var(--state-progress-fg);"></div>
         </div>
       </div>
       <div class="status-card pending">
@@ -123,7 +123,7 @@
         <div class="status-bar">
           <div class="status-bar-fill" 
                [style.width.%]="overallStats.totalTasks > 0 ? (overallStats.pendingTasks / overallStats.totalTasks) * 100 : 0"
-               style="background-color: #FF9800;"></div>
+               style="background-color: var(--state-pending-fg);"></div>
         </div>
       </div>
     </div>

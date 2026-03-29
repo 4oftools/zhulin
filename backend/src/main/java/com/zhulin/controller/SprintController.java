@@ -36,10 +36,7 @@ public class SprintController {
     @PutMapping("/{id}")
     public ResponseEntity<Sprint> updateSprint(@PathVariable String id, @RequestBody Sprint sprint) {
         return sprintService.findById(id)
-                .map(existingSprint -> {
-                    sprint.setId(id);
-                    return ResponseEntity.ok(sprintService.save(sprint));
-                })
+                .map(ex -> ResponseEntity.ok(sprintService.updateSprint(id, sprint)))
                 .orElse(ResponseEntity.notFound().build());
     }
 

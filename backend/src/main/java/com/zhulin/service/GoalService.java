@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,9 +52,31 @@ public class GoalService {
      * @param goal The goal to save
      * @return The saved goal
      */
-    public Goal save(Goal goal) {
-        logger.debug("Saving goal: {}", goal.getName());
-        Goal saved = goalRepository.save(goal);
+    public Goal save(Goal incoming) {
+        logger.debug("Saving goal: {}", incoming.getName());
+        if (incoming.getId() != null && goalRepository.existsById(incoming.getId())) {
+            Goal existing = goalRepository.findById(incoming.getId()).get();
+            existing.setName(incoming.getName());
+            existing.setDescription(incoming.getDescription());
+            existing.setForestId(incoming.getForestId());
+            boolean was = Boolean.TRUE.equals(existing.getCompleted());
+            existing.setCompleted(incoming.getCompleted());
+            boolean now = Boolean.TRUE.equals(existing.getCompleted());
+            if (now && !was) {
+                existing.setCompletedAt(LocalDateTime.now());
+            } else if (!now) {
+                existing.setCompletedAt(null);
+            }
+            Goal saved = goalRepository.save(existing);
+            logger.info("Goal updated successfully with id: {}", saved.getId());
+            return saved;
+        }
+        if (Boolean.TRUE.equals(incoming.getCompleted())) {
+            incoming.setCompletedAt(LocalDateTime.now());
+        } else {
+            incoming.setCompletedAt(null);
+        }
+        Goal saved = goalRepository.save(incoming);
         logger.info("Goal saved successfully with id: {}", saved.getId());
         return saved;
     }

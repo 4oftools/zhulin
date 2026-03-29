@@ -30,7 +30,6 @@ public class DailyReviewService {
             toUpdate.setScore(review.getScore());
             toUpdate.setGoodThings(review.getGoodThings());
             toUpdate.setBadThings(review.getBadThings());
-            toUpdate.setUpdatedAt(java.time.LocalDateTime.now());
             return dailyReviewRepository.save(toUpdate);
         }
         return dailyReviewRepository.save(review);

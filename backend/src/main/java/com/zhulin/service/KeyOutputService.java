@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,9 +52,31 @@ public class KeyOutputService {
      * @param keyOutput The key output to save
      * @return The saved key output
      */
-    public KeyOutput save(KeyOutput keyOutput) {
-        logger.debug("Saving key output: {}", keyOutput.getName());
-        KeyOutput saved = keyOutputRepository.save(keyOutput);
+    public KeyOutput save(KeyOutput incoming) {
+        logger.debug("Saving key output: {}", incoming.getName());
+        if (incoming.getId() != null && keyOutputRepository.existsById(incoming.getId())) {
+            KeyOutput existing = keyOutputRepository.findById(incoming.getId()).get();
+            existing.setName(incoming.getName());
+            existing.setDescription(incoming.getDescription());
+            existing.setForestId(incoming.getForestId());
+            boolean was = Boolean.TRUE.equals(existing.getCompleted());
+            existing.setCompleted(incoming.getCompleted());
+            boolean now = Boolean.TRUE.equals(existing.getCompleted());
+            if (now && !was) {
+                existing.setCompletedAt(LocalDateTime.now());
+            } else if (!now) {
+                existing.setCompletedAt(null);
+            }
+            KeyOutput saved = keyOutputRepository.save(existing);
+            logger.info("Key output updated successfully with id: {}", saved.getId());
+            return saved;
+        }
+        if (Boolean.TRUE.equals(incoming.getCompleted())) {
+            incoming.setCompletedAt(LocalDateTime.now());
+        } else {
+            incoming.setCompletedAt(null);
+        }
+        KeyOutput saved = keyOutputRepository.save(incoming);
         logger.info("Key output saved successfully with id: {}", saved.getId());
         return saved;
     }

@@ -84,7 +84,7 @@ export class BambooService {
     const bamboo = field?.bamboos.find(b => b.id === bambooId);
     
     if (bamboo) {
-        const updated = { ...bamboo, archived, archivedAt: archived ? new Date() : undefined };
+        const updated = { ...bamboo, archived };
         this.updateBamboo(updated);
     }
   }

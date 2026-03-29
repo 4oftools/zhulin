@@ -94,3 +94,6 @@ build/
 
 # Spring Boot
 help.md
+
+# Docker Compose 本地密钥（模板见 docker-deploy/.env.example）
+docker-deploy/.env

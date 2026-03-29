@@ -1,5 +1,6 @@
 package com.zhulin.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -11,8 +12,10 @@ public class Sprint extends BaseEntity {
     private String taskName;
     
     @NotNull
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime startTime;
     
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime endTime;
     
     private Long duration; // in seconds

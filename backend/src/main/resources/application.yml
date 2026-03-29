@@ -1,3 +1,7 @@
+zhulin:
+  # 空库时自动写入演示数据；生产环境请改为 false
+  demo-data: true
+
 spring:
   application:
     name: zhulin-backend
