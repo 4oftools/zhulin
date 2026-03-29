@@ -13,6 +13,22 @@
 
 更细的产品说明与前端目录结构见 **[frontend/README.md](frontend/README.md)**。
 
+## 预览
+
+### 大屏展示
+
+![大屏展示界面](docs/preview/zhulin-01.png)
+
+### 战略管理
+![战略管理界面](docs/preview/zhulin-02.png)
+
+### 战术管理
+![战术管理界面](docs/preview/zhulin-03.png)
+
+### 详细统计
+![详细统计界面](docs/preview/zhulin-04.png)
+
+
 ## 技术栈
 
 | 层级 | 技术 |
@@ -29,6 +45,7 @@ zhulin/
 ├── backend/        # 后端 API（详见 backend/README.md）
 ├── frontend/       # 单页应用（详见 frontend/README.md）
 ├── docker-deploy/  # Compose、.env 示例与 [部署说明](docker-deploy/README.md)
+├── docs/preview/   # README 预览图占位与说明
 └── README.en.md    # 英文版说明
 ```
 

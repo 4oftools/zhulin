@@ -13,6 +13,26 @@ Zhulin is a full-stack app built around the “Bamboo Grove” work method: fore
 
 For product-oriented detail and frontend layout, see **[frontend/README.md](frontend/README.md)** (mostly in Chinese).
 
+
+## Preview
+
+### Large-screen dashboard
+
+![Large-screen dashboard](docs/preview/zhulin-01.png)
+
+### Strategic management
+
+![Strategic management](docs/preview/zhulin-02.png)
+
+### Tactical management
+
+![Tactical management](docs/preview/zhulin-03.png)
+
+### Detailed statistics
+
+![Detailed statistics](docs/preview/zhulin-04.png)
+
+
 ## Tech stack
 
 | Layer | Technology |
@@ -29,6 +49,7 @@ zhulin/
 ├── backend/        # REST API (see backend/README.md)
 ├── frontend/       # SPA (see frontend/README.md)
 ├── docker-deploy/  # Compose, sample .env, [deploy notes](docker-deploy/README.md)
+├── docs/preview/   # README preview placeholders + notes
 └── README.md       # Chinese documentation (default landing doc)
 ```
 
