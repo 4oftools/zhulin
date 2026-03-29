@@ -18,19 +18,27 @@ For product-oriented detail and frontend layout, see **[frontend/README.md](fron
 
 ### Large-screen dashboard
 
-![Large-screen dashboard](docs/preview/zhulin-01.png)
+Work overview: totals for forests, fields, bamboos, and tasks; completion rate and status breakdown; per-forest cards and progress.
+
+![Large-screen dashboard — work overview](docs/preview/zhulin-01-work-overview.png)
 
 ### Strategic management
 
-![Strategic management](docs/preview/zhulin-02.png)
+Kanban by selected forest: columns for bamboo fields and their bamboos/tasks; create fields; goals, key outputs, habit management, and edit.
+
+![Strategic management — field kanban](docs/preview/zhulin-02-strategic-management.png)
 
 ### Tactical management
 
-![Tactical management](docs/preview/zhulin-03.png)
+Execution view: activity list, in-bamboo todos, sprint timer (start sprint / break), and sprint history.
+
+![Tactical management — sprints and todos](docs/preview/zhulin-03-tactical-management.png)
 
 ### Detailed statistics
 
-![Detailed statistics](docs/preview/zhulin-04.png)
+Analytics: headline metrics, task status distribution, goals and outputs (filterable by time range and forest).
+
+![Detailed statistics — analytics](docs/preview/zhulin-04-detailed-statistics.png)
 
 
 ## Tech stack

@@ -17,16 +17,27 @@
 
 ### 大屏展示
 
-![大屏展示界面](docs/preview/zhulin-01.png)
+工作概览：汇总竹林 / 竹田 / 竹子与任务数量，展示任务完成率、状态分布及各竹林卡片与进度。
+
+![大屏展示 · 工作概览](docs/preview/zhulin-01-work-overview.png)
 
 ### 战略管理
-![战略管理界面](docs/preview/zhulin-02.png)
+
+按所选竹林展示竹田看板：分列呈现竹田下的竹子与任务，支持新建竹田、目标 / 关键产出 / 习惯管理与编辑。
+
+![战略管理 · 竹田看板](docs/preview/zhulin-02-strategic-management.png)
 
 ### 战术管理
-![战术管理界面](docs/preview/zhulin-03.png)
+
+战术执行台：活动列表、竹内待办、冲刺计时（开始冲刺 / 休息）与冲刺历史记录。
+
+![战术管理 · 冲刺与待办](docs/preview/zhulin-03-tactical-management.png)
 
 ### 详细统计
-![详细统计界面](docs/preview/zhulin-04.png)
+
+多维度统计：总体指标、任务状态分布，以及目标与产出等（可按时间范围与竹林筛选）。
+
+![详细统计 · 数据看板](docs/preview/zhulin-04-detailed-statistics.png)
 
 
 ## 技术栈
