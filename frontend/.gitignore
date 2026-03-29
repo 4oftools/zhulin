@@ -1,0 +1,35 @@
+# Dependencies
+node_modules/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Angular / build
+.angular/
+dist/
+tmp/
+out-tsc/
+bazel-out/
+
+# Tests & coverage
+coverage/
+libpeerconnection.log
+testem.log
+
+# Cache / misc
+.sass-cache/
+connect.lock
+typings/
+
+# Environment (keep .example committed if you use one)
+.env
+.env.local
+.env.*.local
+
+# OS
+.DS_Store
+Thumbs.db

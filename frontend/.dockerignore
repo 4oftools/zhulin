@@ -1,0 +1,11 @@
+# 减小 build context
+node_modules/
+dist/
+.angular/
+coverage/
+.git/
+.gitignore
+.idea/
+*.iml
+README.md
+*.md

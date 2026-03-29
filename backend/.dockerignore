@@ -1,0 +1,10 @@
+# Build output & VCS (缩小 build context，加快 docker build)
+target/
+.git/
+.gitignore
+.idea/
+*.iml
+.project
+.classpath
+.settings/
+README.md
